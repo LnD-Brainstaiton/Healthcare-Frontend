@@ -2,7 +2,7 @@
 .sidebar {
   height: 100vh;
   width: 250px;
-  background-color: #000000;
+  background-color: #09257a;
   color: white;
   padding: 20px;
   position: fixed;
@@ -63,18 +63,16 @@
 
 /* Button for toggling */
 .toggle-btn {
-  background-color: #000000;
+  background-color: #09257a;
   color: white;
   border: none;
   cursor: pointer;
-  padding: 10px;
   width: 100%;
   text-align: left;
+  padding: 4px;
 }
 
-.toggle-btn:hover {
-  background-color: #000000;
-}
+
 
 .toggle-btn:focus {
   outline: none;

@@ -10,6 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import Login from "./components/LoginComponent"
 import Logout from "./components/LogoutComponent"
 import Sidebar from "./components/Sidebar"
+import Dashboard from "./components/Dashboard";
 
 
 function App() {
@@ -43,10 +44,10 @@ function App() {
                             element={<Login onLogin={handleLogin} />} // Pass the login handler
                         />
                         <Route
-                            path="/users"
+                            path="/dashboard"
                             element={
                             <ProtectedRoute>
-                                {/* <Dashboard /> */}
+                                <Dashboard />
                             </ProtectedRoute>
                             }
                         />

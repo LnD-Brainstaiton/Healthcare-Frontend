@@ -1,0 +1,95 @@
+/* Sidebar.css */
+.sidebar {
+  height: 100vh;
+  width: 250px;
+  background-color: #000000;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  transition: width 0.3s ease; /* Smooth transition */
+}
+
+.sidebar.collapsed {
+  width: 80px; /* Collapsed width */
+}
+
+.sidebar.open {
+  width: 250px; /* Expanded width */
+}
+
+.sidebar h3 {
+  font-size: 1.5em;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: opacity 0.3s ease; /* Smooth transition for visibility */
+}
+
+.sidebar h3.hidden {
+  opacity: 0;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-list.hidden {
+  display: none;
+}
+
+.sidebar-list li {
+  margin: 20px 0;
+}
+
+.sidebar-list a {
+  text-decoration: none;
+  color: white;
+  font-size: 1.2em;
+}
+
+.sidebar-list a:hover {
+  color: #ddd;
+}
+
+.content-container {
+  margin-left: 270px; /* Adjust content to the right of the sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease; /* Smooth transition for content shifting */
+}
+
+.sidebar.collapsed ~ .content-container {
+  margin-left: 100px; /* Adjust content when sidebar is collapsed */
+}
+
+/* Button for toggling */
+.toggle-btn {
+  background-color: #000000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+}
+
+.toggle-btn:hover {
+  background-color: #000000;
+}
+
+.toggle-btn:focus {
+  outline: none;
+}
+
+/* Hamburger icon styling */
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.line {
+  width: 30px; /* Width of the lines */
+  height: 2px; /* Height of the lines */
+  background-color: white; /* Color of the lines */
+  margin: 3px 0; /* Space between the lines */
+}

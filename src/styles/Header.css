@@ -1,0 +1,49 @@
+header {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #09257a;
+  color: white;
+  font-weight: 900;
+
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between; /* Ensures spacing between items */
+  width: 100%; /* Full width for the navbar */
+}
+
+.navbar {
+  display: flex;
+  justify-content: right; /* Space out the items */
+  width: 100%; /* Ensure navbar uses the full width */
+  margin: 10px;
+}
+
+.navbar-nav {
+  display: flex;
+  margin-left: auto; /* Push the items to the right */
+}
+
+.nav-item {
+  display: inline;
+}
+
+.nav-link {
+  color: white !important;
+  margin-right: 10px;
+}
+
+.nav-link:hover {
+  color: #cccccc !important;
+}
+
+.collapse {
+  flex-grow: 0;
+}
+
+.navbar-brand:hover {
+  color: #f8f9fa !important;
+}

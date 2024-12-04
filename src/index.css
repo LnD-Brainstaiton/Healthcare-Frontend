@@ -11,12 +11,12 @@ html {
 }
 
 body {
-    background-color: #2148c0;
+    background-color: #ffffff;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 footer {
-    background-color: #09257a;
+    background-color: #3668fe;
     height: 5vh;
     display: flex;
     justify-content: center;

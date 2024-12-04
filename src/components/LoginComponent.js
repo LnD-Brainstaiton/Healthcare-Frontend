@@ -13,7 +13,7 @@ function Login({ onLogin }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/users"); // Redirect to users list if logged in
+      navigate("/dashboard"); // Redirect to dashboard if logged in
     }
   }, [navigate]);
 
@@ -21,16 +21,16 @@ function Login({ onLogin }) {
     event.preventDefault();
     try {
       await axios
-        .post("http://localhost:8081/....", {
-          username: username,
+        .post("http://localhost:8000/api/v1/user/token", {
+          userName: username,
           password: password,
         })
         .then((res) => {
-          if (res.data.data != null) {
+          if (res.data.data.token != null) {
             const token = res.data.data.token;
             localStorage.setItem("token", token);
             onLogin(token); // Update token state in parent (App.js)
-            navigate("/users");
+            navigate("/dashboard");
           } else {
             setErrorMessage(res.data.message);
           }
@@ -47,44 +47,40 @@ function Login({ onLogin }) {
   return (
     <div className="login-container">
       <div className="login-card">
-        <div >
-          <h2>Login</h2>
-          <hr />
-        </div>
+        <h2 className="login-title">Login</h2>
+        <hr />
 
-        <div className="login-body">
-          {errorMessage && (
-            <div className="alert alert-danger">{errorMessage}</div>
-          )}
+        {errorMessage && (
+          <div className="alert alert-danger">{errorMessage}</div>
+        )}
 
-          <form onSubmit={login}>
-            <div className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Enter Username"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={login}>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter mobile"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              required
+            />
+          </div>
 
-            <div className="form-group">
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Enter Password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
-            </div>
+          <div className="form-group">
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
 
-            <button type="submit" className="btn btn-primary btn-block">
-              Login
-            </button>
-          </form>
-        </div>
+          <button type="submit" className="btn btn-primary btn-block">
+            Login
+          </button>
+        </form>
       </div>
     </div>
   );

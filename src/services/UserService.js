@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8081/ijaa";
+const BASE_URL = "http://localhost:8000/api/v1/user";
 
 class UserService {
   getAllUser() {
     const token = localStorage.getItem("token"); // Retrieve the JWT from localStorage
-    return axios.get(BASE_URL + "/users", {
+    return axios.get(BASE_URL + "/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`, // Include the JWT in the Authorization header
       },

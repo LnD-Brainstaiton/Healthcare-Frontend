@@ -1,13 +1,24 @@
-/* Sidebar.css */
+/* Sidebar styles */
+		
 .sidebar {
-  height: 100vh;
+  height: 180vh;
+  height: 100vh; /* Full height */
   width: 250px;
-  background-color: #09257a;
+  width: 250px; /* Fixed width of sidebar */
+  background-color: #3668fe;
+  color: white;
   color: white;
   padding: 20px;
+  padding: 20px;
   position: fixed;
-  transition: width 0.3s ease; /* Smooth transition */
+  position: fixed; /* Make the sidebar fixed */
+  top: 0; /* Align to the top */
+  left: 0; /* Align to the left */
+  transition: width 0.3s ease;
+  transition: width 0.3s ease; /* Smooth transition for expanding/collapsing */
+  z-index: 100; /* Ensure it stays on top of other content */
 }
+
 
 .sidebar.collapsed {
   width: 80px; /* Collapsed width */
@@ -15,17 +26,6 @@
 
 .sidebar.open {
   width: 250px; /* Expanded width */
-}
-
-.sidebar h3 {
-  font-size: 1.5em;
-  text-align: center;
-  margin-bottom: 20px;
-  transition: opacity 0.3s ease; /* Smooth transition for visibility */
-}
-
-.sidebar h3.hidden {
-  opacity: 0;
 }
 
 .sidebar-list {
@@ -51,34 +51,19 @@
   color: #ddd;
 }
 
-.content-container {
-  margin-left: 270px; /* Adjust content to the right of the sidebar */
-  padding: 20px;
-  transition: margin-left 0.3s ease; /* Smooth transition for content shifting */
-}
-
-.sidebar.collapsed ~ .content-container {
-  margin-left: 100px; /* Adjust content when sidebar is collapsed */
-}
-
-/* Button for toggling */
+/* Toggle button */
 .toggle-btn {
-  background-color: #09257a;
+  background-color: #3668fe;
   color: white;
   border: none;
   cursor: pointer;
   width: 100%;
   text-align: left;
   padding: 4px;
-}
-
-
-
-.toggle-btn:focus {
   outline: none;
 }
 
-/* Hamburger icon styling */
+/* Hamburger icon */
 .hamburger-icon {
   display: flex;
   flex-direction: column;
@@ -86,8 +71,32 @@
 }
 
 .line {
-  width: 30px; /* Width of the lines */
-  height: 2px; /* Height of the lines */
-  background-color: white; /* Color of the lines */
-  margin: 3px 0; /* Space between the lines */
+  width: 30px;
+  height: 2px;
+  background-color: white;
+  margin: 3px 0;
+}
+
+/* Content container styling */
+.content-container {
+  margin-left: 0; /* Default to no margin (when sidebar is not visible) */
+  padding: 20px;
+  transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+/* When sidebar is present (logged in) */
+.sidebar.open ~ .content-container {
+  margin-left: 250px; /* Adjust content when sidebar is expanded */
+}
+
+/* When sidebar is collapsed */
+.sidebar.collapsed ~ .content-container {
+  margin-left: 80px; /* Adjust content when sidebar is collapsed */
+}
+
+/* Add smooth scroll for content */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }

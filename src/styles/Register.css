@@ -1,124 +1,103 @@
-* {
-    box-sizing: border-box;
+/* General styles */
+body {
+    background-color: #f4f7fb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
     margin: 0;
     padding: 0;
-    list-style-type: none;
-    text-decoration: none;
-    outline: none;
-}
-html {
-    scroll-behavior: smooth;
-}
-
-
-
-main {
-    min-height: 85vh;
+  }
+  
+  /* Centering the register form */
+  .register-container {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-
-
-
-section {
-    width: 110%;
-    max-width: 900px;
-    min-height: 400px;
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
+    min-height: 80vh;
+    padding: 20px;
+  }
+  
+  /* Register card styling */
+  .register-card {
+    background-color: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 40px;
+    width: 400px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+  
+  .register-card:hover {
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Title Styling */
+  .register-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #3668fe;
+  }
+  
+  /* Form input styles */
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #3668fe;
+    background-color: #fff;
+    outline: none;
+  }
+  
+  /* Button Styles */
+  .btn-primary {
+    color: #fff;
+    font-weight: 600;
+    background-color: #3668fe;
+    font-size: 16px;
+    padding: 12px 0;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
     background-color: #2148c0;
-    font-size: 25px;
-    color: #fff;
-}
-
-.form-container {
-    display: flex; /* Enables flexbox */
-    flex-wrap: wrap; /* Allows wrapping */
-    gap: 1rem; /* Adds space between columns */
-}
-
-.form-column {
-    flex: 1 1 calc(50% - 1rem); /* Each column takes 50% of the width, minus the gap */
-    display: flex;
-    flex-direction: column; /* Ensures label and input stack vertically */
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    flex-grow: 1;
-    padding-bottom: 1rem;
-}
-
-a, a:visited {
-    color: #fff;
-}
-
-input[type="text"],
-input[type="password"],
-button,
-textarea {
-  font-family: 'Nunito', sans-serif;
-  font-size: 22px;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  max-width: 403px;
-}
-
-label,
-button {
-  margin-top: 1rem;
-}
-
-button {
-  padding: 0.5rem;
-}
-
-.instructions {
-    font-size: 0.75rem;
-    border-radius: 0.5rem;
-    background: #000;
-    color: #fff;
-    padding: 0.25rem;
-    position: relative;
-    bottom: -10px;
-}
-
-.instructions > svg {
-    margin-right: 0.25rem;
-}
-
-.offscreen {
-    position: absolute;
-    left: -9999px;
-}
-
-.hide {
-    display: none;
-}
-
-.valid {
-    color: limegreen;
-    margin-left: 0.25rem;
-}
-
-.invalid {
-    color: red;
-    margin-left: 0.25rem;
-}
-
-.errmsg {
-    background-color: lightpink;
-    color: firebrick;
-    font-weight: bold;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.line {
-    display: inline-block;
-}
+  }
+  
+  /* Alert Styles */
+  .alert {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  /* Divider line */
+  hr {
+    border-top: 1px solid #ddd;
+    margin-bottom: 30px;
+  }
+  

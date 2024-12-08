@@ -1,22 +1,14 @@
 /* Sidebar styles */
 		
 .sidebar {
-  height: 180vh;
-  height: 100vh; /* Full height */
-  width: 250px;
-  width: 250px; /* Fixed width of sidebar */
   background-color: #3668fe;
-  color: white;
-  color: white;
-  padding: 20px;
+  color: #f4f7fb;
   padding: 20px;
   position: fixed;
-  position: fixed; /* Make the sidebar fixed */
   top: 0; /* Align to the top */
   left: 0; /* Align to the left */
   transition: width 0.3s ease;
-  transition: width 0.3s ease; /* Smooth transition for expanding/collapsing */
-  z-index: 100; /* Ensure it stays on top of other content */
+  z-index: 100; 
 }
 
 
@@ -26,6 +18,8 @@
 
 .sidebar.open {
   width: 250px; /* Expanded width */
+  height: 180vh;
+
 }
 
 .sidebar-list {

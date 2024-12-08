@@ -1,0 +1,99 @@
+.dashboard {
+  background-color: #f4f7fb; /* Light background */
+  padding: 40px;
+  min-height: 81vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dashboard h1 {
+  font-size: 2.5rem;
+  color: #0056b3; /* Primary blue */
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.dashboard p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+/* Dashboard Content Area */
+.dashboard-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1600px;
+  width: 100%;
+}
+
+.feature {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  width: 350px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: scale(1.05);
+  background-color: #c4cdff;
+}
+
+.feature-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 15px;
+}
+
+.feature-info h2 {
+  font-size: 1.5rem;
+  color: #0056b3;
+  margin-bottom: 10px;
+}
+
+.feature-info p {
+  font-size: 1.5rem;
+  color: #000000;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard h1 {
+    font-size: 2rem;
+  }
+
+  .feature {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard h1 {
+    font-size: 1.8rem;
+  }
+
+  .dashboard p {
+    font-size: 1rem;
+  }
+
+  .feature {
+    padding: 15px;
+  }
+
+  .feature-info h2 {
+    font-size: 1.2rem;
+  }
+
+  .feature-info p {
+    font-size: 0.9rem;
+  }
+}

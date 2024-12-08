@@ -28,7 +28,10 @@ function Login({ onLogin }) {
         .then((res) => {
           if (res.data.data.token != null) {
             const token = res.data.data.token;
+            const usertype = res.data.data.userType;
             localStorage.setItem("token", token);
+            localStorage.setItem("userType", usertype);
+            console.log(res);
             onLogin(token); // Update token state in parent (App.js)
             navigate("/dashboard");
           } else {

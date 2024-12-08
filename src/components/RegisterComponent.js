@@ -18,7 +18,7 @@ function Register({ onRegister }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/dashboard"); // Redirect to dashboard if logged in
+        navigate("/dashboard"); 
     }
   }, [navigate]);
 
@@ -33,7 +33,7 @@ function Register({ onRegister }) {
 
     try {
       await axios
-        .post("http://localhost:8000/api/v1/user/register", {
+        .post("http://localhost:8000/api/v1/user/patient/register", {
           firstName,
           lastName,
           mobile,
@@ -41,10 +41,13 @@ function Register({ onRegister }) {
           password,
         })
         .then((res) => {
-          if (res.data.success) {
+          if (res.data) {
+            console.log(res.data);
             setSuccessMessage("Registration successful! Please login.");
             setErrorMessage(""); // Clear any error messages
-            navigate("/login"); // Redirect to login page after successful registration
+            setTimeout(() => {
+              navigate("/"); // Redirect to login page after 2 seconds
+            }, 2000); // 2 seconds delay
           } else {
             setErrorMessage(res.data.message);
           }

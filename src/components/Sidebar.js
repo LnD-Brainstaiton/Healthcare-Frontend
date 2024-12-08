@@ -26,7 +26,13 @@ const Sidebar = () => {
           <Link to="/profile">Profile</Link>
         </li>
         <li>
-          <Link to="/users">Users</Link>
+          <Link to="/admins-list">Admins</Link>
+        </li>
+        <li>
+          <Link to="/doctors-list">Doctors</Link>
+        </li>
+        <li>
+          <Link to="/patients-list">Patients</Link>
         </li>
       </ul>
     </div>

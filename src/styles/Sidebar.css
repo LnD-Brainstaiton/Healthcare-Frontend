@@ -1,5 +1,12 @@
-/* Sidebar styles */
-		
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; /* Make sidebar fill the entire height */
+  width: 250px; /* Adjust the width of the sidebar */
+  z-index: 1000; /* Ensure it stays above content */
+}
+
 .sidebar {
   background-color: #3668fe;
   color: #f4f7fb;
@@ -9,10 +16,12 @@
   left: 0; /* Align to the left */
   transition: width 0.3s ease;
   z-index: 100; 
+  height: 100%;
+  /* border: 2px solid #ff0606; */
 }
 
 .logo-ham-container {
-  display: flex; /* Makes items in the container align horizontally */
+  /* display: flex; Makes items in the container align horizontally */
   align-items: center; /* Vertically center the items */
   justify-content: space-between; /* Space between logo and button */
   padding: 10px; /* Optional: Add padding to the container */
@@ -28,14 +37,12 @@
 
 
 .sidebar.collapsed {
-  width: 80px; /* Collapsed width */
+  width: 100px; /* Collapsed width */
 }
 
 .sidebar.open {
   width: 250px; /* Expanded width */
-  height: 120%;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  height: 100%;
 }
 
 .sidebar-list {
@@ -110,3 +117,4 @@ body {
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
+

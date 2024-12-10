@@ -14,9 +14,11 @@ import PatientsList from "./pages/PatientList";
 import AdminsList from "./pages/AdminList";
 import Profile from "./pages/Profile";
 import UpdateProfile from "./pages/ProfileUpdate";
+import "../src/index.css"
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track the sidebar state
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -36,9 +38,9 @@ function App() {
   return (
     <Router>
       <HeaderComponent />
-      <div className="app">
-        {token && <Sidebar />}
+      <div className={`${isSidebarOpen ? 'sidebar-open' : ''}`}> {/* Add sidebar-open class */}
         <main className="content-container">
+          {token && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Login onLogin={handleLogin} />} />
@@ -76,26 +78,19 @@ function App() {
       <FooterComponent />
     </Router>
   );
-  
 };
 
 const DashboardRouter = () => {
-
   const userType = localStorage.getItem('userType');
-
   
   // Redirect to the appropriate dashboard
   if (userType === 'ADMIN')  {
-    console.log(userType);
     return <DashboardAdmin />
   }
   else if (userType === 'PATIENT') {
-    console.log(userType);
     return <DashboardPatient />
   }
-    
   return null; // Render nothing; just handle redirection
 };
-
 
 export default App;

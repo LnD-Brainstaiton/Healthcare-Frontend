@@ -4,9 +4,10 @@
     justify-content: center;
     align-items: center;
     height: 81vh;
-    /* background: linear-gradient(135deg, #5a7dff, #45c4e3); Modern gradient */
+    width: 100vh;
+    /* background: linear-gradient(135deg, #5a7dff, #45c4e3);  */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean font */
-    margin: 0;
+    margin-left: 250px;
   }
   
   .profile-card {

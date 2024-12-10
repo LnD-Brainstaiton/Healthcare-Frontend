@@ -108,6 +108,11 @@ const DashboardAdmin = () => {
     <div className="dashboard-admin">
       <h1>Admin Dashboard</h1>
       <div className="card-container">
+        {/* Admins Count Card */}
+        <div className="card" onClick={() => navigate("/admins-list")}>
+          <h2>Admins</h2>
+          <p>{stats.adminsCount}</p>
+        </div>
         {/* Doctors Count Card */}
         <div className="card" onClick={() => navigate("/doctors-list")}>
           <h2>Doctors</h2>
@@ -119,10 +124,9 @@ const DashboardAdmin = () => {
           <h2>Patients</h2>
           <p>{stats.patientsCount}</p>
         </div>
-
-        {/* Admins Count Card */}
+        {/* Appointments Count Card */}
         <div className="card" onClick={() => navigate("/admins-list")}>
-          <h2>Admins</h2>
+          <h2>Appointments</h2>
           <p>{stats.adminsCount}</p>
         </div>
       </div>

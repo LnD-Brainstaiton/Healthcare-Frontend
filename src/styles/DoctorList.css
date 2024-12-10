@@ -5,6 +5,24 @@ body {
     margin: 0;
     padding: 0;
   }
+  .search-bar {
+    width: 100%;
+    max-width: 400px;
+    margin-left: 750px;
+    display: block;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .search-bar:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+  }
   
   /* Container for the doctors list */
   .doctors-list {
@@ -85,6 +103,120 @@ body {
   .btn-delete:hover {
     background-color: #c82333;
   }
+
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .pagination-button {
+    background-color: #3668fe;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pagination-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination-button:hover:not(:disabled) {
+    background-color: #294bc3;
+  }
+  
+  .pagination-info {
+    font-size: 1.1em;
+    margin: 0 10px;
+  }
+  
+  /* Styles for the Search & Filter Section */
+.search-filter-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Common style for input and select fields */
+.search-filter-container input,
+.search-filter-container select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  min-width: 200px;
+  max-width: 300px;
+  flex-grow: 1;
+}
+
+.search-filter-container input:focus,
+.search-filter-container select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Search Input Specific Styling */
+.search-filter-container .search-input {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Dropdown Styling */
+.search-filter-container .filter-dropdown {
+  flex-grow: 0;
+  min-width: 150px;
+}
+
+/* Button Styles */
+.search-filter-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-filter-container button:hover {
+  background-color: #0056b3;
+}
+
+.search-filter-container button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-filter-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-filter-container input,
+  .search-filter-container select {
+    max-width: 100%;
+  }
+}
+
   
   /* Responsive Design */
   @media (max-width: 768px) {

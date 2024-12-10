@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Sidebar.css";
+import logo from "../assets/Logo.png";
+
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle between expanded and collapsed
@@ -11,13 +13,19 @@ const Sidebar = () => {
 
   return (
     <div className={isOpen ? "sidebar open" : "sidebar collapsed"}>
-      <button className="toggle-btn" onClick={toggleSidebar}>
-        <div className="hamburger-icon">
-          <div className="line"></div>
-          <div className="line"></div>
-          <div className="line"></div>
-        </div>
-      </button>
+      <div class="logo-ham-container">
+        <img
+          src={logo}
+          class="sidebar-logo"
+        />
+        <button className="toggle-btn" onClick={toggleSidebar}>
+          <div className="hamburger-icon">
+            <div className="line"></div>
+            <div className="line"></div>
+            <div className="line"></div>
+          </div>
+        </button>
+      </div>
       <ul className={isOpen ? "sidebar-list" : "sidebar-list hidden"}>
         <li>
           <Link to="/dashboard">Dashboard</Link>

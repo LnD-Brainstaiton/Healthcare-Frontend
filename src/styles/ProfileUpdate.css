@@ -1,0 +1,29 @@
+/* Input Field Styling */
+.input-field {
+    width: 50%;
+    padding: 30px;
+    font-size: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #333;
+    margin-top: 5px;
+  }
+  
+  .input-field:focus {
+    border-color: #4facfe;
+    outline: none;
+  }
+  
+  /* Error and Success Messages */
+  .error-message {
+    color: #ff4d4f;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: #52c41a;
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+  

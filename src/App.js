@@ -13,6 +13,7 @@ import DoctorsList from "./pages/DoctorList";
 import PatientsList from "./pages/PatientList";
 import AdminsList from "./pages/AdminList";
 import Profile from "./pages/Profile";
+import UpdateProfile from "./pages/ProfileUpdate";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -66,15 +67,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/patients-list"
-              element={
-                <ProtectedRoute>
-                  <PatientsList />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/patients-list" element={<ProtectedRoute><PatientsList /></ProtectedRoute>}/>
             <Route path="/profile" element={<Profile />} />
+            <Route path="/update-profile" element={<UpdateProfile/>} />
           </Routes>
         </main>
       </div>
@@ -101,4 +96,6 @@ const DashboardRouter = () => {
     
   return null; // Render nothing; just handle redirection
 };
+
+
 export default App;

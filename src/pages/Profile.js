@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode"; // Correct way to import jwt-decode
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../styles/Profile.css";
 import logo from "../assets/Logo.png";
 
@@ -7,6 +8,7 @@ const Profile = () => {
   const [user, setUser] = useState(null); // State for user data
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
+  const navigate = useNavigate();
 
   // Function to get the token from localStorage and extract the user ID
   const getUserIdFromToken = () => {
@@ -14,10 +16,8 @@ const Profile = () => {
     if (!token) {
       throw new Error("No token found");
     }
-
-    const decodedToken = jwtDecode(token);
-    console.log(decodedToken);
-    return decodedToken.sub; // Assuming the token contains the user ID in the 'id' field
+    const userId = localStorage.getItem("userId");
+    return userId; // Assuming the token contains the user ID in the 'id' field
   };
 
   // Fetch profile information from API
@@ -31,8 +31,9 @@ const Profile = () => {
           return;
         }
         const userId = getUserIdFromToken(); 
-        console.log(userId);// Extract user ID from token
-        const response = await fetch(`http://localhost:8000/api/v1/user/admin/${userId}`, {
+        const userType = localStorage.getItem("userType").toLowerCase();
+        console.log(userType);// Extract user ID from token
+        const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -43,7 +44,7 @@ const Profile = () => {
           throw new Error("Failed to fetch profile information");
         }
         const data = await response.json();
-        console.log(data.data);
+        console.log(data);
         setUser(data.data);
       } catch (err) {
         setError(err.message);
@@ -56,8 +57,9 @@ const Profile = () => {
   }, []);
 
   const handleUpdateProfile = () => {
-    alert("Update Profile feature coming soon!");
+    navigate("/update-profile"); // Navigate to the update profile page
   };
+
 
   if (loading) {
     return <div className="profile-container">Loading profile...</div>;
@@ -96,7 +98,7 @@ const Profile = () => {
                 <span class="field-value">{user.mobile}</span>
             </div>
             </div>
-            <button class="update-btn" onclick="handleUpdateProfile()">Update Profile</button>
+            <button class="update-btn" onClick={handleUpdateProfile}>Update Profile</button>
         </div>
     </div>
 

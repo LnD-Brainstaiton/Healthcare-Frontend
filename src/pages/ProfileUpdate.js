@@ -87,26 +87,28 @@ const UpdateProfile = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
-
+        
         // Fetch gender options
-        const genderRes = await fetch("http://localhost:8000/api/v1/gender-options", { headers });
+        const genderRes = await fetch("http://localhost:8000/api/v1/user/gender-options", { headers });
         const genderData = await genderRes.json();
-        setGenderOptions(genderData.data || []);
+        setGenderOptions(genderData.data.gender || []);
+        console.log("Check");
 
         // Fetch blood group options
-        const bloodGroupRes = await fetch("http://localhost:8000/api/v1/blood-group-options", { headers });
+        const bloodGroupRes = await fetch("http://localhost:8000/api/v1/user/blood-group-options", { headers });
         const bloodGroupData = await bloodGroupRes.json();
-        setBloodGroupOptions(bloodGroupData.data || []);
+        console.log(bloodGroupData);
+        setBloodGroupOptions(bloodGroupData.data.bloodGroups || []);
 
         // Fetch department options
-        const departmentRes = await fetch("http://localhost:8000/api/v1/department-options", { headers });
+        const departmentRes = await fetch("http://localhost:8000/api/v1/user/department-options", { headers });
         const departmentData = await departmentRes.json();
-        setDepartmentOptions(departmentData.data || []);
+        setDepartmentOptions(departmentData.data.departments || []);
 
         // Fetch designation options
-        const designationRes = await fetch("http://localhost:8000/api/v1/designation-options", { headers });
+        const designationRes = await fetch("http://localhost:8000/api/v1/user/designation-options", { headers });
         const designationData = await designationRes.json();
-        setDesignationOptions(designationData.data || []);
+        setDesignationOptions(designationData.data.designations || []);
       } catch (err) {
         setError("Failed to fetch dropdown options");
       }

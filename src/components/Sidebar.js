@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Sidebar.css";
 import logo from "../assets/Logo.png";
 
 const Sidebar = ({ setIsSidebarOpen }) => {
   const [isOpen, setIsOpen] = useState(false); // State to toggle between expanded and collapsed
+  const [userType, setUserType] = useState(""); // To store the userType
+  
+  useEffect(() => {
+    // Retrieve userType from localStorage (or wherever you store the userType)
+    const storedUserType = localStorage.getItem("userType");
+    if (storedUserType) {
+      setUserType(storedUserType.toLowerCase());
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen); // Toggle the sidebar open/close state
@@ -28,18 +37,48 @@ const Sidebar = ({ setIsSidebarOpen }) => {
           <li>
             <Link to="/dashboard">Dashboard</Link>
           </li>
+          {/* Common Link for All Users */}
           <li>
             <Link to="/profile">Profile</Link>
           </li>
-          <li>
-            <Link to="/admins-list">Admins</Link>
-          </li>
-          <li>
-            <Link to="/doctors-list">Doctors</Link>
-          </li>
-          <li>
-            <Link to="/patients-list">Patients</Link>
-          </li>
+          
+          {/* Conditionally Render Links Based on User Type */}
+          {userType === "admin" && (
+            <>
+              <li>
+                <Link to="/admins-list">Admins</Link>
+              </li>
+              <li>
+                <Link to="/doctors-list">Doctors</Link>
+              </li>
+              <li>
+                <Link to="/patients-list">Patients</Link>
+              </li>
+            </>
+          )}
+          
+          {userType === "doctor" && (
+            <>
+              <li>
+                <Link to="/doctors-dashboard">Doctor Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/patients-list">Patients</Link>
+              </li>
+            </>
+          )}
+          
+          {userType === "patient" && (
+            <>
+              <li>
+                <Link to="/patient-dashboard">Patient Dashboard</Link>
+              </li>
+              <li>
+                <Link to="/appointments">Appointments</Link>
+              </li>
+            </>
+          )}
+
         </ul>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Correct way to import jwt-decode
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../styles/Profile.css";
 import logo from "../assets/Logo.png";
@@ -9,6 +8,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
   const navigate = useNavigate();
+  const userType = localStorage.getItem("userType")?.toLowerCase(); // Get userType from localStorage
 
   // Function to get the token from localStorage and extract the user ID
   const getUserIdFromToken = () => {
@@ -31,15 +31,15 @@ const Profile = () => {
           return;
         }
         const userId = getUserIdFromToken(); 
-        const userType = localStorage.getItem("userType").toLowerCase();
-        console.log(userType);// Extract user ID from token
+        console.log(userType + " " + userId); // Extract user ID from token
         const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`, // Add Bearer token
-            },
-          }); // Use the user ID in the path
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Add Bearer token
+          },
+        }); // Use the user ID in the path
+
         if (!response.ok) {
           throw new Error("Failed to fetch profile information");
         }
@@ -60,7 +60,6 @@ const Profile = () => {
     navigate("/update-profile"); // Navigate to the update profile page
   };
 
-
   if (loading) {
     return <div className="profile-container">Loading profile...</div>;
   }
@@ -70,38 +69,85 @@ const Profile = () => {
   }
 
   return (
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-photo-container">
-            <img
-                src={logo}
-                alt="Profile Photo"
-                class="profile-photo"
-            />
-            </div>
-            <h2 class="profile-header">{user.firstname} {user.lastname}</h2>
-            <div class="profile-details">
-            <div class="profile-field">
-                <span class="field-label">First Name:</span>
-                <span class="field-value">{user.firstname}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Last Name:</span>
-                <span class="field-value">{user.lastname}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Email:</span>
-                <span class="field-value">{user.email}</span>
-            </div>
-            <div class="profile-field">
-                <span class="field-label">Phone:</span>
-                <span class="field-value">{user.mobile}</span>
-            </div>
-            </div>
-            <button class="update-btn" onClick={handleUpdateProfile}>Update Profile</button>
+    <div className="profile-container">
+      <div className="profile-card">
+        <div className="profile-photo-container">
+          <img
+            src={logo}
+            alt="Profile Photo"
+            className="profile-photo"
+          />
         </div>
-    </div>
+        <h2 className="profile-header">{user.firstname} {user.lastname}</h2>
+        <div className="profile-details">
+          <div className="profile-field">
+            <span className="field-label">First Name:</span>
+            <span className="field-value">{user.firstname}</span>
+          </div>
+          <div className="profile-field">
+            <span className="field-label">Last Name:</span>
+            <span className="field-value">{user.lastname}</span>
+          </div>
+          <div className="profile-field">
+            <span className="field-label">Email:</span>
+            <span className="field-value">{user.email}</span>
+          </div>
+          <div className="profile-field">
+            <span className="field-label">Phone:</span>
+            <span className="field-value">{user.mobile}</span>
+          </div>
 
+          {/* Conditionally render fields based on userType */}
+          {userType === "patient" && (
+            <>
+              <div className="profile-field">
+                <span className="field-label">Gender:</span>
+                <span className="field-value">{user.gender}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Age:</span>
+                <span className="field-value">{user.age}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Address:</span>
+                <span className="field-value">{user.address}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">NID:</span>
+                <span className="field-value">{user.nid}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Blood Group:</span>
+                <span className="field-value">{user.bloodGroup}</span>
+              </div>
+            </>
+          )}
+
+          {/* Fields for doctor or admin can be conditionally rendered similarly */}
+          {userType === "doctor" && (
+            <>
+              <div className="profile-field">
+                <span className="field-label">Designation:</span>
+                <span className="field-value">{user.designation}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Department:</span>
+                <span className="field-value">{user.department}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Specialities:</span>
+                <span className="field-value">{user.specialities}</span>
+              </div>
+              <div className="profile-field">
+                <span className="field-label">Fee:</span>
+                <span className="field-value">{user.fee}</span>
+              </div>
+            </>
+          )}
+        </div>
+        <button className="update-btn" onClick={handleUpdateProfile}>Update Profile</button>
+      </div>
+    </div>
   );
 };
 

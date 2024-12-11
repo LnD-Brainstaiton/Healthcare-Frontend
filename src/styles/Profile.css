@@ -1,130 +1,120 @@
-/* Profile.css */
 .profile-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 81vh;
-    width: 100vh;
-    /* background: linear-gradient(135deg, #5a7dff, #45c4e3);  */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean font */
-    margin-left: 250px;
-  }
-  
-  .profile-card {
-    background: #f4f7fb;
-    border-radius: 15px;
-    padding: 30px;
-    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); */
-    max-width: 1750px;
-    width: 100%;
-    /* transition: transform 0.3s ease, box-shadow 0.3s ease; Animation on hover */
-  }
-  
-  /* .profile-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-  } */
-  
-  .profile-header {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-  }
-  
-  .profile-details {
-    margin-bottom: 30px;
-  }
-  
-  .profile-field {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px 0;
-    border-bottom: 1px solid #f0f0f0;
-    gap: 5px; /* Adds space between label and value */
-  }
-  
-  .field-label {
-    font-weight: bold;
-    color: #555;
-    flex: 1; /* Makes the label take up space and align to the left */
-    text-align: left; /* Ensures text is left-aligned */
-  }
-  
-  .field-value {
-    color: #000000;
-    flex: 2; /* Ensures value has more space than the label */
-    text-align: left; /* Align values to the left */
-    word-break: break-word; /* Handles long text by wrapping */
-  }
-  
-  
-  .profile-field:last-child {
-    border-bottom: none;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 81vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-left: 250px;
+  overflow: scroll;
 
-  .update-btn {
-    width: 20%;
-    padding: 12px 18px;
-    font-size: 1.1rem;
-    background-color: #4facfe;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-    font-weight: 500;
-  }
-  
-  .update-btn:hover {
-    background-color: #00c9fe;
-    transform: translateY(-3px);
-  }
-  
-  .update-btn:active {
-    transform: translateY(1px);
-  }
-  
-  /* Mobile Responsiveness */
-  @media (max-width: 600px) {
-    .profile-card {
+}
+
+.profile-card {
+  background: #f4f7fb;
+  border-radius: 15px;
+  padding: 30px;
+  max-width: 1750px;
+  width: 100%;
+  padding: 40px;
+}
+
+.profile-header {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 90px;
+  letter-spacing: 0.5px;
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 20px; /* Space between columns */
+  margin-bottom: 30px;
+}
+
+.profile-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0; /* Tighter spacing */
+  border-bottom: 1px solid #f0f0f0;
+  gap: 10px;
+}
+
+.field-label {
+  font-weight: bold;
+  color: #555;
+  flex: 1;
+  text-align: left;
+}
+
+.field-value {
+  color: #000;
+  flex: 2;
+  text-align: left;
+  word-break: break-word;
+}
+
+.profile-field:last-child {
+  border-bottom: none;
+}
+
+.update-btn {
+  width: 20%;
+  padding: 12px 18px;
+  font-size: 1.1rem;
+  background-color: #4facfe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
+}
+
+.update-btn:hover {
+  background-color: #00c9fe;
+  transform: translateY(-3px);
+}
+
+.update-btn:active {
+  transform: translateY(1px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  .profile-card {
       padding: 20px;
       max-width: 100%;
-    }
-  
-    .profile-header {
+  }
+
+  .profile-header {
       font-size: 1.6rem;
-    }
-  
-    .profile-field {
+  }
+
+  .profile-field {
       font-size: 1rem;
-    }
-  
-    .update-btn {
+  }
+
+  .update-btn {
       padding: 10px 15px;
       font-size: 1rem;
-    }
   }
-  
+}
 
-  /* Profile photo container */
 .profile-photo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  /* Profile photo */
-  .profile-photo {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover; /* Ensures the image scales properly */
-    border: 4px solid #4facfe;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #4facfe;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

@@ -9,14 +9,27 @@ const UpdateProfile = () => {
     email: "",
     mobile: "",
     adminId: "",
-    // currentPassword: "", // Added currentPassword field
-    password: "", // Added password field
-    confirmPassword: "", // Added confirmPassword field
+    password: "",
+    confirmPassword: "",
+    gender: "", // Added for patient
+    age: "",    // Added for patient
+    address: "", // Added for patient
+    nid: "",    // Added for patient
+    bloodGroup: "", // Added for patient
+    designation: "", // Added for doctor
+    department: "",  // Added for doctor
+    specialities: "", // Added for doctor
+    fee: ""      // Added for doctor
   });
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userType, setUserType] = useState(localStorage.getItem("userType")?.toLowerCase());
+  const [genderOptions, setGenderOptions] = useState([]);
+  const [bloodGroupOptions, setBloodGroupOptions] = useState([]);
+  const [designationOptions, setDesignationOptions] = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -25,8 +38,7 @@ const UpdateProfile = () => {
         if (!token) {
           throw new Error("No token found");
         }
-
-        const userType = localStorage.getItem("userType").toLowerCase();
+        
         const userId = localStorage.getItem("userId");
 
         const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
@@ -48,9 +60,17 @@ const UpdateProfile = () => {
           email: data.data.email,
           mobile: data.data.mobile,
           adminId: data.data.adminId,
-        //   currentPassword: "",
           password: "",
           confirmPassword: "",
+          gender: data.data.gender || "",
+          age: data.data.age || "",
+          address: data.data.address || "",
+          nid: data.data.nid || "",
+          bloodGroup: data.data.bloodGroup || "",
+          designation: data.data.designation || "",
+          department: data.data.department || "",
+          specialities: data.data.specialities || "",
+          fee: data.data.fee || ""
         });
       } catch (err) {
         setError(err.message);
@@ -59,8 +79,42 @@ const UpdateProfile = () => {
       }
     };
 
+    // Fetch dropdown options
+    const fetchDropdownOptions = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+
+        // Fetch gender options
+        const genderRes = await fetch("http://localhost:8000/api/v1/gender-options", { headers });
+        const genderData = await genderRes.json();
+        setGenderOptions(genderData.data || []);
+
+        // Fetch blood group options
+        const bloodGroupRes = await fetch("http://localhost:8000/api/v1/blood-group-options", { headers });
+        const bloodGroupData = await bloodGroupRes.json();
+        setBloodGroupOptions(bloodGroupData.data || []);
+
+        // Fetch department options
+        const departmentRes = await fetch("http://localhost:8000/api/v1/department-options", { headers });
+        const departmentData = await departmentRes.json();
+        setDepartmentOptions(departmentData.data || []);
+
+        // Fetch designation options
+        const designationRes = await fetch("http://localhost:8000/api/v1/designation-options", { headers });
+        const designationData = await designationRes.json();
+        setDesignationOptions(designationData.data || []);
+      } catch (err) {
+        setError("Failed to fetch dropdown options");
+      }
+    };
+
     fetchUserProfile();
-  }, []);
+    fetchDropdownOptions();
+  }, [userType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -84,7 +138,7 @@ const UpdateProfile = () => {
         throw new Error("No token found");
       }
 
-      const response = await fetch("http://localhost:8000/api/v1/user/admin/update", {
+      const response = await fetch("http://localhost:8000/api/v1/user/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -115,6 +169,8 @@ const UpdateProfile = () => {
         </div>
         <h2 className="update-profile-header">Update Profile</h2>
         <form className="update-profile-details" onSubmit={handleSubmit}>
+
+          {/* Common fields */}
           <div className="update-profile-field">
             <label className="update-field-label">First Name:</label>
             <input
@@ -128,7 +184,7 @@ const UpdateProfile = () => {
             />
           </div>
           <div className="update-profile-field">
-            <label className="fupdate-ield-label">Last Name:</label>
+            <label className="update-field-label">Last Name:</label>
             <input
               type="text"
               name="lastname"
@@ -163,22 +219,130 @@ const UpdateProfile = () => {
               required
             />
           </div>
-          
-          {/* Current Password Field
-          <div className="update-profile-field">
-            <label className="update-field-label">Current Password:</label>
-            <input
-              type="password"
-              name="currentPassword"
-              value={formData.currentPassword}
-              onChange={handleChange}
-              className="update-input-field"
-              placeholder="Enter current password"
-              required
-            />
-          </div> */}
 
-          {/* New Password Field */}
+          {/* Conditionally render fields based on userType */}
+          {userType === "patient" && (
+            <>
+              <div className="update-profile-field">
+                <label className="update-field-label">Gender:</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="update-input-field"
+                >
+                  <option value="">Select Gender</option>
+                  {genderOptions.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Age:</label>
+                <input
+                  type="text"
+                  name="age"
+                  value={formData.age}
+                  onChange={handleChange}
+                  className="update-input-field"
+                  placeholder="Enter age"
+                />
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Address:</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="update-input-field"
+                  placeholder="Enter address"
+                />
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">NID:</label>
+                <input
+                  type="text"
+                  name="nid"
+                  value={formData.nid}
+                  onChange={handleChange}
+                  className="update-input-field"
+                  placeholder="Enter NID"
+                />
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Blood Group:</label>
+                <select
+                  name="bloodGroup"
+                  value={formData.bloodGroup}
+                  onChange={handleChange}
+                  className="update-input-field"
+                >
+                  <option value="">Select Blood Group</option>
+                  {bloodGroupOptions.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
+
+          {userType === "doctor" && (
+            <>
+              <div className="update-profile-field">
+                <label className="update-field-label">Designation:</label>
+                <select
+                  name="designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  className="update-input-field"
+                >
+                  <option value="">Select Designation</option>
+                  {designationOptions.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Department:</label>
+                <select
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className="update-input-field"
+                >
+                  <option value="">Select Department</option>
+                  {departmentOptions.map((option, index) => (
+                    <option key={index} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Specialties:</label>
+                <input
+                  type="text"
+                  name="specialities"
+                  value={formData.specialities}
+                  onChange={handleChange}
+                  className="update-input-field"
+                  placeholder="Enter specialties"
+                />
+              </div>
+              <div className="update-profile-field">
+                <label className="update-field-label">Fee:</label>
+                <input
+                  type="text"
+                  name="fee"
+                  value={formData.fee}
+                  onChange={handleChange}
+                  className="update-input-field"
+                  placeholder="Enter fee"
+                />
+              </div>
+            </>
+          )}
+
+          {/* Password fields */}
           <div className="update-profile-field">
             <label className="update-field-label">New Password:</label>
             <input
@@ -192,7 +356,6 @@ const UpdateProfile = () => {
             />
           </div>
 
-          {/* Confirm Password Field */}
           <div className="update-profile-field">
             <label className="update-field-label">Confirm Password:</label>
             <input
@@ -205,12 +368,15 @@ const UpdateProfile = () => {
               required
             />
           </div>
+
+          <div>
+            <button type="submit" className="update-update-btn">Save Changes</button>
+          </div>
           <div>
             {error && <p className="update-error-message">{error}</p>}
             {success && <p className="update-success-message">{success}</p>}
-            <button type="submit" className="update-update-btn">Save Changes</button>
-
           </div>
+            
         </form>
       </div>
     </div>

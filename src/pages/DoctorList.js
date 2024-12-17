@@ -6,7 +6,10 @@ const DoctorsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [designation, setDesignation] = useState("");
   const [department, setDepartment] = useState("");
-  const [specialities, setSpecialities] = useState("");
+  const [gender, setGender] = useState("");
+  const [genderOptions, setGenderOptions] = useState([]);
+  const [designationOptions, setDesignationOptions] = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
@@ -27,7 +30,7 @@ const DoctorsList = () => {
         firstnameLastname: searchQuery,
         designation,
         department,
-        specialities,
+        gender,
       }).toString();
 
       const response = await fetch(
@@ -42,40 +45,83 @@ const DoctorsList = () => {
       );
 
       const data = await response.json();
+      console.log("Fetched doctors data:", data); // Debug API response
 
       if (data.responseCode === "S100000") {
         setDoctors(data.data.data);
         setTotalPages(data.data.totalPages);
       } else {
         console.error("Error fetching doctors:", data.responseMessage);
+        setDoctors([]); // Clear table if an error occurs
       }
     } catch (error) {
       console.error("Error fetching doctors:", error);
+      setDoctors([]); // Clear table if an error occurs
     }
   };
 
-  // Fetch data when the current page changes
-  useEffect(() => {
-    fetchDoctors(currentPage);
-  }, [currentPage]);
+  // Fetch dropdown options for designation, department, and gender
+  const fetchDropdownOptions = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-  // Trigger search when the Search button is clicked
-  const handleSearch = () => {
-    setCurrentPage(0); // Reset to the first page on a new search
-    fetchDoctors(0);
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      const [designationRes, departmentRes, genderRes] = await Promise.all([
+        fetch("http://localhost:8000/api/v1/user/designation-options", { headers }),
+        fetch("http://localhost:8000/api/v1/user/department-options", { headers }),
+        fetch("http://localhost:8000/api/v1/user/gender-options", { headers }),
+      ]);
+
+      const designationData = await designationRes.json();
+      const departmentData = await departmentRes.json();
+      const genderData = await genderRes.json();
+
+      console.log(genderData);
+
+      setDesignationOptions(designationData.data.designations || []);
+      setDepartmentOptions(departmentData.data.departments || []);
+      setGenderOptions(genderData.data.gender || []);
+    } catch (error) {
+      console.error("Error fetching dropdown options:", error);
+    }
   };
 
-  // Handle doctor update action
+  // Fetch doctors data when filters or pagination change
+  useEffect(() => {
+    fetchDropdownOptions(); // Fetch dropdown options once
+    fetchDoctors(currentPage); // Fetch initial data
+  }, []);
+
+  useEffect(() => {
+    fetchDoctors(currentPage); // Refetch when the page changes
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchDoctors(0); // Refetch when filters change
+  }, [searchQuery, designation, department, gender]);
+
+  const handleSearch = () => {
+    setCurrentPage(0); // Reset pagination
+    fetchDoctors(0); // Refetch with new filters
+  };
+
   const handleUpdate = (doctor) => {
     alert(`Update doctor: ${doctor.firstname} ${doctor.lastname}`);
   };
 
-  // Handle doctor delete action
   const handleDelete = (doctorId) => {
     alert(`Delete doctor with ID: ${doctorId}`);
   };
 
-  // Pagination controls
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -92,7 +138,6 @@ const DoctorsList = () => {
     <div className="doctors-list">
       <h1>Doctors List</h1>
 
-      {/* Search and Filter Section */}
       <div className="search-filter-container">
         <input
           type="text"
@@ -107,9 +152,11 @@ const DoctorsList = () => {
           className="filter-dropdown"
         >
           <option value="">Select Designation</option>
-          <option value="Consultant">Consultant</option>
-          <option value="Specialist">Specialist</option>
-          <option value="Surgeon">Surgeon</option>
+          {designationOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
         <select
           value={department}
@@ -117,26 +164,29 @@ const DoctorsList = () => {
           className="filter-dropdown"
         >
           <option value="">Select Department</option>
-          <option value="Cardiology">Cardiology</option>
-          <option value="Neurology">Neurology</option>
-          <option value="Orthopedics">Orthopedics</option>
+          {departmentOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
         <select
-          value={specialities}
-          onChange={(e) => setSpecialities(e.target.value)}
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
           className="filter-dropdown"
         >
-          <option value="">Select Specialities</option>
-          <option value="Pediatrics">Pediatrics</option>
-          <option value="Geriatrics">Geriatrics</option>
-          <option value="Oncology">Oncology</option>
+          <option value="">Select Gender</option>
+          {genderOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
       </div>
 
-      {/* Doctors Table */}
       <table className="doctors-table">
         <thead>
           <tr>
@@ -179,7 +229,6 @@ const DoctorsList = () => {
         </tbody>
       </table>
 
-      {/* Pagination Controls */}
       <div className="pagination-controls">
         <button
           onClick={goToPreviousPage}

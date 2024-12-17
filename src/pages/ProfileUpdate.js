@@ -140,7 +140,9 @@ const UpdateProfile = () => {
         throw new Error("No token found");
       }
 
-      const response = await fetch("http://localhost:8000/api/v1/user/update", {
+      const userType = localStorage.getItem("userType").toLocaleLowerCase();
+
+      const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

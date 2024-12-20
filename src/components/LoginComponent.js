@@ -26,19 +26,18 @@ function Login({ onLogin }) {
           password: password,
         })
         .then((res) => {
-          if (res.data.data.token != null) {
+          if(res.data.data == null) {
+           setErrorMessage(res.data.responseMessage);
+          } else if (res.data.data.token != null) {
             const token = res.data.data.token;
             const usertype = res.data.data.userType;
             const userId = res.data.data.userId;
             localStorage.setItem("token", token);
             localStorage.setItem("userType", usertype);
             localStorage.setItem("userId", userId);
-            console.log(res);
             onLogin(token); // Update token state in parent (App.js)
             navigate("/dashboard");
-          } else {
-            setErrorMessage(res.data.message);
-          }
+          } 
         })
         .catch((err) => {
           console.error(err);

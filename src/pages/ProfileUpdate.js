@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../styles/ProfileUpdate.css";
+import { useParams } from "react-router-dom";
 import logo from "../assets/Logo.png";
 
 const UpdateProfile = () => {
+  const { userId } = useParams(); 
+  const { userType } = useParams();  
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     email: "",
     mobile: "",
     adminId: "",
+    patientId: "",
+    doctorId: "",
     password: "",
     confirmPassword: "",
     gender: "", // Added for patient
@@ -25,7 +30,7 @@ const UpdateProfile = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [userType, setUserType] = useState(localStorage.getItem("userType")?.toLowerCase());
+  // const [userType, setUserType] = useState(localStorage.getItem("userType")?.toLowerCase());
   const [genderOptions, setGenderOptions] = useState([]);
   const [bloodGroupOptions, setBloodGroupOptions] = useState([]);
   const [designationOptions, setDesignationOptions] = useState([]);
@@ -39,8 +44,6 @@ const UpdateProfile = () => {
           throw new Error("No token found");
         }
         
-        const userId = localStorage.getItem("userId");
-
         const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
           method: "GET",
           headers: {
@@ -54,12 +57,15 @@ const UpdateProfile = () => {
         }
 
         const data = await response.json();
+        console.log(data);
         setFormData({
           firstname: data.data.firstname,
           lastname: data.data.lastname,
           email: data.data.email,
           mobile: data.data.mobile,
           adminId: data.data.adminId,
+          doctorId: data.data.doctorId,
+          patientId: data.data.patientId,
           password: "",
           confirmPassword: "",
           gender: data.data.gender || "",
@@ -92,12 +98,10 @@ const UpdateProfile = () => {
         const genderRes = await fetch("http://localhost:8000/api/v1/user/gender-options", { headers });
         const genderData = await genderRes.json();
         setGenderOptions(genderData.data.gender || []);
-        console.log("Check");
 
         // Fetch blood group options
         const bloodGroupRes = await fetch("http://localhost:8000/api/v1/user/blood-group-options", { headers });
         const bloodGroupData = await bloodGroupRes.json();
-        console.log(bloodGroupData);
         setBloodGroupOptions(bloodGroupData.data.bloodGroups || []);
 
         // Fetch department options
@@ -116,7 +120,7 @@ const UpdateProfile = () => {
 
     fetchUserProfile();
     fetchDropdownOptions();
-  }, [userType]);
+  }, [userId, userType]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -140,7 +144,7 @@ const UpdateProfile = () => {
         throw new Error("No token found");
       }
 
-      const userType = localStorage.getItem("userType").toLocaleLowerCase();
+      // const userType = localStorage.getItem("userType").toLocaleLowerCase();
 
       const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/update`, {
         method: "PUT",
@@ -356,7 +360,7 @@ const UpdateProfile = () => {
               onChange={handleChange}
               className="update-input-field"
               placeholder="Enter new password"
-              required
+              // required
             />
           </div>
 
@@ -369,7 +373,7 @@ const UpdateProfile = () => {
               onChange={handleChange}
               className="update-input-field"
               placeholder="Confirm new password"
-              required
+              // required
             />
           </div>
 

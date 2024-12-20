@@ -57,7 +57,9 @@ const Profile = () => {
   }, []);
 
   const handleUpdateProfile = () => {
-    navigate("/update-profile"); // Navigate to the update profile page
+    const userId = getUserIdFromToken(); 
+    // const userType = getUserIdFromToken(); 
+    navigate(`/update-profile/${userId}/${userType}`); // Navigate to the update profile page
   };
 
   if (loading) {

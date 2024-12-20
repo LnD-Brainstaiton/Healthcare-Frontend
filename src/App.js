@@ -71,7 +71,7 @@ function App() {
             />
             <Route path="/patients-list" element={<ProtectedRoute><PatientsList /></ProtectedRoute>}/>
             <Route path="/profile" element={<Profile />} />
-            <Route path="/update-profile" element={<UpdateProfile/>} />
+            <Route path="/update-profile/:userId/:userType" element={<UpdateProfile/>} />
           </Routes>
         </main>
       </div>

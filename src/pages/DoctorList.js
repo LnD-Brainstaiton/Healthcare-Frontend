@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+
 
 const DoctorsList = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchQueryId, setSearchQueryId] = useState("");
   const [designation, setDesignation] = useState("");
   const [department, setDepartment] = useState("");
   const [gender, setGender] = useState("");
@@ -27,6 +31,7 @@ const DoctorsList = () => {
       const queryParams = new URLSearchParams({
         page,
         size: pageSize,
+        id: searchQueryId,
         firstnameLastname: searchQuery,
         designation,
         department,
@@ -107,21 +112,54 @@ const DoctorsList = () => {
 
   useEffect(() => {
     fetchDoctors(0); // Refetch when filters change
-  }, [searchQuery, designation, department, gender]);
+  }, [searchQueryId, searchQuery, designation, department, gender]);
 
   const handleSearch = () => {
     setCurrentPage(0); // Reset pagination
     fetchDoctors(0); // Refetch with new filters
   };
 
-  const handleUpdate = (doctor) => {
-    alert(`Update doctor: ${doctor.firstname} ${doctor.lastname}`);
+  const handleUpdate = (userId) => {
+    navigate(`/update-profile/${userId}/doctor`);
   };
 
-  const handleDelete = (doctorId) => {
-    alert(`Delete doctor with ID: ${doctorId}`);
+  const handleDelete = async (doctorId) => {
+    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${doctorId}?`);
+  
+    if (userConfirmed) {
+      try {
+        const token = localStorage.getItem("token");
+  
+        if (!token) {
+          alert("Authentication token not found. Please log in.");
+          return;
+        }
+  
+        const response = await fetch(`http://localhost:8000/api/v1/user/doctor/${doctorId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const data = await response.json();
+  
+        if (data.responseCode === "S100000") {
+          alert("Doctor deleted successfully!");
+          fetchDoctors(currentPage); // Refresh the list after deletion
+        } else {
+          alert(`Failed to delete doctor: ${data.responseMessage}`);
+        }
+      } catch (error) {
+        console.error("Error deleting doctor:", error);
+        alert("An error occurred while trying to delete the doctor.");
+      }
+    } else {
+      alert("Delete action canceled.");
+    }
   };
-
+  
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -139,6 +177,13 @@ const DoctorsList = () => {
       <h1>Doctors List</h1>
 
       <div className="search-filter-container">
+        <input
+          type="text"
+          placeholder="Search by id..."
+          value={searchQueryId}
+          onChange={(e) => setSearchQueryId(e.target.value)}
+          className="search-input"
+        />
         <input
           type="text"
           placeholder="Search by name..."
@@ -190,10 +235,12 @@ const DoctorsList = () => {
       <table className="doctors-table">
         <thead>
           <tr>
+          <th>Id</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>Fee</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -201,20 +248,22 @@ const DoctorsList = () => {
           {doctors.length > 0 ? (
             doctors.map((doctor, index) => (
               <tr key={index}>
+                <td>{doctor.doctorId}</td>
                 <td>{doctor.firstname}</td>
                 <td>{doctor.lastname}</td>
-                <td>{doctor.email}</td>
-                <td>{doctor.mobile}</td>
+                <td>{doctor.designation}</td>
+                <td>{doctor.department}</td>
+                <td>{doctor.fee}</td>
                 <td>
                   <button
                     className="btn-update"
-                    onClick={() => handleUpdate(doctor)}
+                    onClick={() => handleUpdate(doctor.doctorId)}
                   >
                     Update
                   </button>
                   <button
                     className="btn-delete"
-                    onClick={() => handleDelete(doctor.id)}
+                    onClick={() => handleDelete(doctor.doctorId)}
                   >
                     Delete
                   </button>

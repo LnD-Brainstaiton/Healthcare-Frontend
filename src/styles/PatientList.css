@@ -8,9 +8,10 @@ body {
   
   /* Container for the patients list */
   .patients-list {
-    max-width: 1200px;
-    min-height: 70vh;
+    max-width: 1400px;
+    min-height: 81vh;
     margin: 50px auto;
+    margin-right: 120px;
     padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);

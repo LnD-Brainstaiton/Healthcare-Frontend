@@ -52,10 +52,10 @@ const Sidebar = ({ setIsSidebarOpen }) => {
                 <Link to="/doctors-list">Doctors</Link>
               </li>
               <li>
-                <Link to="/patients-list">Doctor Approve</Link>
+                <Link to="/patients-list">Patients</Link>
               </li>
               <li>
-                <Link to="/patients-list">Patients</Link>
+                <Link to="/patients-list">Doctor Approve</Link>
               </li>
               <li>
                 <Link to="/patients-list">Appointment History</Link>

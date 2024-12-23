@@ -15,6 +15,11 @@ import AdminsList from "./pages/AdminList";
 import Profile from "./pages/Profile";
 import UpdateProfile from "./pages/ProfileUpdate";
 import "../src/index.css"
+import AppointmentsList from "./pages/AppointmentList";
+import DoctorsApproveList from "./pages/DoctorApproveList";
+import AppointmentApproveList from "./pages/AppointmentApproveList";
+import AppointmentReapproveList from "./pages/AppointmentReapproveList";
+import CreateDoctor from "./pages/CreateDoctor";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -69,7 +74,12 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/create-doctor" element={<ProtectedRoute><CreateDoctor/></ProtectedRoute>}/>
             <Route path="/patients-list" element={<ProtectedRoute><PatientsList /></ProtectedRoute>}/>
+            <Route path="/appointments-list" element={<ProtectedRoute><AppointmentsList/></ProtectedRoute>}/>
+            <Route path="/doctors-approve-list" element={<ProtectedRoute><DoctorsApproveList/></ProtectedRoute>}/>
+            <Route path="/appointment-approve-list" element={<ProtectedRoute><AppointmentApproveList/></ProtectedRoute>}/>
+            <Route path="/appointment-reapprove-list" element={<ProtectedRoute><AppointmentReapproveList/></ProtectedRoute>}/>
             <Route path="/profile" element={<Profile />} />
             <Route path="/update-profile/:userId/:userType" element={<UpdateProfile/>} />
           </Routes>

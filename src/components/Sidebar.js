@@ -55,16 +55,16 @@ const Sidebar = ({ setIsSidebarOpen }) => {
                 <Link to="/patients-list">Patients</Link>
               </li>
               <li>
-                <Link to="/patients-list">Doctor Approve</Link>
+                <Link to="/doctors-approve-list">Doctor Approve</Link>
               </li>
               <li>
-                <Link to="/patients-list">Appointment History</Link>
+                <Link to="/appointments-list">Appointment History</Link>
               </li>
               <li>
-                <Link to="/patients-list">Appointment Approve</Link>
+                <Link to="/appointment-approve-list">Appointment Approve</Link>
               </li>
               <li>
-                <Link to="/patients-list">Appointment Reschedule Approve</Link>
+                <Link to="/appointment-reapprove-list">Appointment Reschedule Approve</Link>
               </li>
             </>
           )}
@@ -75,7 +75,10 @@ const Sidebar = ({ setIsSidebarOpen }) => {
                 <Link to="/doctors-dashboard">Doctor Dashboard</Link>
               </li>
               <li>
-                <Link to="/patients-list">Patients</Link>
+                <Link to="/appointments-list">Appointment History</Link>
+              </li>
+              <li>
+                <Link to="/appointments-list">Appointment Reschedule Request</Link>
               </li>
             </>
           )}
@@ -83,10 +86,13 @@ const Sidebar = ({ setIsSidebarOpen }) => {
           {userType === "patient" && (
             <>
               <li>
-                <Link to="/patient-dashboard">Patient Dashboard</Link>
+                <Link to="/appointments-list">My Prescription</Link>
               </li>
               <li>
-                <Link to="/appointments">Appointments</Link>
+                <Link to="/appointments-list">Make Appointment</Link>
+              </li>
+              <li>
+                <Link to="/appointments-list">Appointment History</Link>
               </li>
             </>
           )}

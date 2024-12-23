@@ -3,7 +3,7 @@ import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 
-const DoctorsList = () => {
+const DoctorsApproveList = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,11 +123,6 @@ const DoctorsList = () => {
     navigate(`/update-profile/${userId}/doctor`);
   };
 
-  const handleCreateDoctor = () => {
-    setCurrentPage(0); // Reset pagination
-    navigate("/create-doctor"); 
-  }
-
   const handleDelete = async (doctorId) => {
     const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${doctorId}?`);
   
@@ -180,11 +175,7 @@ const DoctorsList = () => {
   return (
     <div className="doctors-list">
       <h1>Doctors List</h1>
-      <div className="create-doctor-container">
-        <button onClick={handleCreateDoctor} className="create-doctor-button">
-          Create Doctor
-        </button>
-      </div>
+
       <div className="search-filter-container">
         <input
           type="text"
@@ -310,4 +301,4 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default DoctorsApproveList;

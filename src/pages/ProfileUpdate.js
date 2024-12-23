@@ -35,6 +35,7 @@ const UpdateProfile = () => {
   const [bloodGroupOptions, setBloodGroupOptions] = useState([]);
   const [designationOptions, setDesignationOptions] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [isMobileValid, setIsMobileValid] = useState(true); // To track mobile validation status
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -57,7 +58,6 @@ const UpdateProfile = () => {
         }
 
         const data = await response.json();
-        console.log(data);
         setFormData({
           firstname: data.data.firstname,
           lastname: data.data.lastname,
@@ -125,6 +125,11 @@ const UpdateProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    // Trigger mobile validation on change
+    if (name === "mobile") {
+      checkMobileExists(value);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -161,9 +166,51 @@ const UpdateProfile = () => {
 
       setSuccess("Profile updated successfully!");
     } catch (err) {
-      setError(err.message);
+      setError(err.message); 
     }
   };
+
+  const checkMobileExists = async (mobileNumber) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found");
+      }
+      
+      const response = await fetch(`http://localhost:8000/api/v1/user/check-mobile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ mobile: mobileNumber,
+          userType: userType,
+          userId: userId
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to check mobile number");
+      }
+
+      const data = await response.json();
+      console.log(mobileNumber,data.data);
+      if (data.data === true) {
+        setError("Mobile number already exists");
+        setIsMobileValid(false);
+      } else {
+        setError(null);
+        setIsMobileValid(true);
+      }
+    } catch (err) {
+      setError("Error validating mobile number");
+      setIsMobileValid(false);
+    }
+  };
+
+  // useEffect(() => {
+  //     checkMobileExists(formData.mobile); // Refetch when filters change
+  //   }, [formData.mobile]);
 
   if (loading) {
     return <div className="profile-container">Loading profile...</div>;

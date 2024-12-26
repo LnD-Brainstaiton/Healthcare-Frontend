@@ -75,8 +75,16 @@ const DashboardAdmin = () => {
           <h2 className={styles.cardHeading}>Patients</h2>
           <p className={styles.cardText}>{stats.patientsCount}</p>
         </div>
-        <div className={styles.card} onClick={() => navigate("/appointments-list")}>
-          <h2 className={styles.cardHeading}>Appointments</h2>
+        <div className={styles.card} onClick={() => navigate("/doctors-approve-list")}>
+          <h2 className={styles.cardHeading}>Doctors Approval Pending</h2>
+          <p className={styles.cardText}>{stats.adminsCount}</p>
+        </div>
+        <div className={styles.card} onClick={() => navigate("/appointment-approve-list")}>
+          <h2 className={styles.cardHeading}>Appointments Approval Pending</h2>
+          <p className={styles.cardText}>{stats.adminsCount}</p>
+        </div>
+        <div className={styles.card} onClick={() => navigate("/appointment-reapprove-list")}>
+          <h2 className={styles.cardHeading}>Appointments Reschedule Pending</h2>
           <p className={styles.cardText}>{stats.adminsCount}</p>
         </div>
       </div>

@@ -7,8 +7,8 @@ const CreateDoctor = () => {
 //   const { userId } = useParams(); 
 //   const { userType } = useParams();  
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
     mobile: "",
     password: "",
@@ -81,13 +81,26 @@ const CreateDoctor = () => {
         throw new Error("No token found");
       }
 
-      const response = await fetch(`http://localhost:8000/api/v1/user/doctor/create`, {
+      const staticRequestBody = {
+        featureCode: "DOCTOR", // Replace with your actual feature code
+        operationType: "create", // Replace with your actual operation type
+        message: "", // Replace with your actual message
+        requestUrl: "/api/v1/doctor/create", // Replace with your actual request URL
+        requestId: null, // Replace with your actual request ID
+      };
+      
+      const requestBody = {
+        ...staticRequestBody,
+        data: JSON.stringify(formData), // This is the dynamic part
+      };
+
+      const response = await fetch(`http://localhost:8000/api/v1/user//admin/temp/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -150,8 +163,8 @@ const CreateDoctor = () => {
             <label className="update-field-label">First Name:</label>
             <input
               type="text"
-              name="firstName"
-              value={formData.firstName}
+              name="firstname"
+              value={formData.firstname}
               onChange={handleChange}
               className="update-input-field"
               placeholder="Enter first name"
@@ -162,8 +175,8 @@ const CreateDoctor = () => {
             <label className="update-field-label">Last Name:</label>
             <input
               type="text"
-              name="lastName"
-              value={formData.lastName}
+              name="lastname"
+              value={formData.lastname}
               onChange={handleChange}
               className="update-input-field"
               placeholder="Enter last name"

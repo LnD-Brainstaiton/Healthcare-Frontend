@@ -6,14 +6,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 const DoctorsApproveList = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryId, setSearchQueryId] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [department, setDepartment] = useState("");
-  const [gender, setGender] = useState("");
-  const [genderOptions, setGenderOptions] = useState([]);
-  const [designationOptions, setDesignationOptions] = useState([]);
-  const [departmentOptions, setDepartmentOptions] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
@@ -32,11 +25,7 @@ const DoctorsApproveList = () => {
         page,
         size: pageSize,
         requestId: searchQueryId,
-        firstnameLastname: searchQuery,
         featureCode: "DOCTOR",
-        designation,
-        department,
-        gender,
       }).toString();
 
       const response = await fetch(
@@ -51,10 +40,11 @@ const DoctorsApproveList = () => {
       );
 
       const data = await response.json();
-      
+      console.log(data);
       const doctorsData = data.data.content.map(item => ({
         ...JSON.parse(JSON.parse(item.data)), // Parse the data and spread it to include all the fields
         requestId: item.requestId, // Add the requestId from the original item
+        status: item.status,
       }));
       console.log("Fetched doctors data:", doctorsData); // Debug API response
 
@@ -71,44 +61,11 @@ const DoctorsApproveList = () => {
     }
   };
 
-  // Fetch dropdown options for designation, department, and gender
-  const fetchDropdownOptions = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
-
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      const [designationRes, departmentRes, genderRes] = await Promise.all([
-        fetch("http://localhost:8000/api/v1/user/designation-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/department-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/gender-options", { headers }),
-      ]);
-
-      const designationData = await designationRes.json();
-      const departmentData = await departmentRes.json();
-      const genderData = await genderRes.json();
-
-      console.log(genderData);
-
-      setDesignationOptions(designationData.data.designations || []);
-      setDepartmentOptions(departmentData.data.departments || []);
-      setGenderOptions(genderData.data.gender || []);
-    } catch (error) {
-      console.error("Error fetching dropdown options:", error);
-    }
-  };
+  
 
   // Fetch doctors data when filters or pagination change
   useEffect(() => {
-    fetchDropdownOptions(); // Fetch dropdown options once
+    // fetchDropdownOptions(); // Fetch dropdown options once
     fetchDoctors(currentPage); // Fetch initial data
   }, []);
 
@@ -118,7 +75,7 @@ const DoctorsApproveList = () => {
 
   useEffect(() => {
     fetchDoctors(0); // Refetch when filters change
-  }, [searchQueryId, searchQuery, designation, department, gender]);
+  }, [searchQueryId]);
 
   const handleSearch = () => {
     setCurrentPage(0); // Reset pagination
@@ -190,49 +147,6 @@ const DoctorsApproveList = () => {
           onChange={(e) => setSearchQueryId(e.target.value)}
           className="search-input"
         />
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        <select
-          value={designation}
-          onChange={(e) => setDesignation(e.target.value)}
-          className="filter-dropdown"
-        >
-          <option value="">Select Designation</option>
-          {designationOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <select
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          className="filter-dropdown"
-        >
-          <option value="">Select Department</option>
-          {departmentOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          className="filter-dropdown"
-        >
-          <option value="">Select Gender</option>
-          {genderOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
@@ -246,6 +160,7 @@ const DoctorsApproveList = () => {
             <th>Last Name</th>
             <th>Designation</th>
             <th>Department</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -258,12 +173,19 @@ const DoctorsApproveList = () => {
                 <td>{doctor.lastname}</td>
                 <td>{doctor.designation}</td>
                 <td>{doctor.department}</td>
+                <td>{doctor.status}</td>
                 <td>
+                  <button
+                    className="btn-update"
+                    onClick={() => handleUpdate(doctor.doctorId)}
+                  >
+                    Approve
+                  </button>
                   <button
                     className="btn-delete"
                     onClick={() => handleDelete(doctor.doctorId)}
                   >
-                    Approve
+                    Reject
                   </button>
                 </td>
               </tr>

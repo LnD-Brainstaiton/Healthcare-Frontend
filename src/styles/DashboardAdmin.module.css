@@ -24,7 +24,7 @@
   background-color: #afcfff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 90px;
+  padding: 100px;
   width: 450px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   text-align: center;
@@ -32,7 +32,7 @@
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.cardHover {
+.card:Hover {
   background-color: white;
   transform: translateY(-5px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);

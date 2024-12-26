@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { doc } from "prettier";
 
 
-const DoctorsApproveList = () => {
+const DoctorListPatient = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,16 +32,15 @@ const DoctorsApproveList = () => {
       const queryParams = new URLSearchParams({
         page,
         size: pageSize,
-        requestId: searchQueryId,
+        id: searchQueryId,
         firstnameLastname: searchQuery,
-        featureCode: "DOCTOR",
         designation,
         department,
         gender,
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/admin/tempdata?${queryParams}`,
+        `http://localhost:8000/api/v1/user/doctor/all?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -51,15 +51,10 @@ const DoctorsApproveList = () => {
       );
 
       const data = await response.json();
-      
-      const doctorsData = data.data.content.map(item => ({
-        ...JSON.parse(JSON.parse(item.data)), // Parse the data and spread it to include all the fields
-        requestId: item.requestId, // Add the requestId from the original item
-      }));
-      console.log("Fetched doctors data:", doctorsData); // Debug API response
+      console.log("Fetched doctors data:", data); // Debug API response
 
       if (data.responseCode === "S100000") {
-        setDoctors(doctorsData);
+        setDoctors(data.data.data);
         setTotalPages(data.data.totalPages);
       } else {
         console.error("Error fetching doctors:", data.responseMessage);
@@ -125,45 +120,12 @@ const DoctorsApproveList = () => {
     fetchDoctors(0); // Refetch with new filters
   };
 
-  const handleUpdate = (userId) => {
-    navigate(`/update-profile/${userId}/doctor`);
-  };
-
-  const handleDelete = async (doctorId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${doctorId}?`);
-  
-    if (userConfirmed) {
-      try {
-        const token = localStorage.getItem("token");
-  
-        if (!token) {
-          alert("Authentication token not found. Please log in.");
-          return;
-        }
-  
-        const response = await fetch(`http://localhost:8000/api/v1/user/doctor/${doctorId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const data = await response.json();
-  
-        if (data.responseCode === "S100000") {
-          alert("Doctor deleted successfully!");
-          fetchDoctors(currentPage); // Refresh the list after deletion
-        } else {
-          alert(`Failed to delete doctor: ${data.responseMessage}`);
-        }
-      } catch (error) {
-        console.error("Error deleting doctor:", error);
-        alert("An error occurred while trying to delete the doctor.");
-      }
-    } else {
-      alert("Delete action canceled.");
-    }
+  const makeAppointment = (doctor) => {
+    console.log(doctor);
+    // Pass the entire doctor object through navigation state
+    navigate(`/make-appointment/${doctor.doctorId}`, { 
+      state: { doctorInfo: doctor }
+    });
   };
   
   const goToNextPage = () => {
@@ -180,8 +142,7 @@ const DoctorsApproveList = () => {
 
   return (
     <div className="doctors-list">
-      <h1>Pending Doctors List</h1>
-
+      <h1>Doctors List</h1>
       <div className="search-filter-container">
         <input
           type="text"
@@ -241,11 +202,10 @@ const DoctorsApproveList = () => {
       <table className="doctors-table">
         <thead>
           <tr>
-          <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Name</th>
             <th>Designation</th>
             <th>Department</th>
+            <th>Fee</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -253,17 +213,16 @@ const DoctorsApproveList = () => {
           {doctors.length > 0 ? (
             doctors.map((doctor, index) => (
               <tr key={index}>
-                <td>{doctor.requestId}</td>
-                <td>{doctor.firstname}</td>
-                <td>{doctor.lastname}</td>
+                <td>{doctor.firstname} {doctor.lastname}</td>
                 <td>{doctor.designation}</td>
                 <td>{doctor.department}</td>
+                <td>{doctor.fee}</td>
                 <td>
                   <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(doctor.doctorId)}
+                    className="btn-update"
+                    onClick={() => makeAppointment(doctor)}
                   >
-                    Approve
+                    Make Appointment
                   </button>
                 </td>
               </tr>
@@ -299,4 +258,4 @@ const DoctorsApproveList = () => {
   );
 };
 
-export default DoctorsApproveList;
+export default DoctorListPatient;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../styles/AdminList.css";
+import styles from "../styles/AdminsList.module.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-
 
 const AdminsList = () => {
   const navigate = useNavigate();
@@ -12,7 +11,6 @@ const AdminsList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 10;
 
-  // Fetch admins data from the API
   const fetchAdmins = async (page = 0) => {
     try {
       const token = localStorage.getItem("token");
@@ -41,8 +39,6 @@ const AdminsList = () => {
       );
 
       const data = await response.json();
-      console.log("Fetched admins data:", data); // Debug API response
-
       if (data.responseCode === "S100000") {
         setAdmins(data.data.data);
         setTotalPages(data.data.totalPages);
@@ -52,28 +48,17 @@ const AdminsList = () => {
       }
     } catch (error) {
       console.error("Error fetching admins:", error);
-      setAdmins([]); // Clear table if an error occurs
+      setAdmins([]);
     }
   };
 
-  
-
-  // Fetch admins data when filters or pagination change
   useEffect(() => {
-    fetchAdmins(currentPage); // Fetch initial data
-  }, []);
-
-  useEffect(() => {
-    fetchAdmins(currentPage); // Refetch when the page changes
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchAdmins(0); // Refetch when filters change
-  }, [searchQuery, searchQueryId]);
+    fetchAdmins(currentPage);
+  }, [currentPage, searchQuery, searchQueryId]);
 
   const handleSearch = () => {
-    setCurrentPage(0); // Reset pagination
-    fetchAdmins(0); // Refetch with new filters
+    setCurrentPage(0);
+    fetchAdmins(0);
   };
 
   const handleUpdate = (userId) => {
@@ -81,39 +66,40 @@ const AdminsList = () => {
   };
 
   const handleDelete = async (adminId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${adminId}?`);
-  
+    const userConfirmed = window.confirm(`Are you sure you want to delete the admin with ID: ${adminId}?`);
+
     if (userConfirmed) {
       try {
         const token = localStorage.getItem("token");
-  
+
         if (!token) {
           alert("Authentication token not found. Please log in.");
           return;
         }
-  
-        const response = await fetch(`http://localhost:8000/api/v1/user/admin/${adminId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
+
+        const response = await fetch(
+          `http://localhost:8000/api/v1/user/admin/${adminId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         const data = await response.json();
-  
+
         if (data.responseCode === "S100000") {
-          alert("Doctor deleted successfully!");
-          fetchAdmins(currentPage); // Refresh the list after deletion
+          alert("Admin deleted successfully!");
+          fetchAdmins(currentPage);
         } else {
-          alert(`Failed to delete doctor: ${data.responseMessage}`);
+          alert(`Failed to delete admin: ${data.responseMessage}`);
         }
       } catch (error) {
-        console.error("Error deleting doctor:", error);
-        alert("An error occurred while trying to delete the doctor.");
+        console.error("Error deleting admin:", error);
+        alert("An error occurred while trying to delete the admin.");
       }
-    } else {
-      alert("Delete action canceled.");
     }
   };
 
@@ -130,31 +116,30 @@ const AdminsList = () => {
   };
 
   return (
-    <div className="admins-list">
+    <div className={styles.adminsList}>
       <h1>Admins List</h1>
 
-      <div className="search-filter-container">
+      <div className={styles.searchFilterContainer}>
         <input
           type="text"
           placeholder="Search by id..."
           value={searchQueryId}
           onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
+          className={styles.searchInput}
         />
         <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
+          className={styles.searchInput}
         />
-        
-        <button onClick={handleSearch} className="search-button">
+        <button onClick={handleSearch} className={styles.searchButton}>
           Search
         </button>
       </div>
 
-      <table className="admins-table">
+      <table className={styles.adminsTable}>
         <thead>
           <tr>
             <th>Id</th>
@@ -176,13 +161,13 @@ const AdminsList = () => {
                 <td>{admin.mobile}</td>
                 <td>
                   <button
-                    className="btn-update"
+                    className={styles.btnUpdate}
                     onClick={() => handleUpdate(admin.adminId)}
                   >
                     Update
                   </button>
                   <button
-                    className="btn-delete"
+                    className={styles.btnDelete}
                     onClick={() => handleDelete(admin.adminId)}
                   >
                     Delete
@@ -198,21 +183,21 @@ const AdminsList = () => {
         </tbody>
       </table>
 
-      <div className="pagination-controls">
+      <div className={styles.paginationControls}>
         <button
           onClick={goToPreviousPage}
           disabled={currentPage === 0}
-          className="pagination-button"
+          className={styles.paginationButton}
         >
           Previous
         </button>
-        <span className="pagination-info">
+        <span className={styles.paginationInfo}>
           Page {currentPage + 1} of {totalPages}
         </span>
         <button
           onClick={goToNextPage}
           disabled={currentPage === totalPages - 1}
-          className="pagination-button"
+          className={styles.paginationButton}
         >
           Next
         </button>

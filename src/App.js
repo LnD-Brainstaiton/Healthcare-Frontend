@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // Corrected import
+import axios from "axios";
 import Register from "./components/RegisterComponent";
 import HeaderComponent from "./components/HeaderComponent";
 import FooterComponent from "./components/FooterComponent";
@@ -14,21 +16,37 @@ import PatientsList from "./pages/PatientList";
 import AdminsList from "./pages/AdminList";
 import Profile from "./pages/Profile";
 import UpdateProfile from "./pages/ProfileUpdate";
-import "../src/index.css"
+import "../src/index.css";
 import AppointmentsList from "./pages/AppointmentList";
 import DoctorsApproveList from "./pages/DoctorApproveList";
 import AppointmentApproveList from "./pages/AppointmentApproveList";
 import AppointmentReapproveList from "./pages/AppointmentReapproveList";
 import CreateDoctor from "./pages/CreateDoctor";
+import DoctorListPatient from "./pages/DoctorListPatient";
+import MakeAppointment from "./pages/MakeAppointment";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Track the sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    setToken(storedToken);
-  }, [token]);
+    if (storedToken && isTokenExpired(storedToken)) {
+      handleLogout();
+    } else {
+      setToken(storedToken);
+    }
+  }, []);
+
+  const isTokenExpired = (token) => {
+    try {
+      const decoded = jwtDecode(token); // Updated to use jwtDecode
+      return decoded.exp * 1000 < Date.now(); // Check if token expiry is in the past
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return true; // Treat invalid token as expired
+    }
+  };
 
   const handleLogin = (newToken) => {
     localStorage.setItem("token", newToken);
@@ -43,7 +61,7 @@ function App() {
   return (
     <Router>
       <HeaderComponent />
-      <div className={`${isSidebarOpen ? 'sidebar-open' : ''}`}> {/* Add sidebar-open class */}
+      <div className={`${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <main className="content-container">
           {token && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
           <Routes>
@@ -52,36 +70,24 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
                   <DashboardRouter />
                 </ProtectedRoute>
               }
             />
             <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
-            <Route
-              path="/doctors-list"
-              element={
-                <ProtectedRoute>
-                  <DoctorsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admins-list"
-              element={
-                <ProtectedRoute>
-                  <AdminsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/create-doctor" element={<ProtectedRoute><CreateDoctor/></ProtectedRoute>}/>
-            <Route path="/patients-list" element={<ProtectedRoute><PatientsList /></ProtectedRoute>}/>
-            <Route path="/appointments-list" element={<ProtectedRoute><AppointmentsList/></ProtectedRoute>}/>
-            <Route path="/doctors-approve-list" element={<ProtectedRoute><DoctorsApproveList/></ProtectedRoute>}/>
-            <Route path="/appointment-approve-list" element={<ProtectedRoute><AppointmentApproveList/></ProtectedRoute>}/>
-            <Route path="/appointment-reapprove-list" element={<ProtectedRoute><AppointmentReapproveList/></ProtectedRoute>}/>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/update-profile/:userId/:userType" element={<UpdateProfile/>} />
+            <Route path="/doctors-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DoctorsList /></ProtectedRoute>}/>
+            <Route path="/make-appointment/:doctorId" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><MakeAppointment/></ProtectedRoute>}/>
+            <Route path="/doctor-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DoctorListPatient/></ProtectedRoute>}/>
+            <Route path="/admins-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AdminsList /></ProtectedRoute>}/>
+            <Route path="/create-doctor" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><CreateDoctor/></ProtectedRoute>}/>
+            <Route path="/patients-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><PatientsList /></ProtectedRoute>}/>
+            <Route path="/appointments-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentsList/></ProtectedRoute>}/>
+            <Route path="/doctors-approve-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DoctorsApproveList/></ProtectedRoute>}/>
+            <Route path="/appointment-approve-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentApproveList/></ProtectedRoute>}/>
+            <Route path="/appointment-reapprove-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentReapproveList/></ProtectedRoute>}/>
+            <Route path="/profile" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><Profile /></ProtectedRoute>} />
+            <Route path="/update-profile/:userId/:userType" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><UpdateProfile/></ProtectedRoute>} />
           </Routes>
         </main>
       </div>
@@ -91,16 +97,13 @@ function App() {
 };
 
 const DashboardRouter = () => {
-  const userType = localStorage.getItem('userType');
-  
-  // Redirect to the appropriate dashboard
-  if (userType === 'ADMIN')  {
-    return <DashboardAdmin />
+  const userType = localStorage.getItem("userType");
+  if (userType === "ADMIN") {
+    return <DashboardAdmin />;
+  } else if (userType === "PATIENT") {
+    return <DashboardPatient />;
   }
-  else if (userType === 'PATIENT') {
-    return <DashboardPatient />
-  }
-  return null; // Render nothing; just handle redirection
+  return null;
 };
 
 export default App;

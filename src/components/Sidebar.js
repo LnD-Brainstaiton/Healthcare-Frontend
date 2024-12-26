@@ -72,9 +72,6 @@ const Sidebar = ({ setIsSidebarOpen }) => {
           {userType === "doctor" && (
             <>
               <li>
-                <Link to="/doctors-dashboard">Doctor Dashboard</Link>
-              </li>
-              <li>
                 <Link to="/appointments-list">Appointment History</Link>
               </li>
               <li>
@@ -86,11 +83,12 @@ const Sidebar = ({ setIsSidebarOpen }) => {
           {userType === "patient" && (
             <>
               <li>
-                <Link to="/appointments-list">My Prescription</Link>
+                <Link to="/doctor-list">Doctors</Link>
               </li>
               <li>
-                <Link to="/appointments-list">Make Appointment</Link>
+                <Link to="/appointments-list">My Prescription</Link>
               </li>
+
               <li>
                 <Link to="/appointments-list">Appointment History</Link>
               </li>

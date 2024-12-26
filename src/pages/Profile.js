@@ -31,7 +31,6 @@ const Profile = () => {
           return;
         }
         const userId = getUserIdFromToken(); 
-        console.log(userType + " " + userId); // Extract user ID from token
         const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
           method: "GET",
           headers: {
@@ -40,11 +39,11 @@ const Profile = () => {
           },
         }); // Use the user ID in the path
 
+        console.log(userId);
         if (!response.ok) {
           throw new Error("Failed to fetch profile information");
         }
         const data = await response.json();
-        console.log(data);
         setUser(data.data);
       } catch (err) {
         setError(err.message);

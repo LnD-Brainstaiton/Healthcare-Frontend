@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "../styles/PatientList.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-
+import { useNavigate } from "react-router-dom";
 
 const AppointmentsList = () => {
-  const navigate = useNavigate();
-  const [patients, setPatients] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryId, setSearchQueryId] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedAppointment, setSelectedAppointment] = useState(null); // Popup state
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup visibility state
   const pageSize = 10;
 
-  // Fetch patients data from the API
-  const fetchPatients = async (page = 0) => {
+  // Fetch appointments data from the API
+  const fetchAppointments = async (page = 0) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -30,7 +30,7 @@ const AppointmentsList = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/patient/all?${queryParams}`,
+        `http://localhost:8000/api/v1/appointment/list?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -41,80 +41,37 @@ const AppointmentsList = () => {
       );
 
       const data = await response.json();
-      console.log("Fetched patients data:", data); // Debug API response
-
+      console.log(data);
       if (data.responseCode === "S100000") {
-        setPatients(data.data.data);
+        setAppointments(data.data.data);
         setTotalPages(data.data.totalPages);
       } else {
-        console.error("Error fetching patients:", data.responseMessage);
-        setPatients([]); // Clear table if an error occurs
+        console.error("Error fetching appointments:", data.responseMessage);
+        setAppointments([]);
       }
     } catch (error) {
-      console.error("Error fetching patients:", error);
-      setPatients([]); // Clear table if an error occurs
+      console.error("Error fetching appointments:", error);
+      setAppointments([]);
     }
   };
 
-  
-
-  // Fetch patients data when filters or pagination change
   useEffect(() => {
-    fetchPatients(currentPage); // Fetch initial data
-  }, []);
-
-  useEffect(() => {
-    fetchPatients(currentPage); // Refetch when the page changes
-  }, [currentPage]);
-
-  useEffect(() => {
-    fetchPatients(0); // Refetch when filters change
-  }, [searchQuery, searchQueryId]);
+    fetchAppointments(currentPage);
+  }, [currentPage, searchQuery, searchQueryId]);
 
   const handleSearch = () => {
-    setCurrentPage(0); // Reset pagination
-    fetchPatients(0); // Refetch with new filters
+    setCurrentPage(0);
+    fetchAppointments(0);
   };
 
-  const handleUpdate = (userId) => {
-    navigate(`/update-profile/${userId}/patient`);
+  const handleView = (appointment) => {
+    setSelectedAppointment(appointment); // Set the selected appointment
+    setIsPopupOpen(true); // Open the popup
   };
 
-  const handleDelete = async (patientId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${patientId}?`);
-  
-    if (userConfirmed) {
-      try {
-        const token = localStorage.getItem("token");
-  
-        if (!token) {
-          alert("Authentication token not found. Please log in.");
-          return;
-        }
-  
-        const response = await fetch(`http://localhost:8000/api/v1/user/patient/${patientId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const data = await response.json();
-  
-        if (data.responseCode === "S100000") {
-          alert("Doctor deleted successfully!");
-          fetchPatients(currentPage); // Refresh the list after deletion
-        } else {
-          alert(`Failed to delete doctor: ${data.responseMessage}`);
-        }
-      } catch (error) {
-        console.error("Error deleting doctor:", error);
-        alert("An error occurred while trying to delete the doctor.");
-      }
-    } else {
-      alert("Delete action canceled.");
-    }
+  const closePopup = () => {
+    setSelectedAppointment(null); // Clear selected appointment
+    setIsPopupOpen(false); // Close the popup
   };
 
   const goToNextPage = () => {
@@ -148,7 +105,6 @@ const AppointmentsList = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
@@ -161,42 +117,36 @@ const AppointmentsList = () => {
             <th>Appointment Date</th>
             <th>Appointment Time</th>
             <th>Patient Name</th>
-            <th>Patiuent Age</th>
+            <th>Patient Age</th>
             <th>Patient Contact</th>
             <th>Id</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {patients.length > 0 ? (
-            patients.map((patient, index) => (
+          {appointments.length > 0 ? (
+            appointments.map((appointment, index) => (
               <tr key={index}>
-                <td>{patient.patientId}</td>
-                <td>{patient.firstname}</td>
-                <td>{patient.lastname}</td>
-                <td>{patient.email}</td>
-                <td>{patient.mobile}</td>
-                <td>{patient.bloodGroup}</td>
-                <td>{patient.age}</td>
+                <td>{appointment.appointmentNo}</td>
+                <td>{appointment.appointmentDate}</td>
+                <td>{appointment.appointmentTime}</td>
+                <td>{appointment.patientName}</td>
+                <td>{appointment.patientAge}</td>
+                <td>{appointment.patientContactNo}</td>
+                <td>{appointment.id}</td>
                 <td>
                   <button
-                    className="btn-update"
-                    onClick={() => handleUpdate(patient.patientId)}
+                    className="btn-view"
+                    onClick={() => handleView(appointment)}
                   >
-                    Update
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(patient.patientId)}
-                  >
-                    Delete
+                    View
                   </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">No patients found.</td>
+              <td colSpan="8">No appointments found.</td>
             </tr>
           )}
         </tbody>
@@ -221,6 +171,21 @@ const AppointmentsList = () => {
           Next
         </button>
       </div>
+
+      {isPopupOpen && selectedAppointment && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Appointment Details</h2>
+            <p><strong>Appointment No:</strong> {selectedAppointment.appointmentNo}</p>
+            <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
+            <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
+            <p><strong>Patient Name:</strong> {selectedAppointment.patientName}</p>
+            <p><strong>Patient Age:</strong> {selectedAppointment.patientAge}</p>
+            <p><strong>Patient Contact:</strong> {selectedAppointment.patientContactNo}</p>
+            <button onClick={closePopup} className="popup-close-button">Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

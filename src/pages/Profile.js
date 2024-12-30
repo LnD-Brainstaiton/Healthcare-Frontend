@@ -20,6 +20,8 @@ const Profile = () => {
     return userId; // Assuming the token contains the user ID in the 'id' field
   };
 
+  const userId = getUserIdFromToken(); 
+
   // Fetch profile information from API
   useEffect(() => {
     const fetchProfile = async () => {
@@ -97,7 +99,10 @@ const Profile = () => {
             <span className="field-label">Phone:</span>
             <span className="field-value">{user.mobile}</span>
           </div>
-
+          <div className="profile-field">
+            <span className="field-label">User Id:</span>
+            <span className="field-value">{userId}</span>
+          </div>
           {/* Conditionally render fields based on userType */}
           {userType === "patient" && (
             <>

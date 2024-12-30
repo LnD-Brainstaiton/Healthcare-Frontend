@@ -27,6 +27,8 @@ const MakeAppointment = () => {
 
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const [availableTimes, setAvailableTimes] = useState([]);
+    const [isLoadingTimes, setIsLoadingTimes] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -34,6 +36,60 @@ const MakeAppointment = () => {
             ...prev,
             [name]: value,
         }));
+
+        // Fetch available times when a date is selected
+        if (name === "appointmentDate") {
+            fetchAvailableTimes(value);
+        }
+    };
+
+    const fetchAvailableTimes = async (selectedDate) => {
+        // if (!selectedDate) {
+        //     setAvailableTimes([]);
+        //     return;
+        // }
+
+        // setIsLoadingTimes(true);
+        // setError(null);
+
+        // try {
+        //     const token = localStorage.getItem("token");
+        //     if (!token) throw new Error("No token found");
+
+        //     const response = await fetch(
+        //         `http://localhost:8000/api/v1/appointments/available-times?doctorId=${doctorId}&date=${selectedDate}`,
+        //         {
+        //             method: "GET",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         }
+        //     );
+
+        //     const data = await response.json();
+
+        //     if (data.responseCode === "S100000") {
+        //         setAvailableTimes(data.availableTimes || []);
+        //     } else {
+        //         setAvailableTimes([]);
+        //         setError(data.responseMessage || "Failed to fetch available times");
+        //     }
+        // } catch (err) {
+        //     setAvailableTimes([]);
+        //     setError(err.message);
+        // } finally {
+        //     setIsLoadingTimes(false);
+        // }
+
+        setAvailableTimes([
+            "09:00 AM",
+            "10:00 AM",
+            "11:00 AM",
+            "01:00 PM",
+            "03:00 PM",
+            "05:00 PM",
+        ]);
     };
 
     const handleSubmit = async (e) => {
@@ -58,15 +114,28 @@ const MakeAppointment = () => {
                 },
             };
 
+            const staticRequestBody = {
+                featureCode: "DOCTOR", // Replace with your actual feature code
+                operationType: "create", // Replace with your actual operation type
+                message: "", // Replace with your actual message
+                requestUrl: "/api/v1/doctor/create", // Replace with your actual request URL
+                requestId: null, // Replace with your actual request ID
+              };
+              
+              const requestBody = {
+                ...staticRequestBody,
+                data: JSON.stringify(appointmentData), // This is the dynamic part
+              };
+
             const response = await fetch(
-                "http://localhost:8000/api/v1/appointments/create",
+                "http://localhost:8000/api/v1/user//admin/temp/request",
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify(appointmentData),
+                    body: JSON.stringify(requestBody),
                 }
             );
 
@@ -144,14 +213,25 @@ const MakeAppointment = () => {
                             </div>
                             <div className={styles.formField}>
                                 <label className={styles.fieldLabel}>Time:</label>
-                                <input
-                                    type="time"
+                                <select
                                     name="appointmentTime"
                                     value={formData.appointmentTime}
                                     onChange={handleChange}
                                     className={styles.inputField}
+                                    disabled={!availableTimes.length}
                                     required
-                                />
+                                >
+                                    <option value="">Select a time</option>
+                                    {isLoadingTimes ? (
+                                        <option>Loading times...</option>
+                                    ) : (
+                                        availableTimes.map((time) => (
+                                            <option key={time} value={time}>
+                                                {time}
+                                            </option>
+                                        ))
+                                    )}
+                                </select>
                             </div>
                         </div>
 

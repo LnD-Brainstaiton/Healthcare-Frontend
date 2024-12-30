@@ -24,6 +24,7 @@ import AppointmentReapproveList from "./pages/AppointmentReapproveList";
 import CreateDoctor from "./pages/CreateDoctor";
 import DoctorListPatient from "./pages/DoctorListPatient";
 import MakeAppointment from "./pages/MakeAppointment";
+import DashboardDoctor from "./pages/DashboardDoctor";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -67,14 +68,7 @@ function App() {
           <Routes>
             <Route path="/register" element={<Register />} />
             <Route path="/" element={<Login onLogin={handleLogin} />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <DashboardRouter />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/dashboard" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DashboardRouter /></ProtectedRoute>}/>
             <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
             <Route path="/doctors-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DoctorsList /></ProtectedRoute>}/>
             <Route path="/make-appointment/:doctorId" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><MakeAppointment/></ProtectedRoute>}/>
@@ -103,7 +97,7 @@ const DashboardRouter = () => {
   } else if (userType === "PATIENT") {
     return <DashboardPatient />;
   }
-  return null;
+  return <DashboardDoctor />;
 };
 
 export default App;

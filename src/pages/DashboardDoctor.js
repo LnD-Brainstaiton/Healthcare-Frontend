@@ -5,7 +5,7 @@ import logo from "../assets/Logo.png";
 
 const DashboardDoctor = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [stats, setStats] = useState({ docsCount: 0, patientsCount: 0, adminsCount: 0, docsPendingCount: 0, appointmentsPendingCount: 0, adminsPendingCount: 0 });
+  const [stats, setStats] = useState({ upcomingAppointmentCount: 0 });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +35,7 @@ const DashboardDoctor = () => {
           },
         });
         const data = await response.json();
+        console.log(data);
         if (data.responseCode === "S100000") {
           return data.data.count || 0;
         } else {
@@ -43,16 +44,33 @@ const DashboardDoctor = () => {
         }
       };
 
-      const [docsCount, patientsCount, adminsCount, docsPendingCount, appointmentsPendingCount, adminsPendingCount] = await Promise.all([
-        fetchCounts("http://localhost:8000/api/v1/user/doctor/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/patient/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/admin/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-doctor-count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-appointment-count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-admin-count"),
+      const getUserIdFromToken = () => {
+        const token = localStorage.getItem("token"); // Replace with your token storage method
+        if (!token) {
+          throw new Error("No token found");
+        }
+        return localStorage.getItem("userId"); // Assuming the userId is stored separately
+      };
+
+      const now = new Date();
+      const currentDate = now.toISOString().split("T")[0]; // Get the date in "YYYY-MM-DD" format
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`; // Get the time in "HH:mm" format
+      const userId = getUserIdFromToken();
+
+      let queryParams = {
+        doctorId: userId,
+        date: currentDate, // Assuming the API accepts a "date" parameter
+        time: currentTime, // Assuming the API accepts a "time" parameter
+      };
+  
+      const queryString = new URLSearchParams(queryParams).toString();
+
+
+      const [upcomingAppointmentCount] = await Promise.all([
+        fetchCounts(`http://localhost:8000/api/v1/appointment/doctor/upcoming/appointment/count?${queryString}`),
       ]);
 
-      setStats({ docsCount, patientsCount, adminsCount, docsPendingCount, appointmentsPendingCount, adminsPendingCount });
+      setStats({ upcomingAppointmentCount});
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);
     }
@@ -66,9 +84,9 @@ const DashboardDoctor = () => {
     <div className={styles.dashboardAdmin}>
       <h1 className={styles.heading}>Doctor Dashboard</h1>
       <div className={styles.cardContainer}>
-        <div className={styles.card} onClick={() => navigate("/admins-list")}>
+        <div className={styles.card} onClick={() => navigate("/upcoming-appointments-list")}>
           <h2 className={styles.cardHeading}>Upcoming Appointments</h2>
-          <p className={styles.cardText}>{stats.adminsCount}</p>
+          <p className={styles.cardText}>{stats.upcomingAppointmentCount}</p>
         </div>
       </div>
     </div>

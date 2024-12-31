@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/PatientList.css";
 import { useNavigate } from "react-router-dom";
 
-const AppointmentsList = () => {
+const UpcomingAppointmentsList = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchDate, setSearchDate] = useState("");
 const [searchTime, setSearchTime] = useState("");
@@ -33,14 +33,19 @@ const [searchTime, setSearchTime] = useState("");
         }
         return localStorage.getItem("userId"); // Assuming the userId is stored separately
       };
+
+      // Get the current date and time
+    const now = new Date();
+    const currentDate = now.toISOString().split("T")[0]; // Get the date in "YYYY-MM-DD" format
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`; // Get the time in "HH:mm" format
   
       const userId = getUserIdFromToken();
       let queryParams = {
         page,
         size: pageSize,
         appointmentId: searchQueryId,
-        date: searchDate, // Assuming the API accepts a "date" parameter
-        time: searchTime, // Assuming the API accepts a "time" parameter
+        date: currentDate, // Assuming the API accepts a "date" parameter
+        time: currentTime, // Assuming the API accepts a "time" parameter
       };
   
       // Adjust queryParams based on userType
@@ -124,9 +129,9 @@ const [searchTime, setSearchTime] = useState("");
 
   return (
     <div className="patients-list">
-      <h1>Appointments</h1>
+      <h1> Upcoming Appointments</h1>
 
-      <div className="search-filter-container">
+      {/* <div className="search-filter-container">
         <input
           type="text"
           placeholder="Search by id..."
@@ -151,7 +156,7 @@ const [searchTime, setSearchTime] = useState("");
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
-      </div>
+      </div> */}
 
       <table className="patients-table">
         <thead>
@@ -247,4 +252,4 @@ const [searchTime, setSearchTime] = useState("");
   );
 };
 
-export default AppointmentsList;
+export default UpcomingAppointmentsList;

@@ -29,6 +29,7 @@ import MyPrescriptions from "./pages/MyPrescription";
 import AppointmentReschedule from "./pages/AppointmentReschedule";
 import InstructionPage from "./pages/InstructionPage";
 import PaymentPage from "./pages/Payment";
+import UpcomingAppointmentsList from "./pages/UpcomingAppointments";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -81,6 +82,7 @@ function App() {
             <Route path="/create-doctor" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><CreateDoctor/></ProtectedRoute>}/>
             <Route path="/patients-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><PatientsList /></ProtectedRoute>}/>
             <Route path="/appointments-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentsList/></ProtectedRoute>}/>
+            <Route path="/upcoming-appointments-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><UpcomingAppointmentsList/></ProtectedRoute>}/>
             <Route path="/doctors-approve-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><DoctorsApproveList/></ProtectedRoute>}/>
             <Route path="/appointment-approve-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentApproveList/></ProtectedRoute>}/>
             <Route path="/appointment-reapprove-list" element={<ProtectedRoute token={token} isTokenExpired={isTokenExpired}><AppointmentReapproveList/></ProtectedRoute>}/>

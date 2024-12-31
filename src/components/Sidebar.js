@@ -75,7 +75,7 @@ const Sidebar = ({ setIsSidebarOpen }) => {
                 <Link to="/appointments-list">Appointment History</Link>
               </li>
               <li>
-                <Link to="/appointments-list">Appointment Reschedule Request</Link>
+                <Link to="/appointment-reschedule">Appointment Reschedule Request</Link>
               </li>
             </>
           )}
@@ -86,7 +86,7 @@ const Sidebar = ({ setIsSidebarOpen }) => {
                 <Link to="/doctor-list">Doctors</Link>
               </li>
               <li>
-                <Link to="/appointments-list">My Prescription</Link>
+                <Link to="/patient-prescriptions">My Prescription</Link>
               </li>
 
               <li>

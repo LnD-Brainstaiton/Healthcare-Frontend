@@ -132,7 +132,7 @@ const AppointmentReapproveList = () => {
   return (
     <div className="patients-list">
       <h1>Appointment Reschedule Approve</h1>
-
+{/* 
       <div className="search-filter-container">
         <input
           type="text"
@@ -220,7 +220,7 @@ const AppointmentReapproveList = () => {
         >
           Next
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

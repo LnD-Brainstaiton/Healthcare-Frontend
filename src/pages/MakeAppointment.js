@@ -144,7 +144,7 @@ const MakeAppointment = () => {
             if (data.responseCode === "S100000") {
                 setSuccess("Appointment booked successfully!");
                 setTimeout(() => {
-                    navigate("/appointments");
+                    navigate("/instruction");
                 }, 2000);
             } else {
                 setError(data.responseMessage || "Failed to book appointment");

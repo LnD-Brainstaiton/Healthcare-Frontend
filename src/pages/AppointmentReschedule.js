@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../styles/PatientList.css";
 import { useNavigate } from "react-router-dom";
 
-const AppointmentsList = () => {
+const AppointmentReschedule = () => {
   const [appointments, setAppointments] = useState([]);
-  const [userType, setUserType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchQueryId, setSearchQueryId] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -27,7 +26,7 @@ const AppointmentsList = () => {
         page,
         size: pageSize,
         firstnameLastname: searchQuery,
-        appointmentId: searchQueryId,
+        id: searchQueryId,
       }).toString();
 
       const response = await fetch(
@@ -60,14 +59,6 @@ const AppointmentsList = () => {
     fetchAppointments(currentPage);
   }, [currentPage, searchQuery, searchQueryId]);
 
-  useEffect(() => {
-      // Retrieve userType from localStorage (or wherever you store the userType)
-      const storedUserType = localStorage.getItem("userType");
-      if (storedUserType) {
-        setUserType(storedUserType.toLowerCase());
-      }
-    }, []);
-
   const handleSearch = () => {
     setCurrentPage(0);
     fetchAppointments(0);
@@ -97,8 +88,8 @@ const AppointmentsList = () => {
 
   return (
     <div className="patients-list">
-      <h1>Appointments</h1>
-
+      <h1>Appointments Reschedule</h1>
+{/* 
       <div className="search-filter-container">
         <input
           type="text"
@@ -107,15 +98,13 @@ const AppointmentsList = () => {
           onChange={(e) => setSearchQueryId(e.target.value)}
           className="search-input"
         />
-        {userType === "admin" && (
-          <input
-            type="text"
-            placeholder="Search by name..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-        )}
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
@@ -128,6 +117,9 @@ const AppointmentsList = () => {
             <th>Appointment Date</th>
             <th>Appointment Time</th>
             <th>Patient Name</th>
+            <th>Patient Age</th>
+            <th>Patient Contact</th>
+            <th>Id</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -139,31 +131,17 @@ const AppointmentsList = () => {
                 <td>{appointment.appointmentDate}</td>
                 <td>{appointment.appointmentTime}</td>
                 <td>{appointment.patientName}</td>
+                <td>{appointment.patientAge}</td>
+                <td>{appointment.patientContactNo}</td>
+                <td>{appointment.id}</td>
                 <td>
                   <button
-                    className="view-icon-button"
+                    className="btn-view"
                     onClick={() => handleView(appointment)}
-                    title="View Details"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-eye"
-                    >
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
+                    View
                   </button>
                 </td>
-
-
               </tr>
             ))
           ) : (
@@ -195,24 +173,21 @@ const AppointmentsList = () => {
       </div>
 
       {isPopupOpen && selectedAppointment && (
-  <div className="popup-overlay">
-    <div className="popup-content">
-      <button onClick={closePopup} className="popup-close-icon">×</button>
-      <h2>Appointment Details</h2>
-      <p><strong>Appointment No:</strong> {selectedAppointment.appointmentNo}</p>
-      <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
-      <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
-      <p><strong>Patient Name:</strong> {selectedAppointment.patientName}</p>
-      <p><strong>Patient Age:</strong> {selectedAppointment.patientAge}</p>
-      <p><strong>Patient Contact:</strong> {selectedAppointment.patientContactNo}</p>
-      <p><strong>Appointment Fee:</strong> {selectedAppointment.fee}</p>
-      <p><strong>Appointment Reason:</strong> {selectedAppointment.reason}</p>
-    </div>
-  </div>
-)}
-
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Appointment Details</h2>
+            <p><strong>Appointment No:</strong> {selectedAppointment.appointmentNo}</p>
+            <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
+            <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
+            <p><strong>Patient Name:</strong> {selectedAppointment.patientName}</p>
+            <p><strong>Patient Age:</strong> {selectedAppointment.patientAge}</p>
+            <p><strong>Patient Contact:</strong> {selectedAppointment.patientContactNo}</p>
+            <button onClick={closePopup} className="popup-close-button">Close</button>
+          </div>
+        </div>
+      )} */}
     </div>
   );
 };
 
-export default AppointmentsList;
+export default AppointmentReschedule;

@@ -144,13 +144,13 @@ const DoctorListPatient = () => {
     <div className="doctors-list">
       <h1>Doctors List</h1>
       <div className="search-filter-container">
-        <input
+        {/* <input
           type="text"
           placeholder="Search by id..."
           value={searchQueryId}
           onChange={(e) => setSearchQueryId(e.target.value)}
           className="search-input"
-        />
+        /> */}
         <input
           type="text"
           placeholder="Search by name..."

@@ -26,6 +26,11 @@ const DashboardPatient = () => {
       <h1>Health Care</h1>
       <p>Your one-stop platform for personalized healthcare management.</p>
 
+      <div className="feature-booking"  onClick={() => navigate("/doctor-list")}>
+          <div className="feature-info">
+            <h2>Find Doctor & Book Appointment</h2>
+          </div>
+      </div>
       <div className="dashboard-content">
         {/* Feature Section 1 */}
         <div className="feature">

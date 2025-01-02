@@ -44,12 +44,12 @@ const DashboardAdmin = () => {
       };
 
       const [docsCount, patientsCount, adminsCount, docsPendingCount, appointmentsPendingCount, adminsPendingCount] = await Promise.all([
-        fetchCounts("http://localhost:8000/api/v1/user/doctor/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/patient/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/admin/count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-doctor-count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-appointment-count"),
-        fetchCounts("http://localhost:8000/api/v1/user/pending-admin-count"),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/count`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/count`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/count`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/pending-doctor-count`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/pending-appointment-count`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/pending-admin-count`),
       ]);
 
       setStats({ docsCount, patientsCount, adminsCount, docsPendingCount, appointmentsPendingCount, adminsPendingCount });

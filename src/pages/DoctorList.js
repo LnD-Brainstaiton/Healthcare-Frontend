@@ -39,7 +39,7 @@ const DoctorsList = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/doctor/all?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/all?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -81,9 +81,9 @@ const DoctorsList = () => {
       };
 
       const [designationRes, departmentRes, genderRes] = await Promise.all([
-        fetch("http://localhost:8000/api/v1/user/designation-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/department-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/gender-options", { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/designation-options`, { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`, { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/gender-options`, { headers }),
       ]);
 
       const designationData = await designationRes.json();
@@ -140,7 +140,7 @@ const DoctorsList = () => {
           return;
         }
   
-        const response = await fetch(`http://localhost:8000/api/v1/user/doctor/${doctorId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/${doctorId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

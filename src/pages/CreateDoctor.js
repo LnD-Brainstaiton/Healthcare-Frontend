@@ -7,12 +7,12 @@ const CreateDoctor = () => {
 //   const { userId } = useParams(); 
 //   const { userType } = useParams();  
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     mobile: "",
-    password: "",
-    confirmPassword: "",
+    // password: "",
+    // confirmPassword: "",
     designation: "", // Added for doctor
     department: "",  // Added for doctor
     specialities: "", // Added for doctor
@@ -38,12 +38,12 @@ const CreateDoctor = () => {
         
 
         // Fetch department options
-        const departmentRes = await fetch("http://localhost:8000/api/v1/user/department-options", { headers });
+        const departmentRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`, { headers });
         const departmentData = await departmentRes.json();
         setDepartmentOptions(departmentData.data.departments || []);
 
         // Fetch designation options
-        const designationRes = await fetch("http://localhost:8000/api/v1/user/designation-options", { headers });
+        const designationRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/designation-options`, { headers });
         const designationData = await designationRes.json();
         setDesignationOptions(designationData.data.designations || []);
       } catch (err) {
@@ -70,10 +70,10 @@ const CreateDoctor = () => {
     setSuccess(null);
 
     // Password validation
-    if (formData.password !== formData.confirmPassword) {
-      setError("New password and confirm password do not match.");
-      return;
-    }
+    // if (formData.password !== formData.confirmPassword) {
+    //   setError("New password and confirm password do not match.");
+    //   return;
+    // }
 
     try {
       const token = localStorage.getItem("token");
@@ -85,7 +85,7 @@ const CreateDoctor = () => {
         featureCode: "DOCTOR", // Replace with your actual feature code
         operationType: "create", // Replace with your actual operation type
         message: "", // Replace with your actual message
-        requestUrl: "/api/v1/doctor/create", // Replace with your actual request URL
+        requestUrl: "/api/v1/user/doctor/create", // Replace with your actual request URL
         requestId: null, // Replace with your actual request ID
       };
       
@@ -94,7 +94,7 @@ const CreateDoctor = () => {
         data: JSON.stringify(formData), // This is the dynamic part
       };
 
-      const response = await fetch(`http://localhost:8000/api/v1/user//admin/temp/request`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user//admin/temp/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const CreateDoctor = () => {
         throw new Error("No token found");
       }
       
-      const response = await fetch(`http://localhost:8000/api/v1/user/check-mobile`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/check-mobile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,8 +163,8 @@ const CreateDoctor = () => {
             <label className="update-field-label">First Name:</label>
             <input
               type="text"
-              name="firstname"
-              value={formData.firstname}
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
               className="update-input-field"
               placeholder="Enter first name"
@@ -175,8 +175,8 @@ const CreateDoctor = () => {
             <label className="update-field-label">Last Name:</label>
             <input
               type="text"
-              name="lastname"
-              value={formData.lastname}
+              name="lastName"
+              value={formData.lastName}
               onChange={handleChange}
               className="update-input-field"
               placeholder="Enter last name"
@@ -260,7 +260,7 @@ const CreateDoctor = () => {
               </div>
 
           {/* Password fields */}
-          <div className="update-profile-field">
+          {/* <div className="update-profile-field">
             <label className="update-field-label">New Password:</label>
             <input
               type="password"
@@ -284,7 +284,7 @@ const CreateDoctor = () => {
               placeholder="Confirm new password"
               // required
             />
-          </div>
+          </div> */}
 
           <div>
             <button type="submit" className="update-update-btn">Save Changes</button>

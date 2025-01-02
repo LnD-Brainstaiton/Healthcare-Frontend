@@ -30,7 +30,7 @@ const AppointmentReschedule = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/appointment/list?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/appointment/list?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -89,6 +89,8 @@ const AppointmentReschedule = () => {
   return (
     <div className="patients-list">
       <h1>Appointments Reschedule</h1>
+      <h1>Coming Soon</h1>
+
 {/* 
       <div className="search-filter-container">
         <input

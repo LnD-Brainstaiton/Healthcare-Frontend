@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import "../styles/PatientList.css";
+import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 
-const AppointmentApproveList = () => {
+const AppointmentsApproveList = () => {
   const navigate = useNavigate();
-  const [patients, setPatients] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [appointments, setAppointments] = useState([]);
   const [searchQueryId, setSearchQueryId] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedAppointment, setSelectedAppointment] = useState(null); // Popup state
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup visibility state
   const pageSize = 10;
 
-  // Fetch patients data from the API
-  const fetchPatients = async (page = 0) => {
+  // Fetch appointments data from the API
+  const fetchAppointments = async (page = 0) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -25,12 +26,12 @@ const AppointmentApproveList = () => {
       const queryParams = new URLSearchParams({
         page,
         size: pageSize,
-        firstnameLastname: searchQuery,
-        id: searchQueryId,
+        requestId: searchQueryId,
+        featureCode: "APPOINTMENT",
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/patient/all?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/tempdata?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -41,47 +42,59 @@ const AppointmentApproveList = () => {
       );
 
       const data = await response.json();
-      console.log("Fetched patients data:", data); // Debug API response
+      const appointmentsData = data.data.content.map(item => ({
+        ...JSON.parse(JSON.parse(item.data)), // Parse the data and spread it to include all the fields
+        requestId: item.requestId, // Add the requestId from the original item
+        status: item.status,
+      }));
+      console.log(data.data.content);
+      console.log("Fetched appointments data:", appointmentsData); // Debug API response
 
       if (data.responseCode === "S100000") {
-        setPatients(data.data.data);
+        setAppointments(appointmentsData);
         setTotalPages(data.data.totalPages);
       } else {
-        console.error("Error fetching patients:", data.responseMessage);
-        setPatients([]); // Clear table if an error occurs
+        console.error("Error fetching appointments:", data.responseMessage);
+        setAppointments([]); // Clear table if an error occurs
       }
     } catch (error) {
-      console.error("Error fetching patients:", error);
-      setPatients([]); // Clear table if an error occurs
+      console.error("Error fetching appointments:", error);
+      setAppointments([]); // Clear table if an error occurs
     }
   };
 
   
 
-  // Fetch patients data when filters or pagination change
+  // Fetch appointments data when filters or pagination change
   useEffect(() => {
-    fetchPatients(currentPage); // Fetch initial data
+    // fetchDropdownOptions(); // Fetch dropdown options once
+    fetchAppointments(currentPage); // Fetch initial data
   }, []);
 
   useEffect(() => {
-    fetchPatients(currentPage); // Refetch when the page changes
+    fetchAppointments(currentPage); // Refetch when the page changes
   }, [currentPage]);
 
   useEffect(() => {
-    fetchPatients(0); // Refetch when filters change
-  }, [searchQuery, searchQueryId]);
+    fetchAppointments(0); // Refetch when filters change
+  }, [searchQueryId]);
 
   const handleSearch = () => {
     setCurrentPage(0); // Reset pagination
-    fetchPatients(0); // Refetch with new filters
+    fetchAppointments(0); // Refetch with new filters
+  };
+
+  const closePopup = () => {
+    setSelectedAppointment(null); // Clear selected appointment
+    setIsPopupOpen(false); // Close the popup
   };
 
   const handleUpdate = (userId) => {
-    navigate(`/update-profile/${userId}/patient`);
+    navigate(`/update-profile/${userId}/appointment`);
   };
 
-  const handleDelete = async (patientId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${patientId}?`);
+  const handleDelete = async (appointmentId) => {
+    const userConfirmed = window.confirm(`Are you sure you want to delete the appointment with ID: ${appointmentId}?`);
   
     if (userConfirmed) {
       try {
@@ -92,7 +105,7 @@ const AppointmentApproveList = () => {
           return;
         }
   
-        const response = await fetch(`http://localhost:8000/api/v1/user/patient/${patientId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/appointment/${appointmentId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -103,20 +116,24 @@ const AppointmentApproveList = () => {
         const data = await response.json();
   
         if (data.responseCode === "S100000") {
-          alert("Doctor deleted successfully!");
-          fetchPatients(currentPage); // Refresh the list after deletion
+          alert("Appointment deleted successfully!");
+          fetchAppointments(currentPage); // Refresh the list after deletion
         } else {
-          alert(`Failed to delete doctor: ${data.responseMessage}`);
+          alert(`Failed to delete appointment: ${data.responseMessage}`);
         }
       } catch (error) {
-        console.error("Error deleting doctor:", error);
-        alert("An error occurred while trying to delete the doctor.");
+        console.error("Error deleting appointment:", error);
+        alert("An error occurred while trying to delete the appointment.");
       }
     } else {
       alert("Delete action canceled.");
     }
   };
-
+  const handleView = (appointment) => {
+    setSelectedAppointment(appointment); // Set the selected appointment
+    setIsPopupOpen(true); // Open the popup
+  };
+  
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -130,8 +147,8 @@ const AppointmentApproveList = () => {
   };
 
   return (
-    <div className="patients-list">
-      <h1>Appointment Approve</h1>
+    <div className="doctors-list">
+      <h1>Pending Appointments List</h1>
 
       <div className="search-filter-container">
         <input
@@ -141,62 +158,69 @@ const AppointmentApproveList = () => {
           onChange={(e) => setSearchQueryId(e.target.value)}
           className="search-input"
         />
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
       </div>
 
-      <table className="patients-table">
+      <table className="doctors-table">
         <thead>
           <tr>
             <th>Appointment No</th>
             <th>Appointment Date</th>
             <th>Appointment Time</th>
             <th>Patient Name</th>
-            <th>Patiuent Age</th>
-            <th>Patient Contact</th>
-            <th>Id</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {patients.length > 0 ? (
-            patients.map((patient, index) => (
+          {appointments.length > 0 ? (
+            appointments.map((appointment, index) => (
               <tr key={index}>
-                <td>{patient.patientId}</td>
-                <td>{patient.firstname}</td>
-                <td>{patient.lastname}</td>
-                <td>{patient.email}</td>
-                <td>{patient.mobile}</td>
-                <td>{patient.bloodGroup}</td>
-                <td>{patient.age}</td>
+                <td>{appointment.requestId}</td>
+                <td>{appointment.appointmentDate}</td>
+                <td>{appointment.appointmentTime}</td>
+                <td>{appointment.patientInfo.firstName + " " + appointment.patientInfo.lastName}</td>
                 <td>
+                <button
+                    className="view-icon-button"
+                    onClick={() => handleView(appointment)}
+                    title="View Details"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="feather feather-eye"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
                   <button
                     className="btn-update"
-                    onClick={() => handleUpdate(patient.patientId)}
+                    onClick={() => handleUpdate(appointment.appointmentId)}
                   >
-                    Update
+                    Approve
                   </button>
                   <button
                     className="btn-delete"
-                    onClick={() => handleDelete(patient.patientId)}
+                    onClick={() => handleDelete(appointment.appointmentId)}
                   >
-                    Delete
+                    Reject
                   </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">No patients found.</td>
+              <td colSpan="5">No appointments found.</td>
             </tr>
           )}
         </tbody>
@@ -221,8 +245,25 @@ const AppointmentApproveList = () => {
           Next
         </button>
       </div>
+      {isPopupOpen && selectedAppointment && (
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <button onClick={closePopup} className="popup-close-icon">×</button>
+          <h2>Appointment Details</h2>
+          <p><strong>Appointment ID:</strong> {selectedAppointment.requestId}</p>
+          <p><strong>Doctor ID:</strong> {selectedAppointment.doctorId}</p>
+          <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
+          <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
+          <p><strong>Patient Name:</strong> {selectedAppointment.patientInfo.firstName + " " + selectedAppointment.patientInfo.lastName}</p>
+          <p><strong>Patient Email:</strong> {selectedAppointment.patientInfo.email}</p>
+          <p><strong>Patient Contact:</strong> {selectedAppointment.patientInfo.mobile}</p>
+          <p><strong>Appointment Reason:</strong> {selectedAppointment.reason}</p>
+        </div>
+      </div>
+      )}
+      
     </div>
   );
 };
 
-export default AppointmentApproveList;
+export default AppointmentsApproveList;

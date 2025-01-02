@@ -40,7 +40,7 @@ const DoctorListPatient = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/doctor/all?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/all?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -82,9 +82,9 @@ const DoctorListPatient = () => {
       };
 
       const [designationRes, departmentRes, genderRes] = await Promise.all([
-        fetch("http://localhost:8000/api/v1/user/designation-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/department-options", { headers }),
-        fetch("http://localhost:8000/api/v1/user/gender-options", { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}api/v1/user/designation-options`, { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`, { headers }),
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/gender-options`, { headers }),
       ]);
 
       const designationData = await designationRes.json();

@@ -45,7 +45,7 @@ const UpdateProfile = () => {
           throw new Error("No token found");
         }
         
-        const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/${userType}/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -95,22 +95,22 @@ const UpdateProfile = () => {
         };
         
         // Fetch gender options
-        const genderRes = await fetch("http://localhost:8000/api/v1/user/gender-options", { headers });
+        const genderRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/gender-options`, { headers });
         const genderData = await genderRes.json();
         setGenderOptions(genderData.data.gender || []);
 
         // Fetch blood group options
-        const bloodGroupRes = await fetch("http://localhost:8000/api/v1/user/blood-group-options", { headers });
+        const bloodGroupRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/blood-group-options`, { headers });
         const bloodGroupData = await bloodGroupRes.json();
         setBloodGroupOptions(bloodGroupData.data.bloodGroups || []);
 
         // Fetch department options
-        const departmentRes = await fetch("http://localhost:8000/api/v1/user/department-options", { headers });
+        const departmentRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`, { headers });
         const departmentData = await departmentRes.json();
         setDepartmentOptions(departmentData.data.departments || []);
 
         // Fetch designation options
-        const designationRes = await fetch("http://localhost:8000/api/v1/user/designation-options", { headers });
+        const designationRes = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/designation-options`, { headers });
         const designationData = await designationRes.json();
         setDesignationOptions(designationData.data.designations || []);
       } catch (err) {
@@ -151,7 +151,7 @@ const UpdateProfile = () => {
 
       // const userType = localStorage.getItem("userType").toLocaleLowerCase();
 
-      const response = await fetch(`http://localhost:8000/api/v1/user/${userType}/update`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/${userType}/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const UpdateProfile = () => {
         throw new Error("No token found");
       }
       
-      const response = await fetch(`http://localhost:8000/api/v1/user/check-mobile`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/check-mobile`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

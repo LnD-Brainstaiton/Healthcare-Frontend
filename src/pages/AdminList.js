@@ -28,7 +28,7 @@ const AdminsList = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/admin/all?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/all?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -37,6 +37,8 @@ const AdminsList = () => {
           },
         }
       );
+      console.log("API Base URL:", process.env.REACT_APP_API_BASE_URL);
+
 
       const data = await response.json();
       if (data.responseCode === "S100000") {
@@ -78,7 +80,7 @@ const AdminsList = () => {
         }
 
         const response = await fetch(
-          `http://localhost:8000/api/v1/user/admin/${adminId}`,
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/${adminId}`,
           {
             method: "DELETE",
             headers: {

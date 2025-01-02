@@ -33,7 +33,7 @@ function Register({ onRegister }) {
 
     try {
       await axios
-        .post("http://localhost:8000/api/v1/user/patient/register", {
+        .post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/register`, {
           firstName,
           lastName,
           mobile,

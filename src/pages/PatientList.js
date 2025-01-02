@@ -30,7 +30,7 @@ const PatientsList = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/patient/all?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/all?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -92,7 +92,7 @@ const PatientsList = () => {
           return;
         }
   
-        const response = await fetch(`http://localhost:8000/api/v1/user/patient/${patientId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/${patientId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

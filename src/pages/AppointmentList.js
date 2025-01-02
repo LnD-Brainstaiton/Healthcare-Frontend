@@ -54,7 +54,7 @@ const [searchTime, setSearchTime] = useState("");
       const queryString = new URLSearchParams(queryParams).toString();
   
       const response = await fetch(
-        `http://localhost:8000/api/v1/appointment/list?${queryString}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/appointment/list?${queryString}`,
         {
           method: "GET",
           headers: {
@@ -227,21 +227,21 @@ const [searchTime, setSearchTime] = useState("");
       </div>
 
       {isPopupOpen && selectedAppointment && (
-  <div className="popup-overlay">
-    <div className="popup-content">
-      <button onClick={closePopup} className="popup-close-icon">×</button>
-      <h2>Appointment Details</h2>
-      <p><strong>Appointment No:</strong> {selectedAppointment.appointmentNo}</p>
-      <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
-      <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
-      <p><strong>Patient Name:</strong> {selectedAppointment.patientName}</p>
-      <p><strong>Patient Age:</strong> {selectedAppointment.patientAge}</p>
-      <p><strong>Patient Contact:</strong> {selectedAppointment.patientContactNo}</p>
-      <p><strong>Appointment Fee:</strong> {selectedAppointment.fee}</p>
-      <p><strong>Appointment Reason:</strong> {selectedAppointment.reason}</p>
-    </div>
-  </div>
-)}
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <button onClick={closePopup} className="popup-close-icon">×</button>
+          <h2>Appointment Details</h2>
+          <p><strong>Appointment No:</strong> {selectedAppointment.appointmentNo}</p>
+          <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
+          <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
+          <p><strong>Patient Name:</strong> {selectedAppointment.patientName}</p>
+          <p><strong>Patient Age:</strong> {selectedAppointment.patientAge}</p>
+          <p><strong>Patient Contact:</strong> {selectedAppointment.patientContactNo}</p>
+          <p><strong>Appointment Fee:</strong> {selectedAppointment.fee}</p>
+          <p><strong>Appointment Reason:</strong> {selectedAppointment.reason}</p>
+        </div>
+      </div>
+      )}
 
     </div>
   );

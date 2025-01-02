@@ -59,7 +59,7 @@ const [searchTime, setSearchTime] = useState("");
       const queryString = new URLSearchParams(queryParams).toString();
   
       const response = await fetch(
-        `http://localhost:8000/api/v1/appointment/list?${queryString}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/appointment/list?${queryString}`,
         {
           method: "GET",
           headers: {

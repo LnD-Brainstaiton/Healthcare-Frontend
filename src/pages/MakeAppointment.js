@@ -57,7 +57,7 @@ const MakeAppointment = () => {
         //     if (!token) throw new Error("No token found");
 
         //     const response = await fetch(
-        //         `http://localhost:8000/api/v1/appointments/available-times?doctorId=${doctorId}&date=${selectedDate}`,
+        //         `${process.env.REACT_APP_API_BASE_URL}/api/v1/appointments/available-times?doctorId=${doctorId}&date=${selectedDate}`,
         //         {
         //             method: "GET",
         //             headers: {
@@ -115,7 +115,7 @@ const MakeAppointment = () => {
             };
 
             const staticRequestBody = {
-                featureCode: "DOCTOR", // Replace with your actual feature code
+                featureCode: "APPOINTMENT", // Replace with your actual feature code
                 operationType: "create", // Replace with your actual operation type
                 message: "", // Replace with your actual message
                 requestUrl: "/api/v1/doctor/create", // Replace with your actual request URL
@@ -128,7 +128,7 @@ const MakeAppointment = () => {
               };
 
             const response = await fetch(
-                "http://localhost:8000/api/v1/user//admin/temp/request",
+                `${process.env.REACT_APP_API_BASE_URL}/api/v1/user//admin/temp/request`,
                 {
                     method: "POST",
                     headers: {

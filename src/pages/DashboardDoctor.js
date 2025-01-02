@@ -67,7 +67,7 @@ const DashboardDoctor = () => {
 
 
       const [upcomingAppointmentCount] = await Promise.all([
-        fetchCounts(`http://localhost:8000/api/v1/appointment/doctor/upcoming/appointment/count?${queryString}`),
+        fetchCounts(`${process.env.REACT_APP_API_BASE_URL}/api/v1/appointment/doctor/upcoming/appointment/count?${queryString}`),
       ]);
 
       setStats({ upcomingAppointmentCount});

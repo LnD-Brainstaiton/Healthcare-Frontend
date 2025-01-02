@@ -9,6 +9,9 @@ const DoctorsApproveList = () => {
   const [searchQueryId, setSearchQueryId] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup visibility state
+  const [selectedDoctor, setSelectedDoctor] = useState(null); // Popup state
+  
   const pageSize = 10;
 
   // Fetch doctors data from the API
@@ -29,7 +32,7 @@ const DoctorsApproveList = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8000/api/v1/user/admin/tempdata?${queryParams}`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/tempdata?${queryParams}`,
         {
           method: "GET",
           headers: {
@@ -82,12 +85,21 @@ const DoctorsApproveList = () => {
     fetchDoctors(0); // Refetch with new filters
   };
 
-  const handleUpdate = (userId) => {
-    navigate(`/update-profile/${userId}/doctor`);
+  const handleView = (appointment) => {
+    setSelectedDoctor(appointment); // Set the selected appointment
+    setIsPopupOpen(true); // Open the popup
   };
 
-  const handleDelete = async (doctorId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${doctorId}?`);
+  const closePopup = () => {
+    setSelectedDoctor(null); // Clear selected appointment
+    setIsPopupOpen(false); // Close the popup
+  };
+
+  const handleCheck = async (requestId, status) => {
+    let confirmation = "reject";
+    if(status == "Accepted")
+      confirmation = "accept"
+    let userConfirmed = window.confirm(`Are you sure you want to ${confirmation} the doctor with ID: ${requestId}?`);
   
     if (userConfirmed) {
       try {
@@ -97,29 +109,40 @@ const DoctorsApproveList = () => {
           alert("Authentication token not found. Please log in.");
           return;
         }
+
+        const requestBody = {
+          featureCode: "DOCTOR", // Replace with your actual feature code
+          status: status, // Replace with your actual operation type
+          message: "", // Replace with your actual message
+          requestId: requestId, // Replace with your actual request ID
+        };
+        
+       
   
-        const response = await fetch(`http://localhost:8000/api/v1/user/doctor/${doctorId}`, {
-          method: "DELETE",
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/request/check`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify(requestBody),
         });
   
         const data = await response.json();
   
         if (data.responseCode === "S100000") {
-          alert("Doctor deleted successfully!");
+          alert(`Doctor ${status} successfully!`);
+          closePopup();
           fetchDoctors(currentPage); // Refresh the list after deletion
         } else {
-          alert(`Failed to delete doctor: ${data.responseMessage}`);
+          alert(`Failed to ${confirmation} doctor: ${data.responseMessage}`);
         }
       } catch (error) {
-        console.error("Error deleting doctor:", error);
-        alert("An error occurred while trying to delete the doctor.");
+        console.error("Error processing doctor:", error);
+        alert("An error occurred while trying to process the doctor.");
       }
     } else {
-      alert("Delete action canceled.");
+      alert("Process canceled.");
     }
   };
   
@@ -169,24 +192,34 @@ const DoctorsApproveList = () => {
             doctors.map((doctor, index) => (
               <tr key={index}>
                 <td>{doctor.requestId}</td>
-                <td>{doctor.firstname}</td>
-                <td>{doctor.lastname}</td>
+                <td>{doctor.firstName}</td>
+                <td>{doctor.lastName}</td>
                 <td>{doctor.designation}</td>
                 <td>{doctor.department}</td>
                 <td>{doctor.status}</td>
                 <td>
-                  <button
-                    className="btn-update"
-                    onClick={() => handleUpdate(doctor.doctorId)}
+                <button
+                    className="view-icon-button"
+                    onClick={() => handleView(doctor)}
+                    title="View Details"
                   >
-                    Approve
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="feather feather-eye"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
                   </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(doctor.doctorId)}
-                  >
-                    Reject
-                  </button>
+                  
                 </td>
               </tr>
             ))
@@ -217,6 +250,41 @@ const DoctorsApproveList = () => {
           Next
         </button>
       </div>
+
+      {isPopupOpen && selectedDoctor && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button onClick={closePopup} className="popup-close-icon">×</button>
+            <h2>Doctor Details</h2>
+            <p><strong>Request ID:</strong> {selectedDoctor.requestId}</p>
+            <p><strong>First Name:</strong> {selectedDoctor.firstName}</p>
+            <p><strong>Last Name:</strong> {selectedDoctor.lastName}</p>
+            <p><strong>Email:</strong> {selectedDoctor.email}</p>
+            <p><strong>Mobile:</strong> {selectedDoctor.mobile}</p>
+            <p><strong>Designation:</strong> {selectedDoctor.designation}</p>
+            <p><strong>Department:</strong> {selectedDoctor.department}</p>
+            <p><strong>Fee :</strong> {selectedDoctor.fee}</p>
+            <p><strong>Speacialities :</strong> {selectedDoctor.specialities}</p>
+            <p><strong>Status:</strong> {selectedDoctor.status}</p>
+
+            <div className="popup-actions">
+              <button
+                className="btn-approve"
+                onClick={() => handleCheck(selectedDoctor.requestId,"Accepted")}
+              >
+                Approve
+              </button>
+              <button
+                className="btn-reject"
+                onClick={() => handleCheck(selectedDoctor.requestId,"Rejected")}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

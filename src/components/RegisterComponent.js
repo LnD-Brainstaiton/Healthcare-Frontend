@@ -1,63 +1,115 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Register.css"; // Import custom styles
+import "../styles/Register.css";
 
-function Register({ onRegister }) {
+function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
-  const [successMessage, setSuccessMessage] = useState(""); // State for success message
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isMobileValid, setIsMobileValid] = useState(true);
+  const [mobileError, setMobileError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // New state for loader
+  const [isCheckingMobile, setIsCheckingMobile] = useState(false); // Mobile validation status
+
   const navigate = useNavigate();
 
-  // Check if the user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-        navigate("/dashboard"); 
+      navigate("/dashboard");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      if (mobile) {
+        checkMobileExists(mobile);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [mobile]);
+
+  const checkMobileExists = async (mobileNumber) => {
+    setIsCheckingMobile(true); // Start validation
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/check-mobile`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+          body: JSON.stringify({ mobile: mobileNumber }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to check mobile number");
+      }
+
+      const data = await response.json();
+      if (data.data === true) {
+        setMobileError("Mobile number already exists");
+        setIsMobileValid(false);
+      } else {
+        setMobileError("");
+        setIsMobileValid(true);
+      }
+    } catch (err) {
+      setMobileError("Error validating mobile number");
+      setIsMobileValid(false);
+    } finally {
+      setIsCheckingMobile(false); // End validation
+    }
+  };
 
   async function handleRegister(event) {
     event.preventDefault();
 
-    // Password confirmation check
+    setIsLoading(true); // Show loader
+
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
+      setIsLoading(false); // Hide loader
+      return;
+    }
+
+    // Validate mobile number if not already validated
+    if (!isMobileValid) {
+      setErrorMessage("Please fix the issues with your mobile number.");
+      setIsLoading(false); // Hide loader
       return;
     }
 
     try {
-      await axios
-        .post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/register`, {
-          firstName,
-          lastName,
-          mobile,
-          email,
-          password,
-        })
-        .then((res) => {
-          if (res.data) {
-            console.log(res.data);
-            setSuccessMessage("Registration successful! Please login.");
-            setErrorMessage(""); // Clear any error messages
-            setTimeout(() => {
-              navigate("/"); // Redirect to login page after 2 seconds
-            }, 2000); // 2 seconds delay
-          } else {
-            setErrorMessage(res.data.message);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          setErrorMessage("Registration failed. Please try again."); // Handle server or network error
+      const userId = mobile;
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/generate-otp`,
+        { firstName, lastName, userId, email }
+      );
+
+      if (response.status === 200) {
+        const sessionId = response.data.data.sessionId;
+        navigate("/verify-otp", {
+          state: { firstName, lastName, mobile, email, password, sessionId },
         });
-    } catch (err) {
-      setErrorMessage("An error occurred: " + err);
+      } else {
+        setErrorMessage("Unexpected response from server. Please try again.");
+      }
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    } finally {
+      setIsLoading(false); // Hide loader
     }
   }
 
@@ -70,8 +122,11 @@ function Register({ onRegister }) {
         {errorMessage && (
           <div className="alert alert-danger">{errorMessage}</div>
         )}
-        {successMessage && (
-          <div className="alert alert-success">{successMessage}</div>
+        {isLoading && (
+          <div class="loader-container">
+            <div class="loader"></div>
+            <div class="loader-text">Loading, please wait...</div>
+          </div>
         )}
 
         <form onSubmit={handleRegister}>
@@ -100,12 +155,15 @@ function Register({ onRegister }) {
           <div className="form-group">
             <input
               type="text"
-              className="form-control"
+              className={`form-control`}
               placeholder="Enter Mobile"
               value={mobile}
               onChange={(event) => setMobile(event.target.value)}
               required
             />
+            {!isMobileValid && (
+              <div className="invalid-feedback">{mobileError}</div>
+            )}
           </div>
 
           <div className="form-group">

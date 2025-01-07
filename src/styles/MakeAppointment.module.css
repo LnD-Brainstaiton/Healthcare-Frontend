@@ -1,152 +1,152 @@
 .appointmentContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 81vh;
-    background-color: #f4f7fb;
-    margin-left: 250px;
-    overflow: scroll;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 81vh;
+  background-color: #f4f7fb;
+  margin-left: 250px;
+  overflow: scroll;
 }
 
 .appointmentCard {
-    margin-top: 20px;
-    width: 100%;
-    max-width: 1750px;
-    background-color: #f4f7fb;
-    border-radius: 8px;
-    padding: 40px;
-    box-sizing: border-box;
+  margin-top: 140px;
+  width: 100%;
+  max-width: 1750px;
+  background-color: #f4f7fb;
+  border-radius: 8px;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
 .appointmentHeader {
-    text-align: center;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 30px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 30px;
 }
 
 .appointmentForm {
-    width: 100%;
+  width: 100%;
 }
 
 .formColumns {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
 }
 
 .formColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .sectionHeader {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 1rem 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e2e8f0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
 }
 
 .formField {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Create two equal columns */
-    gap: 20px; /* Add space between columns */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Create two equal columns */
+  gap: 20px; /* Add space between columns */
 }
 
 .fieldLabel {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
 }
 
 .inputField {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
 
 .inputField:focus {
-    border-color: #007bff;
-    outline: none;
+  border-color: #007bff;
+  outline: none;
 }
 
 .inputField:disabled {
-    background-color: #f8fafc;
-    cursor: not-allowed;
+  background-color: #f8fafc;
+  cursor: not-allowed;
 }
 
 textarea.inputField {
-    resize: vertical;
-    min-height: 100px;
+  resize: vertical;
+  min-height: 100px;
 }
 
 .formFooter {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .submitButton {
-    margin-top: 25px;
-    /* margin-left: 30%; */
-    width: 20%;
-    padding: 12px 18px;
-    font-size: 1.1rem;
-    background-color: #4facfe;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-    font-weight: 500;
+  margin-top: 25px;
+  /* margin-left: 30%; */
+  width: 20%;
+  padding: 12px 18px;
+  font-size: 1.1rem;
+  background-color: #4facfe;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-weight: 500;
 }
 
 .submitButton:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 .submitButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
 }
 
 .errorMessage {
-    color: #dc2626;
-    font-size: 0.875rem;
-    text-align: center;
+  color: #dc2626;
+  font-size: 0.875rem;
+  text-align: center;
 }
 
 .successMessage {
-    color: #059669;
-    font-size: 0.875rem;
-    text-align: center;
+  color: #059669;
+  font-size: 0.875rem;
+  text-align: center;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .appointmentContainer {
-        padding: 1rem;
-    }
+  .appointmentContainer {
+    padding: 1rem;
+  }
 
-    .appointmentCard {
-        padding: 1.5rem;
-    }
+  .appointmentCard {
+    padding: 1.5rem;
+  }
 
-    .formColumns {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+  .formColumns {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 
-    .submitButton {
-        width: 100%;
-    }
+  .submitButton {
+    width: 100%;
+  }
 }

@@ -26,8 +26,8 @@ function Login({ onLogin }) {
           password: password,
         })
         .then((res) => {
-          if(res.data.data == null) {
-           setErrorMessage(res.data.responseMessage);
+          if (res.data.data == null) {
+            setErrorMessage(res.data.responseMessage);
           } else if (res.data.data.token != null) {
             const token = res.data.data.token;
             const usertype = res.data.data.userType;
@@ -37,7 +37,7 @@ function Login({ onLogin }) {
             localStorage.setItem("userId", userId);
             onLogin(token); // Update token state in parent (App.js)
             navigate("/dashboard");
-          } 
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -63,7 +63,7 @@ function Login({ onLogin }) {
             <input
               type="text"
               className="form-control"
-              placeholder="Enter mobile"
+              placeholder="Enter id"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               required

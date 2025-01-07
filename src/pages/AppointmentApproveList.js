@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-
+import { useNavigate } from "react-router-dom";
 
 const AppointmentsApproveList = () => {
   const navigate = useNavigate();
@@ -42,13 +41,12 @@ const AppointmentsApproveList = () => {
       );
 
       const data = await response.json();
-      const appointmentsData = data.data.content.map(item => ({
-        ...JSON.parse(JSON.parse(item.data)), // Parse the data and spread it to include all the fields
-        requestId: item.requestId, // Add the requestId from the original item
+      const appointmentsData = data.data.content.map((item) => ({
+        ...JSON.parse(JSON.parse(item.data)),
+        requestId: item.requestId,
         status: item.status,
       }));
-      console.log(data.data.content);
-      console.log("Fetched appointments data:", appointmentsData); // Debug API response
+      console.log(appointmentsData);
 
       if (data.responseCode === "S100000") {
         setAppointments(appointmentsData);
@@ -63,20 +61,16 @@ const AppointmentsApproveList = () => {
     }
   };
 
-  
-
-  // Fetch appointments data when filters or pagination change
   useEffect(() => {
-    // fetchDropdownOptions(); // Fetch dropdown options once
-    fetchAppointments(currentPage); // Fetch initial data
+    fetchAppointments(currentPage);
   }, []);
 
   useEffect(() => {
-    fetchAppointments(currentPage); // Refetch when the page changes
+    fetchAppointments(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    fetchAppointments(0); // Refetch when filters change
+    fetchAppointments(0);
   }, [searchQueryId]);
 
   const handleSearch = () => {
@@ -84,56 +78,71 @@ const AppointmentsApproveList = () => {
     fetchAppointments(0); // Refetch with new filters
   };
 
+  const handleAction = async (requestId, status) => {
+    let confirmation = "reject";
+    if (status == "Accepted") confirmation = "accept";
+    let userConfirmed = window.confirm(
+      `Are you sure you want to ${confirmation} the appointment with ID: ${requestId}?`
+    );
+
+    if (userConfirmed) {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          alert("Authentication token not found. Please log in.");
+          return;
+        }
+
+        const requestBody = {
+          featureCode: "APPOINTMENT", // Replace with your actual feature code
+          status: status, // Replace with your actual operation type
+          message: "", // Replace with your actual message
+          requestId: requestId, // Replace with your actual request ID
+        };
+
+        const response = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/request/check`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.responseCode === "S100000") {
+          alert(`Appointment ${status} successfully!`);
+          closePopup();
+          fetchAppointments(currentPage); // Refresh the list after deletion
+        } else {
+          alert(
+            `Failed to ${confirmation} appointment: ${data.responseMessage}`
+          );
+        }
+      } catch (error) {
+        console.error("Error processing appointment:", error);
+        alert("An error occurred while trying to process the appointment.");
+      }
+    } else {
+      alert("Process canceled.");
+    }
+  };
+
   const closePopup = () => {
     setSelectedAppointment(null); // Clear selected appointment
     setIsPopupOpen(false); // Close the popup
   };
 
-  const handleUpdate = (userId) => {
-    navigate(`/update-profile/${userId}/appointment`);
-  };
-
-  const handleDelete = async (appointmentId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the appointment with ID: ${appointmentId}?`);
-  
-    if (userConfirmed) {
-      try {
-        const token = localStorage.getItem("token");
-  
-        if (!token) {
-          alert("Authentication token not found. Please log in.");
-          return;
-        }
-  
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/appointment/${appointmentId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
-        const data = await response.json();
-  
-        if (data.responseCode === "S100000") {
-          alert("Appointment deleted successfully!");
-          fetchAppointments(currentPage); // Refresh the list after deletion
-        } else {
-          alert(`Failed to delete appointment: ${data.responseMessage}`);
-        }
-      } catch (error) {
-        console.error("Error deleting appointment:", error);
-        alert("An error occurred while trying to delete the appointment.");
-      }
-    } else {
-      alert("Delete action canceled.");
-    }
-  };
   const handleView = (appointment) => {
     setSelectedAppointment(appointment); // Set the selected appointment
     setIsPopupOpen(true); // Open the popup
   };
-  
+
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -180,9 +189,9 @@ const AppointmentsApproveList = () => {
                 <td>{appointment.requestId}</td>
                 <td>{appointment.appointmentDate}</td>
                 <td>{appointment.appointmentTime}</td>
-                <td>{appointment.patientInfo.firstName + " " + appointment.patientInfo.lastName}</td>
+                <td>{appointment.patientName}</td>
                 <td>
-                <button
+                  <button
                     className="view-icon-button"
                     onClick={() => handleView(appointment)}
                     title="View Details"
@@ -202,18 +211,6 @@ const AppointmentsApproveList = () => {
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
-                  </button>
-                  <button
-                    className="btn-update"
-                    onClick={() => handleUpdate(appointment.appointmentId)}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(appointment.appointmentId)}
-                  >
-                    Reject
                   </button>
                 </td>
               </tr>
@@ -245,23 +242,62 @@ const AppointmentsApproveList = () => {
           Next
         </button>
       </div>
+
       {isPopupOpen && selectedAppointment && (
-      <div className="popup-overlay">
-        <div className="popup-content">
-          <button onClick={closePopup} className="popup-close-icon">×</button>
-          <h2>Appointment Details</h2>
-          <p><strong>Appointment ID:</strong> {selectedAppointment.requestId}</p>
-          <p><strong>Doctor ID:</strong> {selectedAppointment.doctorId}</p>
-          <p><strong>Appointment Date:</strong> {selectedAppointment.appointmentDate}</p>
-          <p><strong>Appointment Time:</strong> {selectedAppointment.appointmentTime}</p>
-          <p><strong>Patient Name:</strong> {selectedAppointment.patientInfo.firstName + " " + selectedAppointment.patientInfo.lastName}</p>
-          <p><strong>Patient Email:</strong> {selectedAppointment.patientInfo.email}</p>
-          <p><strong>Patient Contact:</strong> {selectedAppointment.patientInfo.mobile}</p>
-          <p><strong>Appointment Reason:</strong> {selectedAppointment.reason}</p>
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <button onClick={closePopup} className="popup-close-icon">
+              ×
+            </button>
+            <h2>Appointment Details</h2>
+            <p>
+              <strong>Appointment ID:</strong> {selectedAppointment.requestId}
+            </p>
+            <p>
+              <strong>Appointment ID:</strong> {selectedAppointment.doctorId}
+            </p>
+            <p>
+              <strong>Appointment Date:</strong>{" "}
+              {selectedAppointment.appointmentDate}
+            </p>
+            <p>
+              <strong>Appointment Time:</strong>{" "}
+              {selectedAppointment.appointmentTime}
+            </p>
+            <p>
+              <strong>Patient Name:</strong> {selectedAppointment.patientName}
+            </p>
+            <p>
+              <strong>Patient Email:</strong> {selectedAppointment.patientEmail}
+            </p>
+            <p>
+              <strong>Patient Contact:</strong>{" "}
+              {selectedAppointment.patientContactNo}
+            </p>
+            <p>
+              <strong>Appointment Reason:</strong> {selectedAppointment.reason}
+            </p>
+            <div className="popup-actions">
+              <button
+                className="btn-approve"
+                onClick={() =>
+                  handleAction(selectedAppointment.requestId, "Accepted")
+                }
+              >
+                Approve
+              </button>
+              <button
+                className="btn-reject"
+                onClick={() =>
+                  handleAction(selectedAppointment.requestId, "Rejected")
+                }
+              >
+                Reject
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
       )}
-      
     </div>
   );
 };

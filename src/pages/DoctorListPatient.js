@@ -3,7 +3,6 @@ import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { doc } from "prettier";
 
-
 const DoctorListPatient = () => {
   const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
@@ -82,9 +81,18 @@ const DoctorListPatient = () => {
       };
 
       const [designationRes, departmentRes, genderRes] = await Promise.all([
-        fetch(`${process.env.REACT_APP_API_BASE_URL}api/v1/user/designation-options`, { headers }),
-        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`, { headers }),
-        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/gender-options`, { headers }),
+        fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/designation-options`,
+          { headers }
+        ),
+        fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/department-options`,
+          { headers }
+        ),
+        fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/gender-options`,
+          { headers }
+        ),
       ]);
 
       const designationData = await designationRes.json();
@@ -123,11 +131,11 @@ const DoctorListPatient = () => {
   const makeAppointment = (doctor) => {
     console.log(doctor);
     // Pass the entire doctor object through navigation state
-    navigate(`/make-appointment/${doctor.doctorId}`, { 
-      state: { doctorInfo: doctor }
+    navigate(`/make-appointment/${doctor.doctorId}`, {
+      state: { doctorInfo: doctor },
     });
   };
-  
+
   const goToNextPage = () => {
     if (currentPage < totalPages - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -182,7 +190,7 @@ const DoctorListPatient = () => {
             </option>
           ))}
         </select>
-        <select
+        {/* <select
           value={gender}
           onChange={(e) => setGender(e.target.value)}
           className="filter-dropdown"
@@ -193,7 +201,7 @@ const DoctorListPatient = () => {
               {option}
             </option>
           ))}
-        </select>
+        </select> */}
         <button onClick={handleSearch} className="search-button">
           Search
         </button>
@@ -213,7 +221,9 @@ const DoctorListPatient = () => {
           {doctors.length > 0 ? (
             doctors.map((doctor, index) => (
               <tr key={index}>
-                <td>{doctor.firstname} {doctor.lastname}</td>
+                <td>
+                  {doctor.firstname} {doctor.lastname}
+                </td>
                 <td>{doctor.designation}</td>
                 <td>{doctor.department}</td>
                 <td>{doctor.fee}</td>

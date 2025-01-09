@@ -179,6 +179,7 @@ const AppointmentsApproveList = () => {
             <th>Appointment Date</th>
             <th>Appointment Time</th>
             <th>Patient Name</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -190,6 +191,7 @@ const AppointmentsApproveList = () => {
                 <td>{appointment.appointmentDate}</td>
                 <td>{appointment.appointmentTime}</td>
                 <td>{appointment.patientName}</td>
+                <td>{appointment.status}</td>
                 <td>
                   <button
                     className="view-icon-button"

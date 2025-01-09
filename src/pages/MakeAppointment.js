@@ -17,6 +17,7 @@ const MakeAppointment = () => {
     patientGender: "",
     patientAge: "",
     doctorId: doctorId,
+    patientId: "",
     doctorFirstName: doctorInfo?.firstname || "",
     doctorLastName: doctorInfo?.lastname || "",
     designation: doctorInfo?.designation || "",
@@ -33,6 +34,16 @@ const MakeAppointment = () => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoadingTimes, setIsLoadingTimes] = useState(false);
 
+  // Function to get the token from localStorage and extract the user ID
+  const getUserIdFromToken = () => {
+    const token = localStorage.getItem("token"); // Replace with your token storage method
+    if (!token) {
+      throw new Error("No token found");
+    }
+    const userId = localStorage.getItem("userId");
+    return userId; // Assuming the token contains the user ID in the 'id' field
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -47,45 +58,53 @@ const MakeAppointment = () => {
   };
 
   const fetchAvailableTimes = async (selectedDate) => {
-    // if (!selectedDate) {
-    //     setAvailableTimes([]);
-    //     return;
-    // }
+    if (!selectedDate) {
+      setAvailableTimes([]);
+      return;
+    }
 
-    // setIsLoadingTimes(true);
-    // setError(null);
+    setIsLoadingTimes(true);
+    setError(null);
 
-    // try {
-    //     const token = localStorage.getItem("token");
-    //     if (!token) throw new Error("No token found");
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No token found");
 
-    //     const response = await fetch(
-    //         `${process.env.REACT_APP_API_BASE_URL}/api/v1/appointments/available-times?doctorId=${doctorId}&date=${selectedDate}`,
-    //         {
-    //             method: "GET",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //         }
-    //     );
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/time-slot`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            doctorId: doctorId,
+            date: selectedDate,
+          }),
+        }
+      );
 
-    //     const data = await response.json();
-
-    //     if (data.responseCode === "S100000") {
-    //         setAvailableTimes(data.availableTimes || []);
-    //     } else {
-    //         setAvailableTimes([]);
-    //         setError(data.responseMessage || "Failed to fetch available times");
-    //     }
-    // } catch (err) {
-    //     setAvailableTimes([]);
-    //     setError(err.message);
-    // } finally {
-    //     setIsLoadingTimes(false);
-    // }
-
-    setAvailableTimes(["09:00", "10:00", "11:00", "13:00", "15:00", "17:00"]);
+      const data = await response.json();
+      console.log(data);
+      if (response.ok && data.responseCode === "S100000") {
+        if (data != null) {
+          setAvailableTimes(data.data.timeSlotList || []); // Assuming `timeSlots` contains the available times
+        } else {
+          setAvailableTimes([]);
+        }
+      } else if (response.ok && data.responseCode === "E000101") {
+        setAvailableTimes([]);
+      } else {
+        setAvailableTimes([]);
+        setError(data.responseMessage || "Failed to fetch available times");
+      }
+    } catch (err) {
+      setAvailableTimes([]);
+      setError(err.message);
+    } finally {
+      setIsLoadingTimes(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -105,10 +124,11 @@ const MakeAppointment = () => {
         patientEmail: formData.patientEmail,
         patientAge: formData.patientAge, // Defaulting to 35 if age is not provided
         patientGender: formData.patientGender, // Defaulting to "MALE" if not provided
-        patientId: formData.patientId, // Defaulting to "PAT67894" if not provided
+        patientId: getUserIdFromToken(), // Defaulting to "PAT67894" if not provided
         patientContactNo: formData.patientMobile,
         fee: formData.fee, // Defaulting to 150.50 if fee is not provided
         appointmentNo: formData.appointmentNo, // Defaulting to "AP20241225" if not provided
+        reason: formData.reason,
       };
 
       const staticRequestBody = {
@@ -205,6 +225,7 @@ const MakeAppointment = () => {
                   value={formData.appointmentDate}
                   onChange={handleChange}
                   className={styles.inputField}
+                  min={new Date().toISOString().split("T")[0]}
                   required
                 />
               </div>

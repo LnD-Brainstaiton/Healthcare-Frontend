@@ -24,7 +24,7 @@ function VerifyOtp() {
       // Add OTP verification logic here, e.g., API call to verify OTP
       console.log(userName, generatedOtp, sessionId);
       const otpResponse = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/v1/tfa/validate-otp`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/validate-otp`,
         { userName, generatedOtp, sessionId }
       );
       console.log(otpResponse);

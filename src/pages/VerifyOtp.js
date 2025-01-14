@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Register.css";
 
 function VerifyOtp() {
   const location = useLocation();
@@ -50,23 +49,27 @@ function VerifyOtp() {
   }
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2 className="register-title">Verify OTP</h2>
-        <hr />
+    <div className="flex items-center justify-center p-40">
+      <div className="bg-white shadow-lg rounded-xl p-10 w-96 text-center transition-all duration-300 ease-in-out">
+        <h2 className="text-2xl text-primaryText p-4 font-bold">Verify OTP</h2>
+        <hr className="mb-4" />
 
         {errorMessage && (
-          <div className="alert alert-danger">{errorMessage}</div>
+          <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
+            {errorMessage}
+          </div>
         )}
         {successMessage && (
-          <div className="alert alert-success">{successMessage}</div>
+          <div className="p-2 mb-4 rounded-lg font-bold bg-successMessageBackground text-successMessage">
+            {successMessage}
+          </div>
         )}
 
         <form onSubmit={handleVerifyOtp}>
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="text"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter OTP"
               value={generatedOtp}
               onChange={(event) => setGeneratedOtp(event.target.value)}
@@ -74,7 +77,10 @@ function VerifyOtp() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block">
+          <button
+            type="submit"
+            className="bg-teal-600  w-full text-2xl text-primaryText hover:text-primaryTextHover font-bold p-2 rounded-xl"
+          >
             Verify OTP
           </button>
         </form>

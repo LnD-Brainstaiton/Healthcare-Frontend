@@ -8,8 +8,8 @@ import {
 import { jwtDecode } from "jwt-decode"; // Corrected import
 import axios from "axios";
 import Register from "./components/RegisterComponent";
-import Header from "./components/HeaderComponent";
-import Footer from "./components/FooterComponent";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/LoginComponent";
 import Logout from "./components/LogoutComponent";

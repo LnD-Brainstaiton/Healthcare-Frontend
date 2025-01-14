@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Login.css"; // Import custom styles
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -49,20 +48,22 @@ function Login({ onLogin }) {
   }
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2 className="login-title">Login</h2>
-        <hr />
+    <div className="flex items-center justify-center p-40">
+      <div className="bg-white shadow-lg rounded-xl p-10 w-96 text-center transition-all duration-300 ease-in-out">
+        <h2 className="text-2xl text-primaryText p-4 font-bold">Sign in</h2>
+        <hr className="mb-4" />
 
         {errorMessage && (
-          <div className="alert alert-danger">{errorMessage}</div>
+          <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
+            {errorMessage}
+          </div>
         )}
 
         <form onSubmit={login}>
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="text"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter id"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
@@ -70,10 +71,10 @@ function Login({ onLogin }) {
             />
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="password"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -81,8 +82,11 @@ function Login({ onLogin }) {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block">
-            Login
+          <button
+            type="submit"
+            className="bg-teal-600  w-full text-2xl text-primaryText hover:text-primaryTextHover font-bold p-2 rounded-xl"
+          >
+            Sign in
           </button>
         </form>
       </div>

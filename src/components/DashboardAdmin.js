@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/DashboardAdmin.module.css";
-import logo from "../assets/Logo.png";
 
 const DashboardAdmin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -96,41 +94,63 @@ const DashboardAdmin = () => {
   }
 
   return (
-    <div className={styles.dashboardAdmin}>
-      <h1 className={styles.heading}>Admin Dashboard</h1>
-      <div className={styles.cardContainer}>
-        <div className={styles.card} onClick={() => navigate("/admins-list")}>
-          <h2 className={styles.cardHeading}>Admins</h2>
-          <p className={styles.cardText}>{stats.adminsCount}</p>
-        </div>
-        <div className={styles.card} onClick={() => navigate("/doctors-list")}>
-          <h2 className={styles.cardHeading}>Doctors</h2>
-          <p className={styles.cardText}>{stats.docsCount}</p>
-        </div>
-        <div className={styles.card} onClick={() => navigate("/patients-list")}>
-          <h2 className={styles.cardHeading}>Patients</h2>
-          <p className={styles.cardText}>{stats.patientsCount}</p>
+    <div className="grid">
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 p-20">
+        <div
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
+          onClick={() => navigate("/admins-list")}
+        >
+          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
+            Admins
+          </h2>
+          <p className=" text-4xl font-bold">{stats.adminsCount}</p>
         </div>
         <div
-          className={styles.card}
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
+          onClick={() => navigate("/doctors-list")}
+        >
+          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
+            Doctors
+          </h2>
+          <p className=" text-4xl font-bold">{stats.docsCount}</p>
+        </div>
+        <div
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
+          onClick={() => navigate("/patients-list")}
+        >
+          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
+            Patients
+          </h2>
+          <p className=" text-4xl font-bold">{stats.patientsCount}</p>
+        </div>
+        <div
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
           onClick={() => navigate("/doctors-approve-list")}
         >
-          <h2 className={styles.cardHeading}>Pending Doctors</h2>
-          <p className={styles.cardText}>{stats.docsPendingCount}</p>
+          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
+            Pending Doctors
+          </h2>
+          <p className=" text-4xl font-bold">{stats.docsPendingCount}</p>
         </div>
         <div
-          className={styles.card}
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
           onClick={() => navigate("/appointment-approve-list")}
         >
-          <h2 className={styles.cardHeading}>Pending Appointment</h2>
-          <p className={styles.cardText}>{stats.appointmentsPendingCount}</p>
+          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
+            Pending Appointment
+          </h2>
+          <p className=" text-4xl font-bold">
+            {stats.appointmentsPendingCount}
+          </p>
         </div>
         <div
-          className={styles.card}
+          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
           onClick={() => navigate("/appointment-reapprove-list")}
         >
-          <h2 className={styles.cardHeading}>Pending Appointment Reschedule</h2>
-          <p className={styles.cardText}>{stats.adminsPendingCount}</p>
+          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
+            Appointment Reschedule
+          </h2>
+          <p className=" text-4xl font-bold">{stats.adminsPendingCount}</p>
         </div>
       </div>
     </div>

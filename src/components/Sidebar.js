@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen }) => {
   return (
     <aside
       className={`bg-tealBlue text-white ${
-        isOpen ? "w-4/12 px-6" : "w-0"
+        isOpen ? "w-80 px-8" : "w-0"
       } transition-all duration-300 overflow-hidden`}
     >
       {isOpen && (

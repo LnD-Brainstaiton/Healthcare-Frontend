@@ -7,15 +7,15 @@ import {
 } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // Corrected import
 import axios from "axios";
-import Register from "./components/RegisterComponent";
+import Register from "./components/Register";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./components/LoginComponent";
-import Logout from "./components/LogoutComponent";
+import Login from "./components/Login";
+import Logout from "./components/Logout";
 import Sidebar from "./components/Sidebar";
 import DashboardPatient from "./pages/DashboardPatient";
-import DashboardAdmin from "./pages/DashboardAdmin";
+import DashboardAdmin from "./components/DashboardAdmin";
 import DoctorsList from "./pages/DoctorList";
 import PatientsList from "./pages/PatientList";
 import AdminsList from "./pages/AdminList";
@@ -77,9 +77,9 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
-        <div className="flex flex-grow">
+        <div className="flex flex-grow ">
           {token && <Sidebar isOpen={isSidebarOpen} />}
-          <div className="flex-grow">
+          <div className="flex-grow overflow-auto">
             <Routes>
               <Route path="/register" element={<Register />} />
               <Route path="/verify-otp" element={<VerifyOtp />} />

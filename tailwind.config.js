@@ -26,6 +26,10 @@ module.exports = {
         errorMessage: "#721c24", // Error messages
         errorMessageBackground: "#f8d7da", // Darker shade for hover
       },
+      boxShadow: {
+        "custom-light": "0 4px 6px rgba(0, 0, 0, 0.1)",
+        "custom-dark": "0 10px 15px rgba(0, 0, 0, 0.3)",
+      },
     },
   },
   plugins: [],

@@ -21,7 +21,6 @@ import PatientsList from "./pages/PatientList";
 import AdminsList from "./pages/AdminList";
 import Profile from "./pages/Profile";
 import UpdateProfile from "./pages/ProfileUpdate";
-import "../src/index.css";
 import AppointmentsList from "./pages/AppointmentList";
 import DoctorsApproveList from "./pages/DoctorApproveList";
 import AppointmentApproveList from "./pages/AppointmentApproveList";
@@ -74,7 +73,7 @@ function App() {
     <Router>
       <HeaderComponent />
       <div className={`${isSidebarOpen ? "sidebar-open" : ""}`}>
-        <main className="content-container">
+        <main className="">
           {token && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
           <Routes>
             <Route path="/register" element={<Register />} />

@@ -1,48 +1,27 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import "../styles/Header.css";
+import logo from "../assets/Logo.jpeg";
 
-const HeaderComponent = () => {
+const Header = () => {
   const location = useLocation();
   const token = localStorage.getItem("token");
 
   return (
-    <div>
-      <header>
-        <nav className="navbar navbar-expand-md navbar header-container">
-          <div className="container-fluid">
-            <div className="collapse navbar-collapse">
-              <ul className="navbar-nav ms-auto">
-                {token ? (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/logout">
-                      Logout
-                    </Link>
-                  </li>
-                ) : (
-                  <>
-                    {location.pathname === "/register" ? (
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/">
-                          Login
-                        </Link>
-                      </li>
-                    ) : (
-                      <li className="nav-item">
-                        <Link className="nav-link" to="/register">
-                          Sign Up
-                        </Link>
-                      </li>
-                    )}
-                  </>
-                )}
-              </ul>
-            </div>
-          </div>
+    <header className="bg-tealBlue text-white text-xl p-6 h-18 w-full">
+      <div className="flex justify-between items-center h-full">
+        <img src={logo} className="h-12 rounded-full border-2" alt="logo" />
+        <nav>
+          {token ? (
+            <Link to="/">Login</Link>
+          ) : location.pathname === "/register" ? (
+            <Link to="/">Login</Link>
+          ) : (
+            <Link to="/register">Login</Link>
+          )}
         </nav>
-      </header>
-    </div>
+      </div>
+    </header>
   );
 };
 
-export default HeaderComponent;
+export default Header;

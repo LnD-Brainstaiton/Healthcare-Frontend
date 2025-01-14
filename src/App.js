@@ -8,8 +8,8 @@ import {
 import { jwtDecode } from "jwt-decode"; // Corrected import
 import axios from "axios";
 import Register from "./components/RegisterComponent";
-import HeaderComponent from "./components/HeaderComponent";
-import FooterComponent from "./components/FooterComponent";
+import Header from "./components/HeaderComponent";
+import Footer from "./components/FooterComponent";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./components/LoginComponent";
 import Logout from "./components/LogoutComponent";
@@ -49,6 +49,10 @@ function App() {
     }
   }, []);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen); // Toggle sidebar state
+  };
+
   const isTokenExpired = (token) => {
     try {
       const decoded = jwtDecode(token); // Updated to use jwtDecode
@@ -71,166 +75,168 @@ function App() {
 
   return (
     <Router>
-      <HeaderComponent />
-      <div className={`${isSidebarOpen ? "sidebar-open" : ""}`}>
-        <main className="">
-          {token && <Sidebar setIsSidebarOpen={setIsSidebarOpen} />}
-          <Routes>
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify-otp" element={<VerifyOtp />} />
-            <Route path="/" element={<Login onLogin={handleLogin} />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <DashboardRouter />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/logout"
-              element={<Logout onLogout={handleLogout} />}
-            />
-            <Route
-              path="/doctors-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <DoctorsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/make-appointment/:doctorId"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <MakeAppointment />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/doctor-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <DoctorListPatient />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admins-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <AdminsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/create-doctor"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <CreateDoctor />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/patients-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <PatientsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/appointments-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <AppointmentsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/upcoming-appointments-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <UpcomingAppointmentsList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/doctors-approve-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <DoctorsApproveList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/appointment-approve-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <AppointmentApproveList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/appointment-reapprove-list"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <AppointmentReapproveList />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/patient-prescriptions"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <MyPrescriptions />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/appointment-reschedule"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <AppointmentReschedule />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/instruction"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <InstructionPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/payment"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <PaymentPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/update-profile/:userId/:userType"
-              element={
-                <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                  <UpdateProfile />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </main>
+      <div className="min-h-screen flex flex-col">
+        <Header toggleSidebar={toggleSidebar} />
+        <div className="flex flex-grow">
+          {token && <Sidebar isOpen={isSidebarOpen} />}
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-otp" element={<VerifyOtp />} />
+              <Route path="/" element={<Login onLogin={handleLogin} />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DashboardRouter />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/logout"
+                element={<Logout onLogout={handleLogout} />}
+              />
+              <Route
+                path="/doctors-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DoctorsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/make-appointment/:doctorId"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <MakeAppointment />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/doctor-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DoctorListPatient />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admins-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <AdminsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/create-doctor"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <CreateDoctor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/patients-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <PatientsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/appointments-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <AppointmentsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/upcoming-appointments-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <UpcomingAppointmentsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/doctors-approve-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DoctorsApproveList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/appointment-approve-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <AppointmentApproveList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/appointment-reapprove-list"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <AppointmentReapproveList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/patient-prescriptions"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <MyPrescriptions />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/appointment-reschedule"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <AppointmentReschedule />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/instruction"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <InstructionPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/payment"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <PaymentPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/update-profile/:userId/:userType"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <UpdateProfile />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </div>
+        <Footer />
       </div>
-      <FooterComponent />
     </Router>
   );
 }

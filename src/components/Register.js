@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../styles/Register.css";
 
 function Register() {
   const [firstName, setFirstName] = useState("");
@@ -114,26 +113,35 @@ function Register() {
   }
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2 className="register-title">Register</h2>
-        <hr />
+    <div className="flex items-center justify-center p-10">
+      <div className="bg-white shadow-lg rounded-xl p-10 w-96 text-center transition-all duration-300 ease-in-out">
+        <h2 className="text-2xl text-primaryText p-4 font-bold">Register</h2>
+        <hr className="mb-4" />
 
         {errorMessage && (
-          <div className="alert alert-danger">{errorMessage}</div>
+          <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
+            {errorMessage}
+          </div>
+        )}
+        {!isMobileValid && (
+          <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
+            {mobileError}
+          </div>
         )}
         {isLoading && (
-          <div class="loader-container">
-            <div class="loader"></div>
-            <div class="loader-text">Loading, please wait...</div>
+          <div className="flex items-center justify-center fixed w-full h-full bg-white top-0 left-0 opacity-55">
+            <div className="w-16 h-16 border-4 border-t-blue-600 m-8 rounded-full animate-spin "></div>
+            <div className="text-4xl text-blue-600 animate-pulse">
+              Loading, please wait...
+            </div>
           </div>
         )}
 
         <form onSubmit={handleRegister}>
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="text"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter First Name"
               value={firstName}
               onChange={(event) => setFirstName(event.target.value)}
@@ -141,10 +149,10 @@ function Register() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="text"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Last Name"
               value={lastName}
               onChange={(event) => setLastName(event.target.value)}
@@ -152,24 +160,21 @@ function Register() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="text"
-              className={`form-control`}
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Mobile"
               value={mobile}
               onChange={(event) => setMobile(event.target.value)}
               required
             />
-            {!isMobileValid && (
-              <div className="invalid-feedback">{mobileError}</div>
-            )}
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="email"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -177,10 +182,10 @@ function Register() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="password"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -188,10 +193,10 @@ function Register() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="mb-4">
             <input
               type="password"
-              className="form-control"
+              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(event) => setConfirmPassword(event.target.value)}
@@ -199,7 +204,10 @@ function Register() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block">
+          <button
+            type="submit"
+            className="bg-teal-600  w-full text-2xl text-primaryText hover:text-primaryTextHover font-bold p-2 rounded-xl"
+          >
             Register
           </button>
         </form>

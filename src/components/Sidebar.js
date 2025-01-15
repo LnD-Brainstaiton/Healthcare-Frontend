@@ -1,103 +1,116 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../styles/Sidebar.css";
-import logo from "../assets/Logo.png";
 
-const Sidebar = ({ setIsSidebarOpen }) => {
-  const [isOpen, setIsOpen] = useState(false); // State to toggle between expanded and collapsed
+const Sidebar = ({ isOpen }) => {
   const [userType, setUserType] = useState(""); // To store the userType
-  
+
   useEffect(() => {
-    // Retrieve userType from localStorage (or wherever you store the userType)
     const storedUserType = localStorage.getItem("userType");
     if (storedUserType) {
       setUserType(storedUserType.toLowerCase());
     }
   }, []);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen); // Toggle the sidebar open/close state
-    setIsSidebarOpen(!isOpen); // Set the parent state
-  };
-
   return (
-    <div className="sidebar-container">
-      <div className={isOpen ? "sidebar open" : "sidebar collapsed"}>
-        <div className="logo-ham-container">
-          <img src={logo} className="sidebar-logo" alt="logo" />
-          <button className="toggle-btn" onClick={toggleSidebar}>
-            <div className="hamburger-icon">
-              <div className="line"></div>
-              <div className="line"></div>
-              <div className="line"></div>
-            </div>
-          </button>
-        </div>
-        <ul className={isOpen ? "sidebar-list" : "sidebar-list hidden"}>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          {/* Common Link for All Users */}
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
-          
-          {/* Conditionally Render Links Based on User Type */}
+    <aside
+      className={`bg-tealBlue text-white ${
+        isOpen ? "w-80 px-8" : "w-0"
+      } transition-all duration-300 overflow-hidden`}
+    >
+      {isOpen && (
+        <ul className="block py-2 text-xl ">
+          <div className="hover:bg-tealBlueHover hover:rounded-md">
+            <li className=" p-2 ">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+          </div>
+          <div className="hover:bg-tealBlueHover hover:rounded-md">
+            <li className="  p-2">
+              <Link to="/profile">Profile</Link>
+            </li>
+          </div>
           {userType === "admin" && (
             <>
-              <li>
-                <Link to="/admins-list">Admins</Link>
-              </li>
-              <li>
-                <Link to="/doctors-list">Doctors</Link>
-              </li>
-              <li>
-                <Link to="/patients-list">Patients</Link>
-              </li>
-              <li>
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
-              <li>
-                <Link to="/doctors-approve-list">Pending Doctors</Link>
-              </li>
-              <li>
-                <Link to="/appointment-approve-list">Pending Appointment</Link>
-              </li>
-              <li>
-                <Link to="/appointment-reapprove-list">Pending Appointment Reschedule</Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/admins-list">Admins</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/doctors-list">Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/patients-list">Patients</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/doctors-approve-list">Pending Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointment-approve-list">
+                    Pending Appointment
+                  </Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointment-reapprove-list">
+                    Pending Appointment Reschedule
+                  </Link>
+                </li>
+              </div>
             </>
           )}
-          
           {userType === "doctor" && (
             <>
-              <li>
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
-              <li>
-                <Link to="/appointment-reschedule">Appointment Reschedule Request</Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointment-reschedule">
+                    Appointment Reschedule Request
+                  </Link>
+                </li>
+              </div>
             </>
           )}
-          
+
           {userType === "patient" && (
             <>
-              <li>
-                <Link to="/doctor-list">Doctors</Link>
-              </li>
-              <li>
-                <Link to="/patient-prescriptions">My Prescription</Link>
-              </li>
-
-              <li>
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/doctor-list">Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/patient-prescriptions">My Prescription</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
             </>
           )}
-
         </ul>
-      </div>
-    </div>
+      )}
+    </aside>
   );
 };
 

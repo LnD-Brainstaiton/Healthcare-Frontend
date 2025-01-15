@@ -19,64 +19,93 @@ const Sidebar = ({ isOpen }) => {
     >
       {isOpen && (
         <ul className="block py-2 text-xl ">
-          <li className="hover:text-borderGray p-2">
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
-          <li className="hover:text-borderGray p-2">
-            <Link to="/profile">Profile</Link>
-          </li>
+          <div className="hover:bg-tealBlueHover hover:rounded-md">
+            <li className=" p-2 ">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+          </div>
+          <div className="hover:bg-tealBlueHover hover:rounded-md">
+            <li className="  p-2">
+              <Link to="/profile">Profile</Link>
+            </li>
+          </div>
           {userType === "admin" && (
             <>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/admins-list">Admins</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/doctors-list">Doctors</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/patients-list">Patients</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/doctors-approve-list">Pending Doctors</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointment-approve-list">Pending Appointment</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointment-reapprove-list">
-                  Pending Appointment Reschedule
-                </Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/admins-list">Admins</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/doctors-list">Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/patients-list">Patients</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/doctors-approve-list">Pending Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointment-approve-list">
+                    Pending Appointment
+                  </Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="p-2">
+                  <Link to="/appointment-reapprove-list">
+                    Pending Appointment Reschedule
+                  </Link>
+                </li>
+              </div>
             </>
           )}
           {userType === "doctor" && (
             <>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointment-reschedule">
-                  Appointment Reschedule Request
-                </Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointment-reschedule">
+                    Appointment Reschedule Request
+                  </Link>
+                </li>
+              </div>
             </>
           )}
 
           {userType === "patient" && (
             <>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/doctor-list">Doctors</Link>
-              </li>
-              <li className="hover:text-borderGray p-2">
-                <Link to="/patient-prescriptions">My Prescription</Link>
-              </li>
-
-              <li className="hover:text-borderGray p-2">
-                <Link to="/appointments-list">Appointment History</Link>
-              </li>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/doctor-list">Doctors</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/patient-prescriptions">My Prescription</Link>
+                </li>
+              </div>
+              <div className="hover:bg-tealBlueHover hover:rounded-md">
+                <li className="  p-2">
+                  <Link to="/appointments-list">Appointment History</Link>
+                </li>
+              </div>
             </>
           )}
         </ul>

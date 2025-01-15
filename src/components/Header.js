@@ -23,10 +23,10 @@ const Header = ({ toggleSidebar }) => {
 
           <img
             src={logo}
-            className="h-12 rounded-full border-2 ml-6"
+            className="h-12 rounded-lg ml-6 scale-75"
             alt="logo"
           />
-          <h1 className="ml-2 text-3xl">Health Care</h1>
+          <h1 className="text-4xl">Health Care</h1>
         </div>
         <nav>
           {token ? (

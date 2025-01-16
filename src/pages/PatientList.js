@@ -130,93 +130,104 @@ const PatientsList = () => {
   };
 
   return (
-    <div className="patients-list">
-      <h1>Patients List</h1>
+    <div className="max-w-screen-xl min-h-[81vh] mx-auto p-5 bg-white shadow-lg rounded-lg
+    sm:max-w-screen-sm sm:px-4 sm:py-4
+    md:max-w-screen-md md:px-6 md:py-6
+    lg:max-w-screen-lg lg:px-8 lg:py-8
+    xl:max-w-screen-xl xl:px-10 xl:py-10">
+      <h1 className="text-center text-white bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg text-3xl font-semibold mb-5">
+        Patients List
+      </h1>
 
-      <div className="search-filter-container">
+      <div
+          className="flex flex-wrap gap-4 justify-start items-center mb-5 p-2.5 bg-gray-100 border border-gray-300 rounded-lg">
         <input
-          type="text"
+            type="text"
           placeholder="Search by id..."
           value={searchQueryId}
           onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
+          className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
         />
         <input
           type="text"
           placeholder="Search by name..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
+          className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
         />
-        
-        <button onClick={handleSearch} className="search-button">
+
+        <button
+            onClick={handleSearch}
+            className="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition-colors duration-300"
+        >
           Search
         </button>
       </div>
 
-      <table className="patients-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Blood Group</th>
-            <th>Age</th>
-            <th>Actions</th>
-          </tr>
+      <table className="w-full border-collapse my-5 text-sm text-left">
+        <thead className="bg-tealBlue text-white">
+        <tr>
+          <th className="px-4 py-3 text-center border border-borderGray">Id</th>
+          <th className="px-4 py-3 text-center border border-borderGray">First Name</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Last Name</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Email</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Mobile</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Blood Group</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Age</th>
+          <th className="px-4 py-3 text-center border border-borderGray">Actions</th>
+        </tr>
         </thead>
         <tbody>
-          {patients.length > 0 ? (
+        {patients.length > 0 ? (
             patients.map((patient, index) => (
-              <tr key={index}>
-                <td>{patient.patientId}</td>
-                <td>{patient.firstname}</td>
-                <td>{patient.lastname}</td>
-                <td>{patient.email}</td>
-                <td>{patient.mobile}</td>
-                <td>{patient.bloodGroup}</td>
-                <td>{patient.age}</td>
-                <td>
-                  <button
-                    className="btn-update"
-                    onClick={() => handleUpdate(patient.patientId)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(patient.patientId)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
+                <tr key={index} className="even:bg-backgroundHover hover:bg-backgroundHover">
+                  <td className="px-4 py-3 border border-borderGray">{patient.patientId}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.firstname}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.lastname}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.email}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.mobile}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.bloodGroup}</td>
+                  <td className="px-4 py-3 border border-borderGray">{patient.age}</td>
+                  <td className="px-4 py-3 border border-borderGray text-center">
+                    <button
+                        className="bg-primaryButton hover:bg-primaryButtonHover text-white py-1 px-3 rounded mr-2"
+                        onClick={() => handleUpdate(patient.patientId)}
+                    >
+                      Update
+                    </button>
+                    <button
+                        className="bg-secondaryButton hover:bg-secondaryButtonHover text-white py-1 px-3 rounded"
+                        onClick={() => handleDelete(patient.patientId)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
             ))
-          ) : (
+        ) : (
             <tr>
-              <td colSpan="5">No patients found.</td>
+              <td colSpan="8" className="text-center text-secondaryText py-3">No patients found.</td>
             </tr>
-          )}
+        )}
         </tbody>
       </table>
 
-      <div className="pagination-controls">
+
+      <div className="flex justify-center items-center mt-5">
         <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className="pagination-button"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 0}
+            className="bg-blue-600 text-white border-none py-2 px-4 mx-2 cursor-pointer rounded-md text-base transition-colors duration-300 ease-in-out hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className="pagination-info">
-          Page {currentPage + 1} of {totalPages}
-        </span>
+        <span className="text-lg mx-3">
+        Page {currentPage + 1} of {totalPages}
+    </span>
         <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className="pagination-button"
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages - 1}
+            className="bg-blue-600 text-white border-none py-2 px-4 mx-2 cursor-pointer rounded-md text-base transition-colors duration-300 ease-in-out hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           Next
         </button>

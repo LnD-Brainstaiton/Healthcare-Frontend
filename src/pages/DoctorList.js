@@ -183,14 +183,15 @@ const DoctorsList = () => {
     md:max-w-screen-md md:px-6 md:py-6
     lg:max-w-screen-lg lg:px-8 lg:py-8
     xl:max-w-screen-xl xl:px-10 xl:py-10">
-            <h1 className="text-center text-gray-800 mb-5">Doctors List</h1>
-            <div className="mb-5 text-right">
+            <h1 className="flex items-center justify-between text-white bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg text-3xl font-semibold mb-5">
+                <span>Doctors List</span>
                 <button
                     onClick={handleCreateDoctor}
                     className="px-5 py-2 bg-tealBlue text-white rounded-md cursor-pointer text-lg hover:bg-tealBlueHover">
                     Create Doctor
                 </button>
-            </div>
+            </h1>
+
 
             <div
                 className="flex flex-wrap gap-4 justify-start items-center mb-5 p-2.5 bg-gray-100 border border-gray-300 rounded-lg">

@@ -7,7 +7,7 @@ const Header = ({ toggleSidebar }) => {
   const token = localStorage.getItem("token");
 
   return (
-    <header className="bg-tealBlue text-white text-xl p-6 h-18 w-full">
+    <header className="bg-tealBlue text-white text-xl p-2 h-18 w-full">
       <div className="flex justify-between items-center h-full">
         <div className="flex justify-between items-center">
           {token && (
@@ -26,7 +26,7 @@ const Header = ({ toggleSidebar }) => {
             className="h-12 rounded-lg ml-6 scale-75"
             alt="logo"
           />
-          <h1 className="text-4xl">Health Care</h1>
+          <h1 className="text-2xl">Health Care</h1>
         </div>
         <nav>
           {token ? (

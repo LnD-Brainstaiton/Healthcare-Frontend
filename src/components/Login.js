@@ -21,7 +21,7 @@ function Login({ onLogin }) {
     try {
       await axios
         .post(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/token`, {
-          userName: username,
+          userId: username,
           password: password,
         })
         .then((res) => {

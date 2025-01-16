@@ -21,7 +21,6 @@ function VerifyOtp() {
     try {
       const userName = mobile;
       // Add OTP verification logic here, e.g., API call to verify OTP
-      console.log(userName, generatedOtp, sessionId);
       const otpResponse = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/validate-otp`,
         { userName, generatedOtp, sessionId }
@@ -79,7 +78,7 @@ function VerifyOtp() {
 
           <button
             type="submit"
-            className="bg-teal-600  w-full text-2xl text-primaryText hover:text-primaryTextHover font-bold p-2 rounded-xl"
+            className="bg-teal-600 bg-gradient-to-r from-tealBlue  to-green-800 w-full text-2xl text-white hover:text-primaryTextHover font-bold p-2 rounded-xl"
           >
             Verify OTP
           </button>

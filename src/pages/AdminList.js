@@ -118,93 +118,102 @@ const AdminsList = () => {
   };
 
   return (
-    <div className={styles.adminsList}>
-      <h1>Admins List</h1>
+      <div className="max-w-screen-xl min-h-[81vh] mx-auto p-5 bg-white shadow-lg rounded-lg
+    sm:max-w-screen-sm sm:px-4 sm:py-4
+    md:max-w-screen-md md:px-6 md:py-6
+    lg:max-w-screen-lg lg:px-8 lg:py-8
+    xl:max-w-screen-xl xl:px-10 xl:py-10">
+        <h1 className="text-center text-white bg-gradient-to-r from-teal-500 to-teal-700 p-6 rounded-lg shadow-lg text-3xl font-semibold mb-5">
+          Admins List
+        </h1>
 
-      <div className={styles.searchFilterContainer}>
-        <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className={styles.searchInput}
-        />
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className={styles.searchInput}
-        />
-        <button onClick={handleSearch} className={styles.searchButton}>
-          Search
-        </button>
-      </div>
+        <div className={styles.searchFilterContainer}>
+          <input
+              type="text"
+              placeholder="Search by id..."
+              value={searchQueryId}
+              onChange={(e) => setSearchQueryId(e.target.value)}
+              className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
+          />
+          <input
+              type="text"
+              placeholder="Search by name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
+          />
+          <button onClick={handleSearch}
+                  className="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600 transition-colors duration-300">
+            Search
+          </button>
+        </div>
 
-      <table className={styles.adminsTable}>
-        <thead>
+        <table className="w-full border-collapse my-5 text-sm text-left shadow-lg border border-gray-300">
+          <thead className="bg-tealBlue text-white">
           <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Actions</th>
+            <th className="px-4 py-3 text-center border border-borderGray">Id</th>
+            <th className="px-4 py-3 text-center border border-borderGray">First Name</th>
+            <th className="px-4 py-3 text-center border border-borderGray">Last Name</th>
+            <th className="px-4 py-3 text-center border border-borderGray">Email</th>
+            <th className="px-4 py-3 text-center border border-borderGray">Mobile</th>
+            <th className="px-4 py-3 text-center border border-borderGray">Actions</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {admins.length > 0 ? (
-            admins.map((admin, index) => (
-              <tr key={index}>
-                <td>{admin.adminId}</td>
-                <td>{admin.firstname}</td>
-                <td>{admin.lastname}</td>
-                <td>{admin.email}</td>
-                <td>{admin.mobile}</td>
-                <td>
-                  <button
-                    className={styles.btnUpdate}
-                    onClick={() => handleUpdate(admin.adminId)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className={styles.btnDelete}
-                    onClick={() => handleDelete(admin.adminId)}
-                  >
-                    Delete
-                  </button>
+              admins.map((admin, index) => (
+                  <tr key={index} className="even:bg-backgroundHover hover:bg-backgroundHover">
+                    <td className="px-4 py-3 border border-borderGray">{admin.adminId}</td>
+                    <td className="px-4 py-3 border border-borderGray">{admin.firstname}</td>
+                    <td className="px-4 py-3 border border-borderGray">{admin.lastname}</td>
+                    <td className="px-4 py-3 border border-borderGray">{admin.email}</td>
+                    <td className="px-4 py-3 border border-borderGray">{admin.mobile}</td>
+                    <td className="px-4 py-3 border border-borderGray text-center">
+                      <button
+                          className="bg-primaryButton hover:bg-primaryButtonHover text-white py-1 px-3 rounded mr-2"
+                          onClick={() => handleUpdate(admin.adminId)}
+                      >
+                        Update
+                      </button>
+                      <button
+                          className="bg-secondaryButton hover:bg-secondaryButtonHover text-white py-1 px-3 rounded"
+                          onClick={() => handleDelete(admin.adminId)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+              ))
+          ) : (
+              <tr>
+                <td colSpan="6" className="text-center text-secondaryText py-3">
+                  No admins found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No admins found.</td>
-            </tr>
           )}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
 
-      <div className={styles.paginationControls}>
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className={styles.paginationButton}
-        >
-          Previous
-        </button>
-        <span className={styles.paginationInfo}>
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className={styles.paginationButton}
-        >
-          Next
-        </button>
+        <div className="flex justify-center items-center mt-5">
+          <button
+              onClick={goToPreviousPage}
+              disabled={currentPage === 0}
+              className="bg-blue-600 text-white border-none py-2 px-4 mx-2 cursor-pointer rounded-md text-base transition-colors duration-300 ease-in-out hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          <span className="text-lg mx-3">
+        Page {currentPage + 1} of {totalPages}
+    </span>
+          <button
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages - 1}
+              className="bg-blue-600 text-white border-none py-2 px-4 mx-2 cursor-pointer rounded-md text-base transition-colors duration-300 ease-in-out hover:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
   );
 };
 

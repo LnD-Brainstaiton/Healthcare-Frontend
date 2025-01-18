@@ -7,12 +7,12 @@ const Header = ({ toggleSidebar }) => {
   const token = localStorage.getItem("token");
 
   return (
-    <header className="bg-tealBlue text-white text-xl p-2 h-18 w-full">
+    <header className="bg-tealBlue text-white text-xl p-2 h-18 w-full fixed lg:relative ">
       <div className="flex justify-between items-center h-full">
         <div className="flex justify-between items-center">
           {token && (
             <button
-              className="flex flex-col justify-between items-center w-8 h-6 focus:outline-none"
+              className="flex flex-col justify-between items-center ml-8 w-8 h-6 focus:outline-none scale-75"
               onClick={toggleSidebar}
             >
               <div className="h-1 w-full bg-white"></div>
@@ -28,7 +28,7 @@ const Header = ({ toggleSidebar }) => {
           />
           <h1 className="text-2xl">Health Care</h1>
         </div>
-        <nav>
+        <nav className="mr-6">
           {token ? (
             <Link to="/logout">Sign out</Link>
           ) : location.pathname === "/register" ? (

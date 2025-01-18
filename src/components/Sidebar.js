@@ -15,7 +15,7 @@ const Sidebar = ({ isOpen }) => {
     <aside
       className={`bg-tealBlue text-white ${
         isOpen ? "w-80 px-8" : "w-0"
-      } transition-all duration-300 overflow-hidden`}
+      } top-16 lg:top-0 z-10 fixed h-full lg:relative lg:h-auto transition-all duration-300 overflow-hidden`}
     >
       {isOpen && (
         <ul className="block py-2 text-xl ">

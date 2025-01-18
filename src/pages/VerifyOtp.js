@@ -8,7 +8,7 @@ function VerifyOtp() {
   const [generatedOtp, setGeneratedOtp] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const { firstName, lastName, mobile, email, password, sessionId } =
+  const { firstName, lastName, mobile, email, password, sessionId, isDoctor } =
     location.state || {};
 
   if (!email || !mobile) {
@@ -29,10 +29,17 @@ function VerifyOtp() {
 
       if (otpResponse.status === 200) {
         // Proceed with registration
-        await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/register`,
-          { firstName, lastName, mobile, email, password }
-        );
+        if (isDoctor) {
+          await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/init/request`,
+            { firstName, lastName, mobile, email, password }
+          );
+        } else {
+          await axios.post(
+            `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/register`,
+            { firstName, lastName, mobile, email, password }
+          );
+        }
 
         setSuccessMessage("Registration successful! Please login.");
         setTimeout(() => {
@@ -78,7 +85,8 @@ function VerifyOtp() {
 
           <button
             type="submit"
-            className="bg-teal-600 bg-gradient-to-r from-tealBlue  to-green-800 w-full text-2xl text-white hover:text-primaryTextHover font-bold p-2 rounded-xl"
+            className="bg-tealBlueHover w-full text-2xl text-white hover:bg-tealBlue font-bold p-2 rounded-xl  hover:shadow-lg hover:scale-105 transform transition-all duration-200
+"
           >
             Verify OTP
           </button>

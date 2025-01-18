@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/AdminsList.module.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const AdminsList = () => {
   const navigate = useNavigate();
@@ -37,8 +37,6 @@ const AdminsList = () => {
           },
         }
       );
-      console.log("API Base URL:", process.env.REACT_APP_API_BASE_URL);
-
 
       const data = await response.json();
       if (data.responseCode === "S100000") {
@@ -46,7 +44,7 @@ const AdminsList = () => {
         setTotalPages(data.data.totalPages);
       } else {
         console.error("Error fetching admins:", data.responseMessage);
-        setAdmins([]); // Clear table if an error occurs
+        setAdmins([]);
       }
     } catch (error) {
       console.error("Error fetching admins:", error);
@@ -68,7 +66,9 @@ const AdminsList = () => {
   };
 
   const handleDelete = async (adminId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the admin with ID: ${adminId}?`);
+    const userConfirmed = window.confirm(
+      `Are you sure you want to delete the admin with ID: ${adminId}?`
+    );
 
     if (userConfirmed) {
       try {
@@ -118,88 +118,111 @@ const AdminsList = () => {
   };
 
   return (
-    <div className={styles.adminsList}>
-      <h1>Admins List</h1>
+    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admins</h1>
 
-      <div className={styles.searchFilterContainer}>
-        <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className={styles.searchInput}
-        />
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className={styles.searchInput}
-        />
-        <button onClick={handleSearch} className={styles.searchButton}>
-          Search
-        </button>
+      {/* Search Filter Section */}
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Search by ID..."
+              value={searchQueryId}
+              onChange={(e) => setSearchQueryId(e.target.value)}
+              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
+            />
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Search by Name..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
+            />
+          </div>
+          <button
+            onClick={handleSearch}
+            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+          >
+            Search
+          </button>
+        </div>
       </div>
 
-      <table className={styles.adminsTable}>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {admins.length > 0 ? (
-            admins.map((admin, index) => (
-              <tr key={index}>
-                <td>{admin.adminId}</td>
-                <td>{admin.firstname}</td>
-                <td>{admin.lastname}</td>
-                <td>{admin.email}</td>
-                <td>{admin.mobile}</td>
-                <td>
-                  <button
-                    className={styles.btnUpdate}
-                    onClick={() => handleUpdate(admin.adminId)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className={styles.btnDelete}
-                    onClick={() => handleDelete(admin.adminId)}
-                  >
-                    Delete
-                  </button>
+      {/* Admins Table */}
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="min-w-full text-left border-collapse">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="py-3 px-4 text-gray-700 font-semibold">ID</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                First Name
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Last Name
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Email</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Mobile</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {admins.length > 0 ? (
+              admins.map((admin) => (
+                <tr
+                  key={admin.adminId}
+                  className="hover:bg-gray-100 transition duration-200"
+                >
+                  <td className="py-3 px-4">{admin.adminId}</td>
+                  <td className="py-3 px-4">{admin.firstname}</td>
+                  <td className="py-3 px-4">{admin.lastname}</td>
+                  <td className="py-3 px-4">{admin.email}</td>
+                  <td className="py-3 px-4">{admin.mobile}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      onClick={() => handleUpdate(admin.adminId)}
+                      className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => handleDelete(admin.adminId)}
+                      className="text-red-600 hover:text-red-800 transition duration-300"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
+                  No admins found.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No admins found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <div className={styles.paginationControls}>
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
         <button
           onClick={goToPreviousPage}
           disabled={currentPage === 0}
-          className={styles.paginationButton}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className={styles.paginationInfo}>
+        <span className="text-gray-700">
           Page {currentPage + 1} of {totalPages}
         </span>
         <button
           onClick={goToNextPage}
           disabled={currentPage === totalPages - 1}
-          className={styles.paginationButton}
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
         </button>

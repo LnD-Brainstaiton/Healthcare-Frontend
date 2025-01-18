@@ -84,7 +84,8 @@ function Login({ onLogin }) {
 
           <button
             type="submit"
-            className="bg-teal-600 bg-gradient-to-r from-tealBlue  to-green-800 w-full text-2xl text-white hover:text-primaryTextHover font-bold p-2 rounded-xl"
+            className="bg-tealBlueHover w-full text-2xl text-white hover:bg-tealBlue font-bold p-2 rounded-xl hover:shadow-lg hover:scale-105 transform transition-all duration-200
+"
           >
             Sign in
           </button>

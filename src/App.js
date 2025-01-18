@@ -35,6 +35,7 @@ import InstructionPage from "./pages/InstructionPage";
 import PaymentPage from "./pages/Payment";
 import UpcomingAppointmentsList from "./pages/UpcomingAppointments";
 import VerifyOtp from "./pages/VerifyOtp";
+import DoctorView from "./components/DoctorView";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -229,6 +230,14 @@ function App() {
                 element={
                   <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
                     <UpdateProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/doctor-profile/:doctorId/:patientId"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DoctorView />
                   </ProtectedRoute>
                 }
               />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "../styles/DoctorList.css";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { doc } from "prettier";
+import { useNavigate } from "react-router-dom";
+import dp from "../assets/Logo.jpeg";
+import pd from "../assets/doctor-1.jpg";
 
 const DoctorListPatient = () => {
   const navigate = useNavigate();
@@ -16,17 +16,14 @@ const DoctorListPatient = () => {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const pageSize = 10;
+  const pageSize = 12;
 
-  // Fetch doctors data from the API
+  // Fetching logic (same as the original)
+
   const fetchDoctors = async (page = 0) => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
+      if (!token) return;
 
       const queryParams = new URLSearchParams({
         page,
@@ -50,30 +47,21 @@ const DoctorListPatient = () => {
       );
 
       const data = await response.json();
-      console.log("Fetched doctors data:", data); // Debug API response
-
       if (data.responseCode === "S100000") {
         setDoctors(data.data.data);
         setTotalPages(data.data.totalPages);
       } else {
-        console.error("Error fetching doctors:", data.responseMessage);
-        setDoctors([]); // Clear table if an error occurs
+        setDoctors([]);
       }
-    } catch (error) {
-      console.error("Error fetching doctors:", error);
-      setDoctors([]); // Clear table if an error occurs
+    } catch {
+      setDoctors([]);
     }
   };
 
-  // Fetch dropdown options for designation, department, and gender
   const fetchDropdownOptions = async () => {
     try {
       const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
+      if (!token) return;
 
       const headers = {
         "Content-Type": "application/json",
@@ -99,167 +87,156 @@ const DoctorListPatient = () => {
       const departmentData = await departmentRes.json();
       const genderData = await genderRes.json();
 
-      console.log(genderData);
-
       setDesignationOptions(designationData.data.designations || []);
       setDepartmentOptions(departmentData.data.departments || []);
       setGenderOptions(genderData.data.gender || []);
-    } catch (error) {
-      console.error("Error fetching dropdown options:", error);
-    }
+    } catch {}
   };
 
-  // Fetch doctors data when filters or pagination change
   useEffect(() => {
-    fetchDropdownOptions(); // Fetch dropdown options once
-    fetchDoctors(currentPage); // Fetch initial data
+    fetchDropdownOptions();
+    fetchDoctors(0);
   }, []);
 
   useEffect(() => {
-    fetchDoctors(currentPage); // Refetch when the page changes
+    fetchDoctors(currentPage);
   }, [currentPage]);
 
   useEffect(() => {
-    fetchDoctors(0); // Refetch when filters change
+    fetchDoctors(0);
   }, [searchQueryId, searchQuery, designation, department, gender]);
 
   const handleSearch = () => {
-    setCurrentPage(0); // Reset pagination
-    fetchDoctors(0); // Refetch with new filters
+    setCurrentPage(0);
+    fetchDoctors(0);
   };
 
   const makeAppointment = (doctor) => {
-    console.log(doctor);
-    // Pass the entire doctor object through navigation state
     navigate(`/make-appointment/${doctor.doctorId}`, {
       state: { doctorInfo: doctor },
     });
   };
 
-  const goToNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const goToPreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
+  const viewDoctor = (doctorId, patientId) => {
+    navigate(`/doctor-profile/${doctorId}/${patientId}`);
   };
 
   return (
-    <div className="doctors-list">
-      <h1>Doctors List</h1>
-      <div className="search-filter-container">
-        {/* <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
-        /> */}
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        <select
-          value={designation}
-          onChange={(e) => setDesignation(e.target.value)}
-          className="filter-dropdown"
+    <div className="flex flex-col px-6 py-8 space-y-6">
+      <h1 className="text-center text-4xl font-bold text-gray-800">
+        Find Your Doctor
+      </h1>
+
+      <div className="w-full  rounded-lg p-4 flex flex-wrap items-center gap-4 ">
+        {/* Search Input */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-12 pl-10 pr-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+          />
+        </div>
+
+        {/* Designation Dropdown */}
+        <div className="relative flex-1">
+          <select
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
+            className="w-full h-12 pl-3 pr-8 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+          >
+            <option value="">Select Designation</option>
+            {designationOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Department Dropdown */}
+        <div className="relative flex-1">
+          <select
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            className="w-full h-12 pl-3 pr-8 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+          >
+            <option value="">Select Department</option>
+            {departmentOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Search Button */}
+        <button
+          onClick={handleSearch}
+          className="flex-shrink-0 h-12 px-6 py-2 bg-tealBlue text-white font-semibold rounded-lg shadow-md hover:bg-opacity-90"
         >
-          <option value="">Select Designation</option>
-          {designationOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <select
-          value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-          className="filter-dropdown"
-        >
-          <option value="">Select Department</option>
-          {departmentOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        {/* <select
-          value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          className="filter-dropdown"
-        >
-          <option value="">Select Gender</option>
-          {genderOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select> */}
-        <button onClick={handleSearch} className="search-button">
           Search
         </button>
       </div>
 
-      <table className="doctors-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Fee</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {doctors.length > 0 ? (
-            doctors.map((doctor, index) => (
-              <tr key={index}>
-                <td>
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {doctors.length > 0 ? (
+          doctors.map((doctor, index) => (
+            <div
+              key={index}
+              className="flex flex-col justify-around p-4 border border-gray-300 rounded-lg shadow-md bg-white transition-transform transform hover:-translate-y-2"
+            >
+              <div className="flex-grow">
+                <img
+                  src={pd}
+                  className="w-full h-40 object-cover rounded-lg mb-4"
+                  alt="doctor"
+                  onClick={() => viewDoctor()}
+                />
+                <h2
+                  className="text-lg font-semibold text-gray-800"
+                  onClick={() => viewDoctor()}
+                >
                   {doctor.firstname} {doctor.lastname}
-                </td>
-                <td>{doctor.designation}</td>
-                <td>{doctor.department}</td>
-                <td>{doctor.fee}</td>
-                <td>
-                  <button
-                    className="btn-update"
-                    onClick={() => makeAppointment(doctor)}
-                  >
-                    Make Appointment
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No doctors found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+                </h2>
+                <p className="text-gray-600">{doctor.designation}</p>
+                <p className="text-gray-500 text-sm">{doctor.department}</p>
+              </div>
+              <div className="">
+                <button
+                  onClick={() => makeAppointment(doctor)}
+                  className="mt-4 w-full px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-600"
+                >
+                  Book Appointment
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full text-center text-gray-500">
+            No doctors found.
+          </div>
+        )}
+      </div>
 
-      <div className="pagination-controls">
+      <div className="flex items-center justify-center space-x-4">
         <button
-          onClick={goToPreviousPage}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
           disabled={currentPage === 0}
-          className="pagination-button"
+          className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50"
         >
           Previous
         </button>
-        <span className="pagination-info">
+        <span>
           Page {currentPage + 1} of {totalPages}
         </span>
         <button
-          onClick={goToNextPage}
+          onClick={() =>
+            setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev))
+          }
           disabled={currentPage === totalPages - 1}
-          className="pagination-button"
+          className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50"
         >
           Next
         </button>

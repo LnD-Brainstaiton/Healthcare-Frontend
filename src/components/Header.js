@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/Logo.jpeg";
+import logoRounded from "../assets/logo-rounded.png";
 
 const Header = ({ toggleSidebar }) => {
   const location = useLocation();

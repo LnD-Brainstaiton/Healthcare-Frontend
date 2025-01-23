@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import "../styles/PatientList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-
 const AppointmentReapproveList = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
@@ -56,8 +55,6 @@ const AppointmentReapproveList = () => {
     }
   };
 
-  
-
   // Fetch patients data when filters or pagination change
   useEffect(() => {
     fetchPatients(currentPage); // Fetch initial data
@@ -81,27 +78,32 @@ const AppointmentReapproveList = () => {
   };
 
   const handleDelete = async (patientId) => {
-    const userConfirmed = window.confirm(`Are you sure you want to delete the doctor with ID: ${patientId}?`);
-  
+    const userConfirmed = window.confirm(
+      `Are you sure you want to delete the doctor with ID: ${patientId}?`
+    );
+
     if (userConfirmed) {
       try {
         const token = localStorage.getItem("token");
-  
+
         if (!token) {
           alert("Authentication token not found. Please log in.");
           return;
         }
-  
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/${patientId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
+
+        const response = await fetch(
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/patient/${patientId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         const data = await response.json();
-  
+
         if (data.responseCode === "S100000") {
           alert("Doctor deleted successfully!");
           fetchPatients(currentPage); // Refresh the list after deletion
@@ -131,97 +133,8 @@ const AppointmentReapproveList = () => {
 
   return (
     <div className="patients-list">
-      <h1>Appointment Reschedule Approve</h1>
-      <h1>Coming Soon</h1>
-{/* 
-      <div className="search-filter-container">
-        <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
-        />
-        <input
-          type="text"
-          placeholder="Search by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        
-        <button onClick={handleSearch} className="search-button">
-          Search
-        </button>
-      </div>
-
-      <table className="patients-table">
-        <thead>
-          <tr>
-            <th>Appointment No</th>
-            <th>Appointment Date</th>
-            <th>Appointment Time</th>
-            <th>Patient Name</th>
-            <th>Patiuent Age</th>
-            <th>Patient Contact</th>
-            <th>Id</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {patients.length > 0 ? (
-            patients.map((patient, index) => (
-              <tr key={index}>
-                <td>{patient.patientId}</td>
-                <td>{patient.firstname}</td>
-                <td>{patient.lastname}</td>
-                <td>{patient.email}</td>
-                <td>{patient.mobile}</td>
-                <td>{patient.bloodGroup}</td>
-                <td>{patient.age}</td>
-                <td>
-                  <button
-                    className="btn-update"
-                    onClick={() => handleUpdate(patient.patientId)}
-                  >
-                    Update
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDelete(patient.patientId)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No patients found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      <div className="pagination-controls">
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className="pagination-button"
-        >
-          Previous
-        </button>
-        <span className="pagination-info">
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className="pagination-button"
-        >
-          Next
-        </button>
-      </div> */}
+      {/* <h1>Appointment Reschedule Approve</h1>
+      <h1>Coming Soon</h1> */}
     </div>
   );
 };

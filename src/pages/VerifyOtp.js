@@ -25,9 +25,9 @@ function VerifyOtp() {
         `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/validate-otp`,
         { userName, generatedOtp, sessionId }
       );
-      console.log(otpResponse);
+      console.log(otpResponse.data.data);
 
-      if (otpResponse.status === 200) {
+      if (otpResponse.data.data === true) {
         // Proceed with registration
         if (isDoctor) {
           await axios.post(

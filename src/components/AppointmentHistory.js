@@ -251,7 +251,7 @@ const AppointmentsList = () => {
             ) : (
               <tr>
                 <td colSpan="5" className="py-3 px-4 text-center text-gray-500">
-                  No appointments found.
+                  No appointments found
                 </td>
               </tr>
             )}

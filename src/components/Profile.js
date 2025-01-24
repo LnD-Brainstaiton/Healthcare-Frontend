@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/Logo.png";
+import logo from "../assets/doctor-2.png";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -85,7 +85,7 @@ const Profile = () => {
             <img
               src={logo}
               alt="Profile Photo"
-              className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-teal-500"
+              className="w-24 h-24 sm:w-48 sm:h-48 rounded-full object-cover border-4 border-teal-500"
             />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800 mt-4">

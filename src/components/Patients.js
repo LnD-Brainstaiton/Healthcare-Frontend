@@ -217,7 +217,7 @@ const PatientsList = () => {
             ) : (
               <tr>
                 <td colSpan="8" className="py-3 px-4 text-center text-gray-500">
-                  No patients found.
+                  No patients found
                 </td>
               </tr>
             )}

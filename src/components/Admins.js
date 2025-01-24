@@ -199,7 +199,7 @@ const AdminsList = () => {
             ) : (
               <tr>
                 <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
-                  No admins found.
+                  No admins found
                 </td>
               </tr>
             )}

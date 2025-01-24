@@ -378,7 +378,9 @@ const DoctorsApproveList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5">No doctors found.</td>
+                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
+                  No pending doctor
+                </td>
               </tr>
             )}
           </tbody>

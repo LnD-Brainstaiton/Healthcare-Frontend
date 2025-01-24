@@ -324,11 +324,8 @@ const DoctorsList = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="7"
-                  cclassName="py-3 px-4 text-center text-gray-500"
-                >
-                  No doctors found.
+                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
+                  No doctors found
                 </td>
               </tr>
             )}

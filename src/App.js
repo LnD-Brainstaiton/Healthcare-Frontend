@@ -27,7 +27,7 @@ import AppointmentReapproveList from "./pages/AppointmentReapproveList";
 import CreateDoctor from "./pages/CreateDoctor";
 import DoctorListPatient from "./pages/DoctorListPatient";
 import MakeAppointment from "./pages/MakeAppointment";
-import DashboardDoctor from "./components/DashboardDoctor";
+import DashboardDoctor from "./pages/DashboardDoctor";
 import MyPrescriptions from "./pages/MyPrescription";
 import AppointmentReschedule from "./pages/AppointmentReschedule";
 import InstructionPage from "./pages/InstructionPage";
@@ -78,6 +78,7 @@ function App() {
     <Router>
       <div className="min-h-screen flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
+
         <div className="flex flex-grow ">
           {token && <Sidebar isOpen={isSidebarOpen} />}
           <div className="flex-grow overflow-auto">
@@ -244,6 +245,7 @@ function App() {
             </Routes>
           </div>
         </div>
+
         <Footer />
       </div>
     </Router>

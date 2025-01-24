@@ -238,7 +238,9 @@ const AppointmentsApproveList = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5">No appointments found.</td>
+                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
+                  No pending appointment
+                </td>
               </tr>
             )}
           </tbody>

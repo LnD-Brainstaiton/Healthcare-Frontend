@@ -19,6 +19,7 @@ const UpdateProfile = () => {
     department: "",
     specialities: "",
     fee: "",
+    registrationNo: "",
   });
 
   const [error, setError] = useState(null);
@@ -165,7 +166,7 @@ const UpdateProfile = () => {
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="text-xl space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <InputField
               label="First Name"
@@ -239,32 +240,36 @@ const UpdateProfile = () => {
 
           {userType === "doctor" && (
             <>
-              <SelectField
-                label="Designation"
-                name="designation"
-                value={formData.designation}
-                options={dropdownOptions.designations}
-                onChange={handleChange}
-              />
-              <SelectField
-                label="Department"
-                name="department"
-                value={formData.department}
-                options={dropdownOptions.departments}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Specialties"
-                name="specialities"
-                value={formData.specialities}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Fee"
-                name="fee"
-                value={formData.fee}
-                onChange={handleChange}
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <SelectField
+                  label="Designation"
+                  name="designation"
+                  value={formData.designation}
+                  options={dropdownOptions.designations}
+                  onChange={handleChange}
+                />
+                <SelectField
+                  label="Department"
+                  name="department"
+                  value={formData.department}
+                  options={dropdownOptions.departments}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <InputField
+                  label="Specialties"
+                  name="specialities"
+                  value={formData.specialities}
+                  onChange={handleChange}
+                />
+                <InputField
+                  label="Fee"
+                  name="fee"
+                  value={formData.fee}
+                  onChange={handleChange}
+                />
+              </div>
             </>
           )}
 
@@ -274,7 +279,7 @@ const UpdateProfile = () => {
 
           <button
             type="submit"
-            className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            className=" w-2/12 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition duration-300"
           >
             Save Changes
           </button>
@@ -289,7 +294,7 @@ const InputField = ({ label, type = "text", ...props }) => (
     <label className="text-gray-600 font-medium mb-1">{label}</label>
     <input
       type={type}
-      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-xl"
       {...props}
     />
   </div>
@@ -299,7 +304,7 @@ const SelectField = ({ label, options, ...props }) => (
   <div className="flex flex-col">
     <label className="text-gray-600 font-medium mb-1">{label}</label>
     <select
-      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-xl"
       {...props}
     >
       <option value="">Select {label}</option>

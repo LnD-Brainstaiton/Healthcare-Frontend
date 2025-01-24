@@ -282,101 +282,124 @@ const DoctorsApproveList = () => {
   };
 
   return (
-    <div className="doctors-list">
-      <h1>Pending Doctors List</h1>
+    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Pending Doctors
+      </h1>
 
-      <div className="search-filter-container">
-        <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
-        />
-        <button onClick={handleSearch} className="search-button">
-          Search
-        </button>
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Search by ID..."
+              value={searchQueryId}
+              onChange={(e) => setSearchQueryId(e.target.value)}
+              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
+            />
+          </div>
+
+          <button
+            onClick={handleSearch}
+            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+          >
+            Search
+          </button>
+        </div>
       </div>
 
-      <table className="doctors-table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Designation</th>
-            <th>Department</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {doctors.length > 0 ? (
-            doctors.map((doctor, index) => (
-              <tr key={index}>
-                <td>{doctor.requestId}</td>
-                <td>{doctor.firstName}</td>
-                <td>{doctor.lastName}</td>
-                <td>{doctor.designation}</td>
-                <td>{doctor.department}</td>
-                <td>{doctor.status}</td>
-                <td>
-                  <button
-                    className="view-icon-button"
-                    onClick={() => handleView(doctor)}
-                    title="View Details"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-eye"
-                    >
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                  </button>
-                  {doctor.status === "Rejected" && (
-                    <button
-                      className="update-submit"
-                      onClick={() => handleUpdate(doctor)}
-                      title="Update Details"
-                    >
-                      Update
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))
-          ) : (
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="min-w-full text-left border-collapse">
+          <thead className="bg-gray-200">
             <tr>
-              <td colSpan="5">No doctors found.</td>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Id</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                First Name
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Last Name
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Designation
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Department
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Status</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-
-      <div className="pagination-controls">
+          </thead>
+          <tbody>
+            {doctors.length > 0 ? (
+              doctors.map((doctor, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-gray-100 transition duration-200"
+                >
+                  <td className="py-3 px-4">{doctor.requestId}</td>
+                  <td className="py-3 px-4">{doctor.firstName}</td>
+                  <td className="py-3 px-4">{doctor.lastName}</td>
+                  <td className="py-3 px-4">{doctor.designation}</td>
+                  <td className="py-3 px-4">{doctor.department}</td>
+                  <td className="py-3 px-4">{doctor.status}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      className="text-teal-600 hover:underline"
+                      onClick={() => handleView(doctor)}
+                      title="View Details"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-eye"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                    {doctor.status === "Rejected" && (
+                      <button
+                        className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
+                        onClick={() => handleUpdate(doctor)}
+                        title="Update Details"
+                      >
+                        Update
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">No doctors found.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
         <button
           onClick={goToPreviousPage}
           disabled={currentPage === 0}
-          className="pagination-button"
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className="pagination-info">
+        <span className="text-gray-700">
           Page {currentPage + 1} of {totalPages}
         </span>
         <button
           onClick={goToNextPage}
           disabled={currentPage === totalPages - 1}
-          className="pagination-button"
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
         </button>
@@ -476,40 +499,45 @@ const DoctorsApproveList = () => {
       )}
 
       {isPopupOpen && selectedDoctor && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <button onClick={closePopup} className="popup-close-icon">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xl">
+          <div className="relative bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+            <button
+              onClick={closePopup}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+            >
               ×
             </button>
-            <h2>Doctor Details</h2>
-            <p>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Doctor Details
+            </h2>
+            <p className="text-gray-600 mb-2">
               <strong>Request ID:</strong> {selectedDoctor.requestId}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>First Name:</strong> {selectedDoctor.firstName}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Last Name:</strong> {selectedDoctor.lastName}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Email:</strong> {selectedDoctor.email}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Mobile:</strong> {selectedDoctor.mobile}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Designation:</strong> {selectedDoctor.designation}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Department:</strong> {selectedDoctor.department}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Fee :</strong> {selectedDoctor.fee}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Speacialities :</strong> {selectedDoctor.specialities}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Status:</strong> {selectedDoctor.status}
             </p>
             <div>
@@ -540,7 +568,7 @@ const DoctorsApproveList = () => {
 
             <div className="popup-actions">
               <button
-                className="btn-approve"
+                className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
                 onClick={() =>
                   handleCheck(selectedDoctor.requestId, "Accepted")
                 }
@@ -548,7 +576,7 @@ const DoctorsApproveList = () => {
                 Approve
               </button>
               <button
-                className="btn-reject"
+                className="text-red-600 hover:text-red-800 transition duration-300"
                 onClick={() =>
                   handleCheck(selectedDoctor.requestId, "Rejected")
                 }

@@ -156,132 +156,158 @@ const AppointmentsApproveList = () => {
   };
 
   return (
-    <div className="doctors-list">
-      <h1>Pending Appointments List</h1>
-
-      <div className="search-filter-container">
-        <input
-          type="text"
-          placeholder="Search by id..."
-          value={searchQueryId}
-          onChange={(e) => setSearchQueryId(e.target.value)}
-          className="search-input"
-        />
-        <button onClick={handleSearch} className="search-button">
-          Search
-        </button>
+    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Pending Appointments List
+      </h1>
+      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              placeholder="Search by id..."
+              value={searchQueryId}
+              onChange={(e) => setSearchQueryId(e.target.value)}
+              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
+            />
+          </div>
+          <button
+            onClick={handleSearch}
+            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="min-w-full text-left border-collapse">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Appointment No
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Appointment Date
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Appointment Time
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">
+                Patient Name
+              </th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Status</th>
+              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {appointments.length > 0 ? (
+              appointments.map((appointment, index) => (
+                <tr
+                  key={index}
+                  className="hover:bg-gray-100 transition duration-200"
+                >
+                  <td className="py-3 px-4">{appointment.requestId}</td>
+                  <td className="py-3 px-4">{appointment.appointmentDate}</td>
+                  <td className="py-3 px-4">{appointment.appointmentTime}</td>
+                  <td className="py-3 px-4">{appointment.patientName}</td>
+                  <td className="py-3 px-4">{appointment.status}</td>
+                  <td className="py-3 px-4">
+                    <button
+                      className="text-teal-600 hover:underline"
+                      onClick={() => handleView(appointment)}
+                      title="View Details"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-eye"
+                      >
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">No appointments found.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
-      <table className="doctors-table">
-        <thead>
-          <tr>
-            <th>Appointment No</th>
-            <th>Appointment Date</th>
-            <th>Appointment Time</th>
-            <th>Patient Name</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.length > 0 ? (
-            appointments.map((appointment, index) => (
-              <tr key={index}>
-                <td>{appointment.requestId}</td>
-                <td>{appointment.appointmentDate}</td>
-                <td>{appointment.appointmentTime}</td>
-                <td>{appointment.patientName}</td>
-                <td>{appointment.status}</td>
-                <td>
-                  <button
-                    className="view-icon-button"
-                    onClick={() => handleView(appointment)}
-                    title="View Details"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-eye"
-                    >
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                      <circle cx="12" cy="12" r="3"></circle>
-                    </svg>
-                  </button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">No appointments found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-
-      <div className="pagination-controls">
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-6">
         <button
           onClick={goToPreviousPage}
           disabled={currentPage === 0}
-          className="pagination-button"
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
-        <span className="pagination-info">
+        <span className="text-gray-700">
           Page {currentPage + 1} of {totalPages}
         </span>
         <button
           onClick={goToNextPage}
           disabled={currentPage === totalPages - 1}
-          className="pagination-button"
+          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
         </button>
       </div>
 
       {isPopupOpen && selectedAppointment && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <button onClick={closePopup} className="popup-close-icon">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="relative bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+            <button
+              onClick={closePopup}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+            >
               ×
             </button>
-            <h2>Appointment Details</h2>
-            <p>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+              Appointment Details
+            </h2>
+            <p className="text-gray-600 mb-2">
               <strong>Appointment ID:</strong> {selectedAppointment.requestId}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Appointment ID:</strong> {selectedAppointment.doctorId}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Appointment Date:</strong>{" "}
               {selectedAppointment.appointmentDate}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Appointment Time:</strong>{" "}
               {selectedAppointment.appointmentTime}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Patient Name:</strong> {selectedAppointment.patientName}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Patient Email:</strong> {selectedAppointment.patientEmail}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Patient Contact:</strong>{" "}
               {selectedAppointment.patientContactNo}
             </p>
-            <p>
+            <p className="text-gray-600 mb-2">
               <strong>Appointment Reason:</strong> {selectedAppointment.reason}
             </p>
-            <div className="popup-actions">
+            <div className="flex justify-between">
               <button
-                className="btn-approve"
+                className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
                 onClick={() =>
                   handleAction(selectedAppointment.requestId, "Accepted")
                 }
@@ -289,7 +315,7 @@ const AppointmentsApproveList = () => {
                 Approve
               </button>
               <button
-                className="btn-reject"
+                className="text-red-600 hover:text-red-800 transition duration-300"
                 onClick={() =>
                   handleAction(selectedAppointment.requestId, "Rejected")
                 }

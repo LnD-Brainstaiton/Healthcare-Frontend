@@ -63,13 +63,13 @@ const Sidebar = ({ isOpen }) => {
                   </Link>
                 </li>
               </div>
-              <div className="hover:bg-tealBlueHover hover:rounded-md">
+              {/* <div className="hover:bg-tealBlueHover hover:rounded-md">
                 <li className="p-2">
                   <Link to="/appointment-reapprove-list">
                     Pending Appointment Reschedule
                   </Link>
                 </li>
-              </div>
+              </div> */}
             </>
           )}
           {userType === "doctor" && (
@@ -79,13 +79,13 @@ const Sidebar = ({ isOpen }) => {
                   <Link to="/appointments-list">Appointment History</Link>
                 </li>
               </div>
-              <div className="hover:bg-tealBlueHover hover:rounded-md">
+              {/* <div className="hover:bg-tealBlueHover hover:rounded-md">
                 <li className="  p-2">
                   <Link to="/appointment-reschedule">
                     Appointment Reschedule Request
                   </Link>
                 </li>
-              </div>
+              </div> */}
             </>
           )}
 
@@ -96,11 +96,11 @@ const Sidebar = ({ isOpen }) => {
                   <Link to="/doctor-list">Doctors</Link>
                 </li>
               </div>
-              <div className="hover:bg-tealBlueHover hover:rounded-md">
+              {/* <div className="hover:bg-tealBlueHover hover:rounded-md">
                 <li className="  p-2">
                   <Link to="/patient-prescriptions">My Prescription</Link>
                 </li>
-              </div>
+              </div> */}
               <div className="hover:bg-tealBlueHover hover:rounded-md">
                 <li className="  p-2">
                   <Link to="/appointments-list">Appointment History</Link>

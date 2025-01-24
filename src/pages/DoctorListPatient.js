@@ -47,6 +47,7 @@ const DoctorListPatient = () => {
       );
 
       const data = await response.json();
+      console.log(data);
       if (data.responseCode === "S100000") {
         setDoctors(data.data.data);
         setTotalPages(data.data.totalPages);
@@ -192,11 +193,11 @@ const DoctorListPatient = () => {
                   src={pd}
                   className="w-full h-40 object-cover rounded-lg mb-4"
                   alt="doctor"
-                  onClick={() => viewDoctor()}
+                  onClick={() => viewDoctor(doctor.doctorId)}
                 />
                 <h2
                   className="text-lg font-semibold text-gray-800"
-                  onClick={() => viewDoctor()}
+                  onClick={() => viewDoctor(doctor.doctorId)}
                 >
                   {doctor.firstname} {doctor.lastname}
                 </h2>

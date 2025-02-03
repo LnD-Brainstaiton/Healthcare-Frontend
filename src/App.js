@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"; // Corrected import
 import axios from "axios";
 import Register from "./components/Register";
@@ -36,10 +31,15 @@ import UpcomingAppointmentsList from "./pages/UpcomingAppointments";
 import VerifyOtp from "./pages/VerifyOtp";
 import DoctorView from "./components/DoctorView";
 import AdminsList from "./components/Admins";
+import DoctorRegisterLevel2 from "./components/DoctorRegisterLevel2";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [authLevel, setAuthLevel] = useState(
+    localStorage.getItem("doctorAuthLevel")
+  );
+  console.log(authLevel);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -74,14 +74,32 @@ function App() {
     setToken(null);
   };
 
+  const closePopup = () => {
+    setAuthLevel(0);
+  };
+
   return (
     <Router>
       <div className="min-h-screen flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
-
         <div className="flex flex-grow ">
           {token && <Sidebar isOpen={isSidebarOpen} />}
           <div className="flex-grow overflow-auto">
+            {token && authLevel == 1 && (
+              <div
+                // onClick={register}
+                className="relative bg-errorMessageBackground text-4xl text-errorMessage text-center m-4 p-8 shadow-custom-dark flex-col justify-center items-center rounded-xl"
+              >
+                <h1>
+                  <Link to="/doctor-register-level2">
+                    Complete your profile
+                  </Link>
+                </h1>
+                <button onClick={closePopup} className="absolute top-4 right-4">
+                  ×
+                </button>
+              </div>
+            )}
             <Routes>
               <Route path="/register" element={<Register />} />
               <Route path="/verify-otp" element={<VerifyOtp />} />
@@ -239,6 +257,14 @@ function App() {
                 element={
                   <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
                     <DoctorView />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/doctor-register-level2"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <DoctorRegisterLevel2 />
                   </ProtectedRoute>
                 }
               />

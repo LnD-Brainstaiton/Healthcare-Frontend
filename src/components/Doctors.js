@@ -201,6 +201,7 @@ const DoctorsList = () => {
           Create Doctor
         </button>
       </h1>
+      {/* Search */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center space-x-2">
@@ -271,7 +272,7 @@ const DoctorsList = () => {
           </button>
         </div>
       </div>
-
+      {/* Table */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full text-left border-collapse">
           <thead className="bg-gray-200">
@@ -332,7 +333,7 @@ const DoctorsList = () => {
           </tbody>
         </table>
       </div>
-
+      {/* Pagination */}
       <div className="flex justify-between items-center mt-6">
         <button
           onClick={goToPreviousPage}

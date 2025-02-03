@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/doctor-2.png";
+import { use } from "react";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -46,6 +47,7 @@ const Profile = () => {
         }
         const data = await response.json();
         setUser(data.data);
+        console.log(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -109,10 +111,13 @@ const Profile = () => {
           )}
           {userType === "doctor" && (
             <>
+              <ProfileField label="Registration No" value={user.bloodGroup} />
               <ProfileField label="Designation" value={user.designation} />
               <ProfileField label="Department" value={user.department} />
               <ProfileField label="Specialities" value={user.specialities} />
               <ProfileField label="Fee" value={user.fee} />
+              <ProfileField label="Blood Group" value={user.bloodGroup} />
+              <ProfileField label="Date of Birth" value={user.bloodGroup} />
             </>
           )}
         </div>

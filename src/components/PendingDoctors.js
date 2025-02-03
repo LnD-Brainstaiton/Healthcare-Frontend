@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { testImage } from "../assets/Logo.jpeg";
 
 const DoctorsApproveList = () => {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ const DoctorsApproveList = () => {
   const [designationOptions, setDesignationOptions] = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [error, setError] = useState(null);
+  const [captchaImage, setCaptchaImage] = useState(null);
+
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup visibility state
@@ -17,8 +20,8 @@ const DoctorsApproveList = () => {
   const [updateFormData, setUpdateFormData] = useState({
     requestId: "",
     status: "",
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     email: "",
     mobile: "",
     designation: "", // Added for doctor
@@ -27,6 +30,42 @@ const DoctorsApproveList = () => {
     fee: "", // Added for doctor
   });
   const pageSize = 10;
+
+  const fetchCaptcha = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/get/captcha`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to load CAPTCHA");
+      }
+
+      const data = await response.json();
+      console.log("Check:", data.data);
+
+      if (data && data.data) {
+        // Assuming the backend sends Base64 data like "data:image/png;base64,iVBOR..."
+        setCaptchaImage("data:image/png;base64," + data.data);
+      } else {
+        console.error("Invalid CAPTCHA response");
+      }
+    } catch (error) {
+      console.error("Error fetching CAPTCHA:", error);
+    }
+  };
 
   // Fetch doctors data from the API
   const fetchDoctors = async (page = 0) => {
@@ -126,8 +165,8 @@ const DoctorsApproveList = () => {
     setSelectedDoctor(doctor); // Set the doctor for update
     setUpdateFormData({
       requestId: doctor.requestId,
-      firstName: doctor.firstName,
-      lastName: doctor.lastName,
+      firstname: doctor.firstname,
+      lastname: doctor.lastname,
       email: doctor.email,
       mobile: doctor.mobile,
       patientId: doctor.patientId,
@@ -138,6 +177,10 @@ const DoctorsApproveList = () => {
       status: "Pending",
     }); // Pre-fill the update form with doctor's data
     setIsUpdatePopupOpen(true); // Open the update popup
+  };
+
+  const handleRefreshCaptcha = () => {
+    fetchCaptcha(); // Fetch a new CAPTCHA on button click
   };
 
   const closeUpdatePopup = () => {
@@ -209,6 +252,7 @@ const DoctorsApproveList = () => {
   const handleView = (appointment) => {
     setSelectedDoctor(appointment); // Set the selected appointment
     setIsPopupOpen(true); // Open the popup
+    fetchCaptcha(); // Fetch CAPTCHA image
   };
 
   const closePopup = () => {
@@ -240,7 +284,7 @@ const DoctorsApproveList = () => {
         };
 
         const response = await fetch(
-          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/admin/request/check`,
+          `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/create/request`,
           {
             method: "POST",
             headers: {
@@ -283,10 +327,11 @@ const DoctorsApproveList = () => {
 
   return (
     <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
+      {/** Page title */}
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">
         Pending Doctors
       </h1>
-
+      {/* Search form */}
       <div className="bg-white shadow-md rounded-lg p-6 mb-6">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center space-x-2">
@@ -307,7 +352,7 @@ const DoctorsApproveList = () => {
           </button>
         </div>
       </div>
-
+      {/* Table */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full text-left border-collapse">
           <thead className="bg-gray-200">
@@ -337,8 +382,8 @@ const DoctorsApproveList = () => {
                   className="hover:bg-gray-100 transition duration-200"
                 >
                   <td className="py-3 px-4">{doctor.requestId}</td>
-                  <td className="py-3 px-4">{doctor.firstName}</td>
-                  <td className="py-3 px-4">{doctor.lastName}</td>
+                  <td className="py-3 px-4">{doctor.firstname}</td>
+                  <td className="py-3 px-4">{doctor.lastname}</td>
                   <td className="py-3 px-4">{doctor.designation}</td>
                   <td className="py-3 px-4">{doctor.department}</td>
                   <td className="py-3 px-4">{doctor.status}</td>
@@ -406,6 +451,7 @@ const DoctorsApproveList = () => {
           Next
         </button>
       </div>
+      {/* Popup */}
       {isUpdatePopupOpen && selectedDoctor && (
         <div className="popup-overlay">
           <div className="popup-content">
@@ -417,16 +463,16 @@ const DoctorsApproveList = () => {
               <label>First Name</label>
               <input
                 type="text"
-                name="firstName"
-                value={updateFormData.firstName || ""}
+                name="firstname"
+                value={updateFormData.firstname || ""}
                 onChange={handleChange}
               />
 
               <label>Last Name</label>
               <input
                 type="text"
-                name="lastName"
-                value={updateFormData.lastName || ""}
+                name="lastname"
+                value={updateFormData.lastname || ""}
                 onChange={handleChange}
               />
 
@@ -499,7 +545,7 @@ const DoctorsApproveList = () => {
           </div>
         </div>
       )}
-
+      {/* Doctor details popup */}
       {isPopupOpen && selectedDoctor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xl">
           <div className="relative bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
@@ -516,10 +562,10 @@ const DoctorsApproveList = () => {
               <strong>Request ID:</strong> {selectedDoctor.requestId}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>First Name:</strong> {selectedDoctor.firstName}
+              <strong>First Name:</strong> {selectedDoctor.firstname}
             </p>
             <p className="text-gray-600 mb-2">
-              <strong>Last Name:</strong> {selectedDoctor.lastName}
+              <strong>Last Name:</strong> {selectedDoctor.lastname}
             </p>
             <p className="text-gray-600 mb-2">
               <strong>Email:</strong> {selectedDoctor.email}
@@ -542,6 +588,7 @@ const DoctorsApproveList = () => {
             <p className="text-gray-600 mb-2">
               <strong>Status:</strong> {selectedDoctor.status}
             </p>
+            {/** Time slot */}
             <div>
               <strong>Time Slot:</strong>
               {selectedDoctor.timeSlots &&
@@ -566,6 +613,22 @@ const DoctorsApproveList = () => {
               ) : (
                 <div>No time slots available.</div>
               )}
+            </div>
+            {/* Captcha Image */}
+            <div className="flex flex-col items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-md w-fit">
+              {captchaImage && (
+                <img
+                  src={captchaImage}
+                  alt="CAPTCHA"
+                  className="w-48 h-auto border rounded-lg shadow-sm"
+                />
+              )}
+              <button
+                onClick={handleRefreshCaptcha}
+                className="px-4 py-2 bg-tealBlue text-white font-semibold rounded-lg shadow-md hover:bg-tealBlueHover transition-all duration-200"
+              >
+                Refresh CAPTCHA
+              </button>
             </div>
 
             <div className="popup-actions">

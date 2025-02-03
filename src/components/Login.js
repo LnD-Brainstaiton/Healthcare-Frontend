@@ -31,9 +31,11 @@ function Login({ onLogin }) {
             const token = res.data.data.token;
             const usertype = res.data.data.userType;
             const userId = res.data.data.userId;
+            const doctorAuthLevel = res.data.data.doctorAuthLevel;
             localStorage.setItem("token", token);
             localStorage.setItem("userType", usertype);
             localStorage.setItem("userId", userId);
+            localStorage.setItem("doctorAuthLevel", doctorAuthLevel);
             onLogin(token); // Update token state in parent (App.js)
             navigate("/dashboard");
           }

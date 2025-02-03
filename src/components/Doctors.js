@@ -35,6 +35,7 @@ const DoctorsList = () => {
         designation,
         department,
         gender,
+        doctorAuthLevel: 2,
       }).toString();
 
       const response = await fetch(

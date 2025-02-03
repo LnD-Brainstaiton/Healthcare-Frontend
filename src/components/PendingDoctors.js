@@ -11,7 +11,10 @@ const DoctorsApproveList = () => {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [error, setError] = useState(null);
   const [captchaImage, setCaptchaImage] = useState(null);
-
+  // const [response, setResponse] = useState(null);
+  const [captchaCode, setCaptchaCode] = useState(""); // State for CAPTCHA code
+  const [registrationNo, setRegistrationNo] = useState(""); // State for registration number
+  const [htmlContent, setHtmlContent] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false); // Popup visibility state
@@ -30,6 +33,39 @@ const DoctorsApproveList = () => {
     fee: "", // Added for doctor
   });
   const pageSize = 10;
+
+  const validateRegistration = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+      const res = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/validate/registration`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            captchaCode: captchaCode, // Use CAPTCHA code from state
+            registrationNo: registrationNo, // Use registration number from state
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error(`Error: ${res.status}`);
+
+      const data = await res.json();
+      setHtmlContent(data.data);
+      fetchCaptcha();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const fetchCaptcha = async () => {
     try {
@@ -54,7 +90,6 @@ const DoctorsApproveList = () => {
       }
 
       const data = await response.json();
-      console.log("Check:", data.data);
 
       if (data && data.data) {
         // Assuming the backend sends Base64 data like "data:image/png;base64,iVBOR..."
@@ -96,16 +131,15 @@ const DoctorsApproveList = () => {
       );
 
       const data = await response.json();
-      console.log(data);
       const doctorsData = data.data.content.map((item) => ({
         ...JSON.parse(JSON.parse(item.data)), // Parse the data and spread it to include all the fields
         requestId: item.requestId, // Add the requestId from the original item
         status: item.status,
       }));
-      console.log("Fetched doctors data:", doctorsData); // Debug API response
 
       if (data.responseCode === "S100000") {
         setDoctors(doctorsData);
+        console.log(doctorsData);
         setTotalPages(data.data.totalPages);
       } else {
         console.error("Error fetching doctors:", data.responseMessage);
@@ -258,13 +292,16 @@ const DoctorsApproveList = () => {
   const closePopup = () => {
     setSelectedDoctor(null); // Clear selected appointment
     setIsPopupOpen(false); // Close the popup
+    setHtmlContent("");
+    setCaptchaCode("");
+    setRegistrationNo("");
   };
 
-  const handleCheck = async (requestId, status) => {
+  const handleCheck = async (doctor, status) => {
     let confirmation = "reject";
     if (status == "Accepted") confirmation = "accept";
     let userConfirmed = window.confirm(
-      `Are you sure you want to ${confirmation} the doctor with ID: ${requestId}?`
+      `Are you sure you want to ${confirmation} the doctor with ID: ${doctor.userId}?`
     );
 
     if (userConfirmed) {
@@ -277,12 +314,17 @@ const DoctorsApproveList = () => {
         }
 
         const requestBody = {
-          featureCode: "DOCTOR", // Replace with your actual feature code
-          status: status, // Replace with your actual operation type
-          message: "", // Replace with your actual message
-          requestId: requestId, // Replace with your actual request ID
+          userId: doctor.userId,
+          registrationNo: doctor.registrationNo,
+          designation: doctor.designation,
+          department: doctor.department,
+          specialities: doctor.specialities,
+          timeSlots: doctor.timeSlots,
+          bloodGroup: doctor.bloodGroup,
+          dob: doctor.dob,
+          fee: doctor.fee,
         };
-
+        console.log(requestBody);
         const response = await fetch(
           `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/doctor/create/request`,
           {
@@ -381,7 +423,7 @@ const DoctorsApproveList = () => {
                   key={index}
                   className="hover:bg-gray-100 transition duration-200"
                 >
-                  <td className="py-3 px-4">{doctor.requestId}</td>
+                  <td className="py-3 px-4">{doctor.userId}</td>
                   <td className="py-3 px-4">{doctor.firstname}</td>
                   <td className="py-3 px-4">{doctor.lastname}</td>
                   <td className="py-3 px-4">{doctor.designation}</td>
@@ -409,7 +451,7 @@ const DoctorsApproveList = () => {
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
                     </button>
-                    {doctor.status === "Rejected" && (
+                    {/* {doctor.status === "Rejected" && (
                       <button
                         className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
                         onClick={() => handleUpdate(doctor)}
@@ -417,7 +459,7 @@ const DoctorsApproveList = () => {
                       >
                         Update
                       </button>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               ))
@@ -452,7 +494,7 @@ const DoctorsApproveList = () => {
         </button>
       </div>
       {/* Popup */}
-      {isUpdatePopupOpen && selectedDoctor && (
+      {/* {isUpdatePopupOpen && selectedDoctor && (
         <div className="popup-overlay">
           <div className="popup-content">
             <button onClick={closeUpdatePopup} className="popup-close-icon">
@@ -544,52 +586,50 @@ const DoctorsApproveList = () => {
             </form>
           </div>
         </div>
-      )}
+      )} */}
       {/* Doctor details popup */}
       {isPopupOpen && selectedDoctor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xl">
-          <div className="relative bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+          <div className="relative bg-white rounded-lg shadow-lg w-2/3 p-6 max-h-[80vh] overflow-y-auto">
             <button
               onClick={closePopup}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl font-bold"
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-3xl font-bold"
             >
               ×
             </button>
-            <h2 className="text-2xl font-bold mb-4 text-gray-800">
+            <h2 className="text-2xl font-bold mb-4 mx-4 text-gray-800">
               Doctor Details
             </h2>
-            <p className="text-gray-600 mb-2">
-              <strong>Request ID:</strong> {selectedDoctor.requestId}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>First Name:</strong> {selectedDoctor.firstname}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Last Name:</strong> {selectedDoctor.lastname}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Email:</strong> {selectedDoctor.email}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Mobile:</strong> {selectedDoctor.mobile}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Designation:</strong> {selectedDoctor.designation}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Department:</strong> {selectedDoctor.department}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Fee :</strong> {selectedDoctor.fee}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Speacialities :</strong> {selectedDoctor.specialities}
-            </p>
-            <p className="text-gray-600 mb-2">
-              <strong>Status:</strong> {selectedDoctor.status}
-            </p>
+            <div className="w-full space-y-4">
+              <ProfileField label="Request ID" value={selectedDoctor.userId} />
+              <ProfileField
+                label="Registration No"
+                value={selectedDoctor.registrationNo}
+              />
+              <ProfileField
+                label="First Name"
+                value={selectedDoctor.firstname}
+              />
+              <ProfileField label="Last Name" value={selectedDoctor.lastname} />
+              <ProfileField label="Email" value={selectedDoctor.email} />
+              <ProfileField label="Mobile" value={selectedDoctor.mobile} />
+              <ProfileField
+                label="Designation"
+                value={selectedDoctor.designation}
+              />
+              <ProfileField
+                label="Department"
+                value={selectedDoctor.department}
+              />
+              <ProfileField label="Fee" value={selectedDoctor.fee} />
+              <ProfileField
+                label="Specialities"
+                value={selectedDoctor.specialities}
+              />
+              <ProfileField label="Status" value={selectedDoctor.status} />
+            </div>
             {/** Time slot */}
-            <div>
+            <div className="m-4">
               <strong>Time Slot:</strong>
               {selectedDoctor.timeSlots &&
               selectedDoctor.timeSlots.length > 0 ? (
@@ -597,6 +637,7 @@ const DoctorsApproveList = () => {
                   <div key={index} style={{ marginBottom: "10px" }}>
                     <div>
                       Start Time: {slot.startTime}, End Time: {slot.endTime},
+                      <br></br>
                       Weekdays:{" "}
                       {slot.weekdays && slot.weekdays.length > 0 ? (
                         slot.weekdays.map((day, idx) => (
@@ -614,13 +655,56 @@ const DoctorsApproveList = () => {
                 <div>No time slots available.</div>
               )}
             </div>
+            <div className="scale-95 outline-double outline-tealBlue ">
+              {htmlContent === "" && (
+                <>
+                  <div className="w-full p-4 text-3xl">
+                    Validate Doctor with Captcha and Registration No
+                  </div>
+                </>
+              )}
+              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+            </div>
+            <div className="m-4 my-8">
+              {/* CAPTCHA and Registration Number Input Fields */}
+              <div className="mt-4">
+                <label className="block text-gray-700 font-semibold mb-2">
+                  CAPTCHA Code
+                </label>
+                <input
+                  type="text"
+                  value={captchaCode}
+                  onChange={(e) => setCaptchaCode(e.target.value)}
+                  className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-2/3"
+                />
+              </div>
+              <div className="mt-4">
+                <label className="block text-gray-700 font-semibold mb-2">
+                  Registration Number
+                </label>
+                <input
+                  type="text"
+                  value={registrationNo}
+                  onChange={(e) => setRegistrationNo(e.target.value)}
+                  className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-2/3"
+                />
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={validateRegistration}
+                  className="px-4 py-2 bg-tealBlue text-white font-semibold rounded-lg shadow-md hover:bg-tealBlueHover transition-all duration-200"
+                >
+                  Validate
+                </button>
+              </div>
+            </div>
             {/* Captcha Image */}
-            <div className="flex flex-col items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-md w-fit">
+            <div className="flex flex-col items-center m-4  rounded-lg  w-fit">
               {captchaImage && (
                 <img
                   src={captchaImage}
                   alt="CAPTCHA"
-                  className="w-48 h-auto border rounded-lg shadow-sm"
+                  className="w-48 h-auto my-4 border rounded-lg shadow-sm"
                 />
               )}
               <button
@@ -631,22 +715,18 @@ const DoctorsApproveList = () => {
               </button>
             </div>
 
-            <div className="popup-actions">
-              <button
-                className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
-                onClick={() =>
-                  handleCheck(selectedDoctor.requestId, "Accepted")
-                }
-              >
-                Approve
-              </button>
+            <div className="popup-actions p-4">
               <button
                 className="text-red-600 hover:text-red-800 transition duration-300"
-                onClick={() =>
-                  handleCheck(selectedDoctor.requestId, "Rejected")
-                }
+                onClick={() => handleCheck(selectedDoctor, "Rejected")}
               >
                 Reject
+              </button>
+              <button
+                className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
+                onClick={() => handleCheck(selectedDoctor, "Accepted")}
+              >
+                Approve
               </button>
             </div>
           </div>
@@ -655,5 +735,13 @@ const DoctorsApproveList = () => {
     </div>
   );
 };
-
+const ProfileField = ({ label, value }) => (
+  <div className="text-xl px-4">
+    <div className="flex justify-start">
+      <span className="text-gray-600 w-2/6">{label}:</span>
+      <span className="text-gray-800">{value || "N/A"}</span>
+    </div>
+    <hr className="my-4" />
+  </div>
+);
 export default DoctorsApproveList;

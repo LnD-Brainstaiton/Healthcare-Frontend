@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Eye, EyeOff } from "lucide-react"; // Import icons
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
+  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  // Check if the user is already logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/dashboard"); // Redirect to dashboard if logged in
+      navigate("/dashboard");
     }
   }, [navigate]);
 
@@ -28,21 +29,18 @@ function Login({ onLogin }) {
           if (res.data.data == null) {
             setErrorMessage(res.data.responseMessage);
           } else if (res.data.data.token != null) {
-            const token = res.data.data.token;
-            const usertype = res.data.data.userType;
-            const userId = res.data.data.userId;
-            const doctorAuthLevel = res.data.data.doctorAuthLevel;
+            const { token, userType, userId, doctorAuthLevel } = res.data.data;
             localStorage.setItem("token", token);
-            localStorage.setItem("userType", usertype);
+            localStorage.setItem("userType", userType);
             localStorage.setItem("userId", userId);
             localStorage.setItem("doctorAuthLevel", doctorAuthLevel);
-            onLogin(token); // Update token state in parent (App.js)
+            onLogin(token);
             navigate("/dashboard");
           }
         })
         .catch((err) => {
           console.error(err);
-          setErrorMessage("Login failed. Please try again."); // Handle server or network error
+          setErrorMessage("Login failed. Please try again.");
         });
     } catch (err) {
       setErrorMessage("An error occurred: " + err);
@@ -73,21 +71,28 @@ function Login({ onLogin }) {
             />
           </div>
 
-          <div className="mb-4">
+          {/* Password field with toggle visibility */}
+          <div className="mb-4 relative">
             <input
-              type="password"
-              className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
+              type={showPassword ? "text" : "password"}
+              className="w-full p-3 pr-10 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
               placeholder="Enter Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
             />
+            <button
+              type="button"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           <button
             type="submit"
-            className="bg-tealBlueHover w-full text-2xl text-white hover:bg-tealBlue font-bold p-2 rounded-xl hover:shadow-lg hover:scale-105 transform transition-all duration-200
-"
+            className="bg-tealBlueHover w-full text-2xl text-white hover:bg-tealBlue font-bold p-2 rounded-xl hover:shadow-lg hover:scale-105 transform transition-all duration-200"
           >
             Sign in
           </button>

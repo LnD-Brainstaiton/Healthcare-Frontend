@@ -222,7 +222,7 @@ function Register() {
 
               <div className="mb-4">
                 <input
-                  type="password"
+                  type="text"
                   className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
                   placeholder="Enter Password"
                   value={password}
@@ -233,7 +233,7 @@ function Register() {
 
               <div className="mb-4">
                 <input
-                  type="password"
+                  type="text"
                   className="w-full p-3 rounded-lg border border-gray-300 text-base bg-gray-100 transition-colors duration-300 ease-in-out focus:border-blue-500"
                   placeholder="Confirm Password"
                   value={confirmPassword}

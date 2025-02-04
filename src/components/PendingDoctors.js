@@ -117,6 +117,7 @@ const DoctorsApproveList = () => {
         size: pageSize,
         requestId: searchQueryId,
         featureCode: "DOCTOR",
+        checkerResponse: "3",
       }).toString();
 
       const response = await fetch(
@@ -637,7 +638,6 @@ const DoctorsApproveList = () => {
                   <div key={index} style={{ marginBottom: "10px" }}>
                     <div>
                       Start Time: {slot.startTime}, End Time: {slot.endTime},
-                      <br></br>
                       Weekdays:{" "}
                       {slot.weekdays && slot.weekdays.length > 0 ? (
                         slot.weekdays.map((day, idx) => (
@@ -655,14 +655,7 @@ const DoctorsApproveList = () => {
                 <div>No time slots available.</div>
               )}
             </div>
-            <div className="scale-95 outline-double outline-tealBlue ">
-              {htmlContent === "" && (
-                <>
-                  <div className="w-full p-4 text-3xl">
-                    Validate Doctor with Captcha and Registration No
-                  </div>
-                </>
-              )}
+            <div className="scale-95 w-auto h-auto outline-double outline-tealBlue ">
               <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
             </div>
             <div className="m-4 my-8">

@@ -32,6 +32,7 @@ import VerifyOtp from "./pages/VerifyOtp";
 import DoctorView from "./components/DoctorView";
 import AdminsList from "./components/Admins";
 import DoctorRegisterLevel2 from "./components/DoctorRegisterLevel2";
+import ChangePassword from "./components/ChangePassword";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -265,6 +266,14 @@ function App() {
                 element={
                   <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
                     <DoctorRegisterLevel2 />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                    <ChangePassword />
                   </ProtectedRoute>
                 }
               />

@@ -29,6 +29,11 @@ const Sidebar = ({ isOpen }) => {
               <Link to="/profile">Profile</Link>
             </li>
           </div>
+          <div className="hover:bg-tealBlueHover hover:rounded-md">
+            <li className="  p-2">
+              <Link to="/change-password">Change Password</Link>
+            </li>
+          </div>
           {userType === "admin" && (
             <>
               <div className="hover:bg-tealBlueHover hover:rounded-md">

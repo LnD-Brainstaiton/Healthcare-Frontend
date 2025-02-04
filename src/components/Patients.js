@@ -181,7 +181,7 @@ const PatientsList = () => {
                 Blood Group
               </th>
               <th className="py-3 px-4 text-gray-700 font-semibold">Age</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
+              {/* <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -198,7 +198,7 @@ const PatientsList = () => {
                   <td className="py-3 px-4">{patient.mobile}</td>
                   <td className="py-3 px-4">{patient.bloodGroup}</td>
                   <td className="py-3 px-4">{patient.age}</td>
-                  <td className="py-3 px-4">
+                  {/* <td className="py-3 px-4">
                     <button
                       className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
                       onClick={() => handleUpdate(patient.patientId)}
@@ -211,7 +211,7 @@ const PatientsList = () => {
                     >
                       Delete
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               ))
             ) : (

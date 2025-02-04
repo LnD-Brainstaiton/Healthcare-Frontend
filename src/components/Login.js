@@ -48,8 +48,8 @@ function Login({ onLogin }) {
   }
 
   return (
-    <div className="flex items-center justify-center p-40">
-      <div className="bg-white shadow-lg rounded-xl p-10 w-96 text-center transition-all duration-300 ease-in-out">
+    <div className="flex items-center justify-center mt-48 sm:mt-0 p-4 sm:p-40">
+      <div className="bg-white shadow-lg rounded-xl p-6 sm:p-10 w-full sm:w-96 text-center transition-all duration-300 ease-in-out">
         <h2 className="text-2xl text-primaryText p-4 font-bold">Sign in</h2>
         <hr className="mb-4" />
 
@@ -97,6 +97,19 @@ function Login({ onLogin }) {
             Sign in
           </button>
         </form>
+        {/* Forgot Password Link */}
+
+        <div className="flex justify-between items-center mb-4 text-sm">
+          <span></span>
+
+          <button
+            type="button"
+            className="text-blue-500 hover:underline"
+            onClick={() => navigate("/forgot-password")}
+          >
+            Forgot Password?
+          </button>
+        </div>
       </div>
     </div>
   );

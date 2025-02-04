@@ -165,7 +165,7 @@ const AdminsList = () => {
               </th>
               <th className="py-3 px-4 text-gray-700 font-semibold">Email</th>
               <th className="py-3 px-4 text-gray-700 font-semibold">Mobile</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
+              {/* <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -180,7 +180,7 @@ const AdminsList = () => {
                   <td className="py-3 px-4">{admin.lastname}</td>
                   <td className="py-3 px-4">{admin.email}</td>
                   <td className="py-3 px-4">{admin.mobile}</td>
-                  <td className="py-3 px-4">
+                  {/* <td className="py-3 px-4">
                     <button
                       onClick={() => handleUpdate(admin.adminId)}
                       className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
@@ -193,7 +193,7 @@ const AdminsList = () => {
                     >
                       Delete
                     </button>
-                  </td>
+                  </td> */}
                 </tr>
               ))
             ) : (

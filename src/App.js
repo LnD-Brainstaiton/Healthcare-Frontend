@@ -33,6 +33,7 @@ import DoctorView from "./components/DoctorView";
 import AdminsList from "./components/Admins";
 import DoctorRegisterLevel2 from "./components/DoctorRegisterLevel2";
 import ChangePassword from "./components/ChangePassword";
+import HomePage from "./components/HomePage";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -291,10 +292,10 @@ const DashboardRouter = () => {
   const userType = localStorage.getItem("userType");
   if (userType === "ADMIN") {
     return <DashboardAdmin />;
-  } else if (userType === "PATIENT") {
-    return <DashboardPatient />;
+  } else if (userType === "DOCTOR") {
+    return <DashboardDoctor />;
   }
-  return <DashboardDoctor />;
+  return <HomePage />;
 };
 
 export default App;

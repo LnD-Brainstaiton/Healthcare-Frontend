@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import styles from "../styles/MakeAppointment.module.css";
+import { motion } from "framer-motion";
+import {
+  Calendar,
+  Clock,
+  User,
+  Mail,
+  Phone,
+  FileText,
+  UserCircle,
+  AlertCircle,
+} from "lucide-react";
 
 const MakeAppointment = () => {
   const { doctorId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const doctorInfo = location.state?.doctorInfo;
-  const [genderOptions, setGenderOptions] = useState(["MALE", "FEMALE"]);
+  const [genderOptions] = useState(["MALE", "FEMALE"]);
 
   const [formData, setFormData] = useState({
     patientFirstName: "",
@@ -34,14 +44,12 @@ const MakeAppointment = () => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isLoadingTimes, setIsLoadingTimes] = useState(false);
 
-  // Function to get the token from localStorage and extract the user ID
   const getUserIdFromToken = () => {
-    const token = localStorage.getItem("token"); // Replace with your token storage method
+    const token = localStorage.getItem("token");
     if (!token) {
       throw new Error("No token found");
     }
-    const userId = localStorage.getItem("userId");
-    return userId; // Assuming the token contains the user ID in the 'id' field
+    return localStorage.getItem("userId");
   };
 
   const handleChange = (e) => {
@@ -51,7 +59,6 @@ const MakeAppointment = () => {
       [name]: value,
     }));
 
-    // Fetch available times when a date is selected
     if (name === "appointmentDate") {
       fetchAvailableTimes(value);
     }
@@ -86,21 +93,14 @@ const MakeAppointment = () => {
       );
 
       const data = await response.json();
-      console.log(data);
       if (response.ok && data.responseCode === "S100000") {
-        if (data != null) {
-          setAvailableTimes(data.data.timeSlotList || []); // Assuming `timeSlots` contains the available times
-        } else {
-          setAvailableTimes([]);
-        }
+        setAvailableTimes(data.data?.timeSlotList || []);
       } else if (response.ok && data.responseCode === "E000101") {
         setAvailableTimes([]);
       } else {
-        setAvailableTimes([]);
         setError(data.responseMessage || "Failed to fetch available times");
       }
     } catch (err) {
-      setAvailableTimes([]);
       setError(err.message);
     } finally {
       setIsLoadingTimes(false);
@@ -122,26 +122,12 @@ const MakeAppointment = () => {
         appointmentTime: formData.appointmentTime,
         patientName: `${formData.patientFirstName} ${formData.patientLastName}`,
         patientEmail: formData.patientEmail,
-        patientAge: formData.patientAge, // Defaulting to 35 if age is not provided
-        patientGender: formData.patientGender, // Defaulting to "MALE" if not provided
-        patientId: getUserIdFromToken(), // Defaulting to "PAT67894" if not provided
+        patientAge: formData.patientAge,
+        patientGender: formData.patientGender,
+        patientId: getUserIdFromToken(),
         patientContactNo: formData.patientMobile,
-        fee: formData.fee, // Defaulting to 150.50 if fee is not provided
-        appointmentNo: formData.appointmentNo, // Defaulting to "AP20241225" if not provided
+        fee: formData.fee,
         reason: formData.reason,
-      };
-
-      const staticRequestBody = {
-        featureCode: "APPOINTMENT", // Replace with your actual feature code
-        operationType: "create", // Replace with your actual operation type
-        message: "", // Replace with your actual message
-        requestUrl: "/api/v1/appointment/create", // Replace with your actual request URL
-        requestId: null, // Replace with your actual request ID
-      };
-
-      const requestBody = {
-        ...staticRequestBody,
-        data: JSON.stringify(appointmentData), // This is the dynamic part
       };
 
       const response = await fetch(
@@ -152,7 +138,14 @@ const MakeAppointment = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(requestBody),
+          body: JSON.stringify({
+            featureCode: "APPOINTMENT",
+            operationType: "create",
+            message: "",
+            requestUrl: "/api/v1/appointment/create",
+            requestId: null,
+            data: JSON.stringify(appointmentData),
+          }),
         }
       );
 
@@ -172,186 +165,273 @@ const MakeAppointment = () => {
   };
 
   return (
-    <div className={styles.appointmentContainer}>
-      <div className={styles.appointmentCard}>
-        <h2 className={styles.appointmentHeader}>Book Appointment</h2>
-        <form className={styles.appointmentForm} onSubmit={handleSubmit}>
-          <div className={styles.formColumns}>
-            <div className={styles.formColumn}>
-              <div className={styles.sectionHeader}>Doctor Information</div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Doctor Name:</label>
-                <input
-                  type="text"
-                  value={`${formData.doctorFirstName} ${formData.doctorLastName}`}
-                  className={styles.inputField}
-                  disabled
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Designation:</label>
-                <input
-                  type="text"
-                  value={formData.designation}
-                  className={styles.inputField}
-                  disabled
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Department:</label>
-                <input
-                  type="text"
-                  value={formData.department}
-                  className={styles.inputField}
-                  disabled
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Fee:</label>
-                <input
-                  type="text"
-                  value={formData.fee}
-                  className={styles.inputField}
-                  disabled
-                />
-              </div>
-
-              <div className={styles.sectionHeader}>Appointment Details</div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Date:</label>
-                <input
-                  type="date"
-                  name="appointmentDate"
-                  value={formData.appointmentDate}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  min={new Date().toISOString().split("T")[0]}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Time:</label>
-                <select
-                  name="appointmentTime"
-                  value={formData.appointmentTime}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  disabled={!availableTimes.length}
-                  required
-                >
-                  <option value="">Select a time</option>
-                  {isLoadingTimes ? (
-                    <option>Loading times...</option>
-                  ) : (
-                    availableTimes.map((time) => (
-                      <option key={time} value={time}>
-                        {time}
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-              <div className={styles.sectionHeader}>Reason for Visit</div>
-              <div className={styles.formField}>
-                <textarea
-                  name="reason"
-                  value={formData.reason}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                  rows="5"
-                  placeholder="Please describe your reason for visit..."
-                />
-              </div>
-            </div>
-
-            <div className={styles.formColumn}>
-              <div className={styles.sectionHeader}>Patient Information</div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>First Name:</label>
-                <input
-                  type="text"
-                  name="patientFirstName"
-                  value={formData.patientFirstName}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Last Name:</label>
-                <input
-                  type="text"
-                  name="patientLastName"
-                  value={formData.patientLastName}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Email:</label>
-                <input
-                  type="email"
-                  name="patientEmail"
-                  value={formData.patientEmail}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Mobile:</label>
-                <input
-                  type="text"
-                  name="patientMobile"
-                  value={formData.patientMobile}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Age:</label>
-                <input
-                  type="text"
-                  name="patientAge"
-                  value={formData.patientAge}
-                  onChange={handleChange}
-                  className={styles.inputField}
-                  required
-                />
-              </div>
-              <div className={styles.formField}>
-                <label className={styles.fieldLabel}>Gender:</label>
-
-                <select
-                  name="patientGender"
-                  value={formData.patientGender}
-                  onChange={handleChange}
-                  className="update-input-field"
-                >
-                  <option value="">Select Gender</option>
-                  {genderOptions.map((option, index) => (
-                    <option key={index} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.formFooter}>
-            {error && <p className={styles.errorMessage}>{error}</p>}
-            {success && <p className={styles.successMessage}>{success}</p>}
-            <button type="submit" className={styles.submitButton}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div className="max-w-5xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-teal-500 to-blue-600 px-6 py-8">
+            <h2 className="text-3xl font-bold text-white text-center">
               Book Appointment
-            </button>
+            </h2>
           </div>
-        </form>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-8">
+            {/* Doctor Information */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <UserCircle className="w-6 h-6 text-teal-500" />
+                Doctor Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Doctor Name
+                  </label>
+                  <input
+                    type="text"
+                    value={`${formData.doctorFirstName} ${formData.doctorLastName}`}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-700"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Designation
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.designation}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-700"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Department
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.department}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-700"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Consultation Fee
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.fee}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-100 text-gray-700"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Appointment Details */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <Calendar className="w-6 h-6 text-teal-500" />
+                Appointment Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    name="appointmentDate"
+                    value={formData.appointmentDate}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    min={new Date().toISOString().split("T")[0]}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Time
+                  </label>
+                  <select
+                    name="appointmentTime"
+                    value={formData.appointmentTime}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    disabled={!availableTimes.length}
+                    required
+                  >
+                    <option value="">Select a time</option>
+                    {isLoadingTimes ? (
+                      <option>Loading times...</option>
+                    ) : (
+                      availableTimes.map((time) => (
+                        <option key={time} value={time}>
+                          {time}
+                        </option>
+                      ))
+                    )}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Patient Information */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <User className="w-6 h-6 text-teal-500" />
+                Patient Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    name="patientFirstName"
+                    value={formData.patientFirstName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="patientLastName"
+                    value={formData.patientLastName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    name="patientEmail"
+                    value={formData.patientEmail}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mobile
+                  </label>
+                  <input
+                    type="tel"
+                    name="patientMobile"
+                    value={formData.patientMobile}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Age
+                  </label>
+                  <input
+                    type="number"
+                    name="patientAge"
+                    value={formData.patientAge}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Gender
+                  </label>
+                  <select
+                    name="patientGender"
+                    value={formData.patientGender}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select Gender</option>
+                    {genderOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Reason for Visit */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <FileText className="w-6 h-6 text-teal-500" />
+                Reason for Visit
+              </h3>
+              <textarea
+                name="reason"
+                value={formData.reason}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
+                rows="4"
+                placeholder="Please describe your reason for visit..."
+                required
+              />
+            </div>
+
+            {/* Error and Success Messages */}
+            {(error || success) && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`p-4 rounded-lg ${
+                  error
+                    ? "bg-red-50 text-red-700"
+                    : "bg-green-50 text-green-700"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {error ? (
+                    <AlertCircle className="w-5 h-5" />
+                  ) : (
+                    <Clock className="w-5 h-5" />
+                  )}
+                  <p className="font-medium">{error || success}</p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Submit Button */}
+            <div className="flex justify-end">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="submit"
+                className="bg-tealBlueHover w-full text-2xl text-white hover:bg-tealBlue font-bold p-2 rounded-xl hover:shadow-lg hover:scale-105 transform transition-all duration-200"
+
+                // className="px-8 py-3 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-teal-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-all"
+              >
+                Book Appointment
+              </motion.button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

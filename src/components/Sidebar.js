@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen }) => {
         <ul className="block py-2 text-xl ">
           <div className="hover:bg-tealBlueHover hover:rounded-md">
             <li className=" p-2 ">
-              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/">Dashboard</Link>
             </li>
           </div>
           <div className="hover:bg-tealBlueHover hover:rounded-md">

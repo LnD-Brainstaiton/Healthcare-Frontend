@@ -12,8 +12,12 @@ function Register() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isMobileValid, setIsMobileValid] = useState(true);
   const [mobileError, setMobileError] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [emailError, setEmailError] = useState("");
   const [isLoading, setIsLoading] = useState(false); // New state for loader
   const [isCheckingMobile, setIsCheckingMobile] = useState(false); // Mobile validation status
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false); // Mobile validation status
+
   const [isDoctor, setIsDoctor] = useState(false);
   const navigate = useNavigate();
 
@@ -33,6 +37,16 @@ function Register() {
 
     return () => clearTimeout(debounceTimeout);
   }, [mobile]);
+
+  useEffect(() => {
+    const debounceTimeout = setTimeout(() => {
+      if (mobile) {
+        checkEmailExists(mobile);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimeout);
+  }, [email]);
 
   const checkMobileExists = async (mobileNumber) => {
     setIsCheckingMobile(true); // Start validation
@@ -66,6 +80,41 @@ function Register() {
       setIsMobileValid(false);
     } finally {
       setIsCheckingMobile(false); // End validation
+    }
+  };
+
+  const checkEmailExists = async (mobileNumber) => {
+    setIsCheckingEmail(true); // Start validation
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/check-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        }
+      );
+      console.log("Response: ", response);
+
+      if (!response.ok) {
+        throw new Error("Failed to check mobile number");
+      }
+
+      const data = await response.json();
+      if (data.data === true) {
+        setEmailError("Email already exists");
+        setIsEmailValid(false);
+      } else {
+        setEmailError("");
+        setIsEmailValid(true);
+      }
+    } catch (err) {
+      setEmailError("Error validating mobile number");
+      setIsEmailValid(false);
+    } finally {
+      setIsCheckingEmail(false); // End validation
     }
   };
 
@@ -162,6 +211,11 @@ function Register() {
             {!isMobileValid && (
               <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
                 {mobileError}
+              </div>
+            )}
+            {!isEmailValid && (
+              <div className="p-2 mb-4 rounded-lg font-bold bg-errorMessageBackground text-errorMessage">
+                {emailError}
               </div>
             )}
             {isLoading && (

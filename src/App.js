@@ -41,15 +41,17 @@ function App() {
   const [authLevel, setAuthLevel] = useState(
     localStorage.getItem("doctorAuthLevel")
   );
-  console.log(authLevel);
+  const userType = localStorage.getItem("userType");
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken && isTokenExpired(storedToken)) {
-      handleLogout();
-    } else {
-      setToken(storedToken);
-    }
+    const checkTokenExpiry = setInterval(() => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken && isTokenExpired(storedToken)) {
+        handleLogout();
+      }
+    }, 60000); // Check every minute
+
+    return () => clearInterval(checkTokenExpiry); // Cleanup on unmount
   }, []);
 
   const toggleSidebar = () => {
@@ -105,15 +107,32 @@ function App() {
             <Routes>
               <Route path="/register" element={<Register />} />
               <Route path="/verify-otp" element={<VerifyOtp />} />
-              <Route path="/" element={<Login onLogin={handleLogin} />} />
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
               <Route
-                path="/dashboard"
+                path="/"
                 element={
-                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                    <DashboardRouter />
-                  </ProtectedRoute>
+                  <>
+                    {userType === "ADMIN" && (
+                      <ProtectedRoute
+                        token={token}
+                        isTokenExpired={isTokenExpired}
+                      >
+                        <DashboardAdmin />
+                      </ProtectedRoute>
+                    )}
+                    {userType === "DOCTOR" && (
+                      <ProtectedRoute
+                        token={token}
+                        isTokenExpired={isTokenExpired}
+                      >
+                        <DashboardDoctor />
+                      </ProtectedRoute>
+                    )}
+                    {userType === "PATIENT" && <HomePage />}
+                  </>
                 }
               />
+
               <Route
                 path="/logout"
                 element={<Logout onLogout={handleLogout} />}
@@ -137,9 +156,9 @@ function App() {
               <Route
                 path="/doctor-list"
                 element={
-                  <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
-                    <DoctorListPatient />
-                  </ProtectedRoute>
+                  // <ProtectedRoute token={token} isTokenExpired={isTokenExpired}>
+                  <DoctorListPatient />
+                  // </ProtectedRoute>
                 }
               />
               <Route
@@ -288,14 +307,5 @@ function App() {
   );
 }
 
-const DashboardRouter = () => {
-  const userType = localStorage.getItem("userType");
-  if (userType === "ADMIN") {
-    return <DashboardAdmin />;
-  } else if (userType === "DOCTOR") {
-    return <DashboardDoctor />;
-  }
-  return <HomePage />;
-};
 
 export default App;

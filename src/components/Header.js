@@ -29,13 +29,30 @@ const Header = ({ toggleSidebar }) => {
           />
           <h1 className="text-2xl">Health Care</h1>
         </div>
-        <nav className="mr-6">
+        <nav>
           {token ? (
-            <Link to="/logout">Sign out</Link>
-          ) : location.pathname === "/register" ? (
-            <Link to="/">Sign in</Link>
+            <Link
+              to="/logout"
+              className="inline-flex items-center px-4 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
+            >
+              <span>Sign out</span>
+            </Link>
           ) : (
-            <Link to="/register">Sign up</Link>
+            <div className="space-x-2">
+              <Link
+                to="/login"
+                className="px-4 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
+              >
+                Sign in
+              </Link>
+              <span className="text-teal-200">or</span>
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
+              >
+                Sign up
+              </Link>
+            </div>
           )}
         </nav>
       </div>

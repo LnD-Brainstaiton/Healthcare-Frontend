@@ -22,8 +22,7 @@ const DoctorListPatient = () => {
 
   const fetchDoctors = async (page = 0) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+
 
       const queryParams = new URLSearchParams({
         page,
@@ -41,7 +40,6 @@ const DoctorListPatient = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
         }
       );

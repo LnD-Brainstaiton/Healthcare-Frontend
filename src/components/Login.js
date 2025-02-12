@@ -13,7 +13,7 @@ function Login({ onLogin }) {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -35,7 +35,7 @@ function Login({ onLogin }) {
             localStorage.setItem("userId", userId);
             localStorage.setItem("doctorAuthLevel", doctorAuthLevel);
             onLogin(token);
-            navigate("/dashboard");
+            navigate("/");
           }
         })
         .catch((err) => {

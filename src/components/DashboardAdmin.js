@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Users,
+  UserCog,
+  UserRound,
+  ClipboardList,
+  CalendarClock,
+  CalendarRange,
+} from "lucide-react";
 
 const DashboardAdmin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -93,68 +101,88 @@ const DashboardAdmin = () => {
     return null;
   }
 
+  const cards = [
+    {
+      title: "Admins",
+      count: stats.adminsCount,
+      path: "/admins-list",
+      icon: UserCog,
+      color: "text-blue-600",
+    },
+    {
+      title: "Doctors",
+      count: stats.docsCount,
+      path: "/doctors-list",
+      icon: Users,
+      color: "text-teal-600",
+    },
+    {
+      title: "Patients",
+      count: stats.patientsCount,
+      path: "/patients-list",
+      icon: UserRound,
+      color: "text-purple-600",
+    },
+    {
+      title: "Pending Doctors",
+      count: stats.docsPendingCount,
+      path: "/doctors-approve-list",
+      icon: ClipboardList,
+      color: "text-orange-600",
+    },
+    {
+      title: "Pending Appointments",
+      count: stats.appointmentsPendingCount,
+      path: "/appointment-approve-list",
+      icon: CalendarClock,
+      color: "text-red-600",
+    },
+    // {
+    //   title: "Appointment Reschedule",
+    //   count: stats.adminsPendingCount,
+    //   path: "/appointment-reapprove-list",
+    //   icon: CalendarRange,
+    //   color: "text-indigo-600",
+    // },
+  ];
+
   return (
-    <div className="grid">
-      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 p-20">
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/admins-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
-            Admins
-          </h2>
-          <p className=" text-4xl font-bold">{stats.adminsCount}</p>
-        </div>
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/doctors-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
-            Doctors
-          </h2>
-          <p className=" text-4xl font-bold">{stats.docsCount}</p>
-        </div>
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/patients-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
-            Patients
-          </h2>
-          <p className=" text-4xl font-bold">{stats.patientsCount}</p>
-        </div>
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/doctors-approve-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
-            Pending Doctors
-          </h2>
-          <p className=" text-4xl font-bold">{stats.docsPendingCount}</p>
-        </div>
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/appointment-approve-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold  text-center">
-            Pending Appointment
-          </h2>
-          <p className=" text-4xl font-bold">
-            {stats.appointmentsPendingCount}
-          </p>
-        </div>
-        <div
-          className="flex bg-cardBackground shadow-custom-dark flex-col justify-center items-center  w-full h-60 rounded-xl transition-transform hover:bg-cardBackgroundHover hover:-translate-y-2"
-          onClick={() => navigate("/appointment-reapprove-list")}
-        >
-          <h2 className="text-primaryText mb-4 text-2xl font-bold text-center">
-            Appointment Reschedule
-          </h2>
-          <p className=" text-4xl font-bold">{stats.adminsPendingCount}</p>
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">
+          Dashboard Overview
+        </h1>
+
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {cards.map((card, index) => {
+            const Icon = card.icon;
+            return (
+              <button
+                key={index}
+                onClick={() => navigate(card.path)}
+                className="group bg-white hover:bg-gray-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-6 border border-gray-100 hover:border-gray-200"
+              >
+                <div className="flex flex-col items-center text-center space-y-4">
+                  <div
+                    className={`${card.color} p-3 rounded-full bg-opacity-10 bg-current group-hover:scale-110 transition-transform duration-300`}
+                  >
+                    <Icon className={`h-8 w-8 ${card.color}`} />
+                  </div>
+
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    {card.title}
+                  </h2>
+
+                  <p className={`text-3xl font-bold ${card.color}`}>
+                    {card.count}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 };
-
 export default DashboardAdmin;

@@ -279,7 +279,7 @@ const UpdateProfile = () => {
 
           <button
             type="submit"
-            className=" w-2/12 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            className="w-2/3 lg:w-2/12 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition duration-300"
           >
             Save Changes
           </button>

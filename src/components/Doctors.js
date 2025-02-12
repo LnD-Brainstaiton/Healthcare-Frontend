@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { Search, ChevronLeft, ChevronRight, Edit2, Trash2 } from "lucide-react";
 
 const DoctorsList = () => {
   const navigate = useNavigate();
@@ -192,72 +193,78 @@ const DoctorsList = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
-      <h1 className="flex justify-between items-center text-3xl font-semibold text-gray-800 mb-6">
-        <span>Doctors</span>
-        <button
-          onClick={handleCreateDoctor}
-          className=" bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
-        >
-          Create Doctor
-        </button>
-      </h1>
-      {/* Search */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search by id..."
-              value={searchQueryId}
-              onChange={(e) => setSearchQueryId(e.target.value)}
-              className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search by name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="px-2 py-2 text-lg w-48 border border-gray-300 rounded-md"
-            />
-          </div>
-          <div className="relative flex-1">
+    <div className="p-4 lg:p-8 bg-gray-50 min-h-screen mt-24 md:mt-0">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+            Doctors Management
+          </h1>
+          <button
+            onClick={handleCreateDoctor}
+            className="w-full sm:w-auto bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300 text-center"
+          >
+            Add New Doctor
+          </button>
+        </div>
+
+        {/* Search Panel */}
+        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by ID"
+                value={searchQueryId}
+                onChange={(e) => setSearchQueryId(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 text-gray-400 h-5 w-5" />
+            </div>
+
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 text-gray-400 h-5 w-5" />
+            </div>
+
             <select
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              className="w-full h-12 pl-3 pr-8 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             >
-              <option value="">Select Designation</option>
+              <option value="">Designation</option>
               {designationOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </select>
-          </div>
-          <div className="relative flex-1">
+
             <select
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
-              className="w-full h-12 pl-3 pr-8 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             >
-              <option value="">Select Department</option>
+              <option value="">Department</option>
               {departmentOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </select>
-          </div>
-          <div className="relative flex-1">
+
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="w-full h-12 pl-3 pr-8 py-2 border rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-tealBlue focus:border-primaryText"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
             >
-              <option value="">Select Gender</option>
+              <option value="">Gender</option>
               {genderOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
@@ -265,94 +272,119 @@ const DoctorsList = () => {
               ))}
             </select>
           </div>
+
+          <div className="mt-4">
+            <button
+              onClick={handleSearch}
+              className="w-full sm:w-auto bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            >
+              Search
+            </button>
+          </div>
+        </div>
+
+        {/* Doctors List */}
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="hidden sm:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Designation
+                  </th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Department
+                  </th>
+                  <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Fee
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {doctors.length > 0 ? (
+                  doctors.map((doctor) => (
+                    <tr key={doctor.doctorId} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {doctor.doctorId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {doctor.firstname} {doctor.lastname}
+                        </div>
+                      </td>
+                      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {doctor.designation}
+                      </td>
+                      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {doctor.department}
+                      </td>
+                      <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${doctor.fee}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleUpdate(doctor.doctorId)}
+                          className="text-teal-600 hover:text-teal-900 mr-4"
+                        >
+                          <Edit2 className="h-5 w-5 inline" />
+                          <span className="hidden sm:inline ml-1">Edit</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(doctor.doctorId)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Trash2 className="h-5 w-5 inline" />
+                          <span className="hidden sm:inline ml-1">Delete</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
+                      No doctors found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-6">
           <button
-            onClick={handleSearch}
-            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 0}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Search
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Previous
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages - 1}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+            <ChevronRight className="h-5 w-5 ml-1" />
           </button>
         </div>
-      </div>
-      {/* Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full text-left border-collapse">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Id</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                First Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Last Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Designation
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Department
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Fee</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {doctors.length > 0 ? (
-              doctors.map((doctor, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-100 transition duration-200"
-                >
-                  <td className="py-3 px-4">{doctor.doctorId}</td>
-                  <td className="py-3 px-4">{doctor.firstname}</td>
-                  <td className="py-3 px-4">{doctor.lastname}</td>
-                  <td className="py-3 px-4">{doctor.designation}</td>
-                  <td className="py-3 px-4">{doctor.department}</td>
-                  <td className="py-3 px-4">{doctor.fee}</td>
-                  <td className="py-3 px-4">
-                    <button
-                      className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
-                      onClick={() => handleUpdate(doctor.doctorId)}
-                    >
-                      Update
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800 transition duration-300"
-                      onClick={() => handleDelete(doctor.doctorId)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
-                  No doctors found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-6">
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span className="text-gray-700">
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
       </div>
     </div>
   );

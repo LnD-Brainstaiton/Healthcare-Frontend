@@ -19,7 +19,7 @@ const HomePage = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="relative px-6 py-20 text-center bg-gradient-to-r from-teal-500 to-blue-600 text-white"
+        className="relative px-6 py-20 text-center bg-gradient-to-r from-teal-500 to-teal-600 text-white"
       >
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl font-bold mb-6">Your Health, Our Priority</h1>
@@ -70,22 +70,22 @@ const HomePage = () => {
         <div className="grid gap-8 md:grid-cols-3">
           {[
             {
-              name: "Dr. Sarah Wilson",
+              name: "Dr. Michael Wilson",
               specialty: "Cardiologist",
               image:
-                "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400",
+                "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=400",
             },
             {
               name: "Dr. James Chen",
               specialty: "Neurologist",
               image:
-                "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400",
+                "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400",
             },
             {
-              name: "Dr. Emily Parker",
+              name: "Dr. David Parker",
               specialty: "Pediatrician",
               image:
-                "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400",
+                "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400",
             },
           ].map((doctor, index) => (
             <motion.div

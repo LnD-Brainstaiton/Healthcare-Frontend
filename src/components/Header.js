@@ -8,7 +8,7 @@ const Header = ({ toggleSidebar }) => {
   const token = localStorage.getItem("token");
 
   return (
-    <header className="bg-tealBlue text-white text-xl p-2 h-18 w-full fixed lg:relative ">
+    <header className="bg-tealBlue text-white text-xl p-2 h-18 w-full fixed lg:relative z-50">
       <div className="flex justify-between items-center h-full">
         <div className="flex justify-between items-center">
           {token && (
@@ -41,14 +41,14 @@ const Header = ({ toggleSidebar }) => {
             <div className="space-x-2">
               <Link
                 to="/login"
-                className="px-4 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
+                className="px-2 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
               >
                 Sign in
               </Link>
-              <span className="text-teal-200">or</span>
+              {/* <span className="text-teal-200">or</span> */}
               <Link
                 to="/register"
-                className="px-4 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
+                className="px-2 py-2 rounded-md hover:bg-teal-500 transition-colors duration-200"
               >
                 Sign up
               </Link>

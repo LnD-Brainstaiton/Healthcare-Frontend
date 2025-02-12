@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Star, StarHalf, Calendar, Mail, Phone, MapPin, MessageCircle, Send, Clock, Award } from "lucide-react";
+import {
+  Star,
+  StarHalf,
+  Calendar,
+  Mail,
+  Phone,
+  MapPin,
+  MessageCircle,
+  Send,
+  Clock,
+  Award,
+} from "lucide-react";
 import { useParams } from "react-router-dom";
 
 function DoctorView() {
@@ -8,6 +19,8 @@ function DoctorView() {
 
   const [doctorDetails, setDoctorDetails] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hoveredRating, setHoveredRating] = useState(0);
   const [replyTo, setReplyTo] = useState(null);
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +42,7 @@ function DoctorView() {
         }
       );
       const data = await response.json();
-      
+
       if (data.responseCode === "S100000") {
         setDoctorDetails(data.data);
         setComments(data.data.ratingResponseList || []);
@@ -46,7 +59,16 @@ function DoctorView() {
   const submitComment = async (parentId) => {
     try {
       const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
       if (!token) throw new Error("Authentication required");
+
+      const payload = {
+        comment: newComment,
+        doctorId: doctorId,
+        userId: userId,
+        ...(parentId && { commentParentId: parentId }),
+        ...(!parentId && { commentParentId: "parent", rating: rating }), // Only include rating for new comments, not replies
+      };
 
       const response = await fetch(
         `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/rating`,
@@ -56,18 +78,14 @@ function DoctorView() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            comment: newComment,
-            doctorId: "123",
-            userId: "PTf66e88",
-            ...(parentId && { commentParentId: parentId }),
-          }),
+          body: JSON.stringify(payload),
         }
       );
 
       const data = await response.json();
       if (data.responseCode === "S100000") {
         setNewComment("");
+        setRating(0);
         setReplyTo(null);
         fetchDoctorDetails();
       } else {
@@ -80,23 +98,36 @@ function DoctorView() {
 
   useEffect(() => {
     fetchDoctorDetails();
-  }, []);
+  }, [doctorId]);
 
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    
+  const renderStars = (rating, interactive = false) => {
+    const displayRating = interactive ? hoveredRating || rating : rating;
+
     return (
       <div className="flex items-center gap-1">
-        {[...Array(5)].map((_, i) => {
-          if (i < fullStars) {
-            return <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />;
-          } else if (i === fullStars && hasHalfStar) {
-            return <StarHalf key={i} className="w-5 h-5 text-yellow-400" />;
-          }
-          return <Star key={i} className="w-5 h-5 text-gray-300" />;
-        })}
-        <span className="ml-2 text-gray-600">({rating.toFixed(1)})</span>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            className={`${
+              interactive ? "cursor-pointer" : ""
+            } transition-colors duration-200`}
+            onMouseEnter={() => interactive && setHoveredRating(star)}
+            onMouseLeave={() => interactive && setHoveredRating(0)}
+            onClick={() => interactive && setRating(star)}
+            disabled={!interactive}
+          >
+            <Star
+              className={`w-6 h-6 ${
+                star <= displayRating
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "text-gray-300"
+              }`}
+            />
+          </button>
+        ))}
+        {!interactive && (
+          <span className="ml-2 text-gray-600">({rating.toFixed(1)})</span>
+        )}
       </div>
     );
   };
@@ -137,7 +168,7 @@ function DoctorView() {
           >
             {/* Doctor Profile Card */}
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-              <div className="bg-gradient-to-r from-teal-500 to-blue-600 px-6 py-8 sm:p-10">
+              <div className="bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-8 sm:p-10">
                 <div className="flex flex-col sm:flex-row items-center gap-8">
                   <img
                     src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400"
@@ -148,8 +179,12 @@ function DoctorView() {
                     <h1 className="text-3xl font-bold text-white mb-2">
                       Dr. {doctorDetails.firstname} {doctorDetails.lastname}
                     </h1>
-                    <p className="text-teal-50 text-lg mb-2">{doctorDetails.designation}</p>
-                    <p className="text-teal-50 mb-4">{doctorDetails.department}</p>
+                    <p className="text-teal-50 text-lg mb-2">
+                      {doctorDetails.designation}
+                    </p>
+                    <p className="text-teal-50 mb-4">
+                      {doctorDetails.department}
+                    </p>
                     <div className="bg-white/10 inline-block rounded-full px-4 py-2">
                       {renderStars(doctorDetails.rating)}
                     </div>
@@ -163,7 +198,9 @@ function DoctorView() {
                     <Award className="w-6 h-6 text-teal-500" />
                     <div>
                       <p className="text-sm text-gray-500">Experience</p>
-                      <p className="font-semibold">{doctorDetails.experience}</p>
+                      <p className="font-semibold">
+                        {doctorDetails.experience}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -200,21 +237,42 @@ function DoctorView() {
 
               {/* New Comment Input */}
               <div className="mb-8">
+                {!replyTo && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Your Rating
+                    </label>
+                    {renderStars(rating, true)}
+                  </div>
+                )}
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Share your experience..."
+                  placeholder={
+                    replyTo ? "Write your reply..." : "Share your experience..."
+                  }
                   className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
                   rows={4}
                 />
-                <div className="mt-2 flex justify-end">
+                <div className="mt-2 flex justify-end gap-2">
+                  {replyTo && (
+                    <button
+                      onClick={() => {
+                        setReplyTo(null);
+                        setNewComment("");
+                      }}
+                      className="px-6 py-2 text-gray-600 hover:text-gray-800"
+                    >
+                      Cancel
+                    </button>
+                  )}
                   <button
-                    onClick={() => submitComment()}
-                    disabled={!newComment.trim()}
+                    onClick={() => submitComment(replyTo)}
+                    disabled={!newComment.trim() || (!replyTo && rating === 0)}
                     className="flex items-center gap-2 px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-4 h-4" />
-                    Post Review
+                    {replyTo ? "Post Reply" : "Post Review"}
                   </button>
                 </div>
               </div>
@@ -237,42 +295,59 @@ function DoctorView() {
                             </span>
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-800">{comment.userId}</p>
-                            <p className="text-sm text-gray-500 flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {new Date(comment.commentTime).toLocaleDateString()}
+                            <p className="font-semibold text-gray-800">
+                              {comment.userId}
                             </p>
+                            <div className="flex items-center gap-2">
+                              {renderStars(comment.rating || 0)}
+                              <span className="text-sm text-gray-500 flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {new Date(
+                                  comment.commentTime
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
                       <p className="text-gray-600 ml-13">{comment.comment}</p>
 
                       {/* Replies */}
-                      {comment.ratingReplyList && comment.ratingReplyList.length > 0 && (
-                        <div className="mt-4 ml-13 space-y-4">
-                          {comment.ratingReplyList.map((reply) => (
-                            <div key={reply.commentId} className="bg-gray-50 rounded-lg p-4">
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                  <span className="text-blue-600 font-semibold">
-                                    {reply.userId.charAt(0)}
-                                  </span>
+                      {comment.ratingReplyList &&
+                        comment.ratingReplyList.length > 0 && (
+                          <div className="mt-4 ml-13 space-y-4">
+                            {comment.ratingReplyList.map((reply) => (
+                              <div
+                                key={reply.commentId}
+                                className="bg-gray-50 rounded-lg p-4"
+                              >
+                                <div className="flex items-center gap-2 mb-2">
+                                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <span className="text-blue-600 font-semibold">
+                                      {reply.userId.charAt(0)}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <p className="font-semibold text-gray-800">
+                                      {reply.userId}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                      {new Date(
+                                        reply.commentTime
+                                      ).toLocaleDateString()}
+                                    </p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <p className="font-semibold text-gray-800">{reply.userId}</p>
-                                  <p className="text-sm text-gray-500">
-                                    {new Date(reply.commentTime).toLocaleDateString()}
-                                  </p>
-                                </div>
+                                <p className="text-gray-600 ml-10">
+                                  {reply.comment}
+                                </p>
                               </div>
-                              <p className="text-gray-600 ml-10">{reply.comment}</p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            ))}
+                          </div>
+                        )}
 
                       {/* Reply Button */}
-                      {replyTo !== comment.commentId ? (
+                      {replyTo !== comment.commentId && (
                         <button
                           onClick={() => setReplyTo(comment.commentId)}
                           className="mt-2 text-teal-500 text-sm hover:text-teal-600 flex items-center gap-1"
@@ -280,40 +355,13 @@ function DoctorView() {
                           <MessageCircle className="w-4 h-4" />
                           Reply
                         </button>
-                      ) : (
-                        <div className="mt-4">
-                          <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Write a reply..."
-                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
-                            rows={2}
-                          />
-                          <div className="mt-2 flex gap-2 justify-end">
-                            <button
-                              onClick={() => {
-                                setReplyTo(null);
-                                setNewComment("");
-                              }}
-                              className="px-4 py-1 text-gray-600 hover:text-gray-800"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              onClick={() => submitComment(comment.commentId)}
-                              disabled={!newComment.trim()}
-                              className="flex items-center gap-2 px-4 py-1 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              <Send className="w-4 h-4" />
-                              Reply
-                            </button>
-                          </div>
-                        </div>
                       )}
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-center text-gray-500 py-8">No reviews yet. Be the first to share your experience!</p>
+                  <p className="text-center text-gray-500 py-8">
+                    No reviews yet. Be the first to share your experience!
+                  </p>
                 )}
               </div>
             </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/DoctorList.css";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { testImage } from "../assets/Logo.jpeg";
+import { Eye, Search, X, RefreshCw } from "lucide-react";
 
 const DoctorsApproveList = () => {
   const navigate = useNavigate();
@@ -369,355 +370,299 @@ const DoctorsApproveList = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
-      {/** Page title */}
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-        Pending Doctors
-      </h1>
-      {/* Search form */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search by ID..."
-              value={searchQueryId}
-              onChange={(e) => setSearchQueryId(e.target.value)}
-              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
-            />
-          </div>
-
-          <button
-            onClick={handleSearch}
-            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
-          >
-            Search
-          </button>
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Pending Doctors
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Review and approve doctor registration requests
+          </p>
         </div>
-      </div>
-      {/* Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full text-left border-collapse">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Id</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                First Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Last Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Designation
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Department
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Status</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {doctors.length > 0 ? (
-              doctors.map((doctor, index) => (
-                <tr
-                  key={index}
-                  className="hover:bg-gray-100 transition duration-200"
-                >
-                  <td className="py-3 px-4">{doctor.userId}</td>
-                  <td className="py-3 px-4">{doctor.firstname}</td>
-                  <td className="py-3 px-4">{doctor.lastname}</td>
-                  <td className="py-3 px-4">{doctor.designation}</td>
-                  <td className="py-3 px-4">{doctor.department}</td>
-                  <td className="py-3 px-4">{doctor.status}</td>
-                  <td className="py-3 px-4">
-                    <button
-                      className="text-teal-600 hover:underline"
-                      onClick={() => handleView(doctor)}
-                      title="View Details"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="feather feather-eye"
-                      >
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                        <circle cx="12" cy="12" r="3"></circle>
-                      </svg>
-                    </button>
-                    {/* {doctor.status === "Rejected" && (
-                      <button
-                        className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
-                        onClick={() => handleUpdate(doctor)}
-                        title="Update Details"
-                      >
-                        Update
-                      </button>
-                    )} */}
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
-                  No pending doctor
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-6">
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span className="text-gray-700">
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
-      </div>
-      {/* Popup */}
-      {/* {isUpdatePopupOpen && selectedDoctor && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <button onClick={closeUpdatePopup} className="popup-close-icon">
-              ×
-            </button>
 
-            <form onSubmit={handleUpdateSubmit}>
-              <label>First Name</label>
+        {/* Search Section */}
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="relative flex-1 max-w-sm">
               <input
                 type="text"
-                name="firstname"
-                value={updateFormData.firstname || ""}
-                onChange={handleChange}
+                placeholder="Search by ID..."
+                value={searchQueryId}
+                onChange={(e) => setSearchQueryId(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
               />
-
-              <label>Last Name</label>
-              <input
-                type="text"
-                name="lastname"
-                value={updateFormData.lastname || ""}
-                onChange={handleChange}
-              />
-
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                value={updateFormData.email || ""}
-                onChange={handleChange}
-              />
-
-              <label>Mobile</label>
-              <input
-                type="text"
-                name="mobile"
-                value={updateFormData.mobile || ""}
-                onChange={handleChange}
-              />
-
-              <label>Designation</label>
-              <select
-                name="designation"
-                value={updateFormData.designation}
-                onChange={handleChange}
-                className="update-input-field"
-              >
-                <option value="">Select Designation</option>
-                {designationOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-
-              <label>Department</label>
-              <select
-                name="department"
-                value={updateFormData.department}
-                onChange={handleChange}
-                className="update-input-field"
-              >
-                <option value="">Select Department</option>
-                {departmentOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-
-              <label>Fee</label>
-              <input
-                type="number"
-                name="fee"
-                value={updateFormData.fee || ""}
-                onChange={handleChange}
-              />
-
-              <label htmlFor="specialities">Specialities</label>
-              <input
-                name="specialities"
-                value={updateFormData.specialities || ""}
-                onChange={handleChange}
-              />
-              <div className="update-footer">
-                <button type="submit" className="update-submit">
-                  Update
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )} */}
-      {/* Doctor details popup */}
-      {isPopupOpen && selectedDoctor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 text-xl">
-          <div className="relative bg-white rounded-lg shadow-lg w-2/3 p-6 max-h-[80vh] overflow-y-auto">
+              <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            </div>
             <button
-              onClick={closePopup}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-3xl font-bold"
+              onClick={handleSearch}
+              className="w-full sm:w-auto px-6 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors"
             >
-              ×
+              Search
             </button>
-            <h2 className="text-2xl font-bold mb-4 mx-4 text-gray-800">
-              Doctor Details
-            </h2>
-            <div className="w-full space-y-4">
-              <ProfileField label="Request ID" value={selectedDoctor.userId} />
-              <ProfileField
-                label="Registration No"
-                value={selectedDoctor.registrationNo}
-              />
-              <ProfileField
-                label="First Name"
-                value={selectedDoctor.firstname}
-              />
-              <ProfileField label="Last Name" value={selectedDoctor.lastname} />
-              <ProfileField label="Email" value={selectedDoctor.email} />
-              <ProfileField label="Mobile" value={selectedDoctor.mobile} />
-              <ProfileField
-                label="Designation"
-                value={selectedDoctor.designation}
-              />
-              <ProfileField
-                label="Department"
-                value={selectedDoctor.department}
-              />
-              <ProfileField label="Fee" value={selectedDoctor.fee} />
-              <ProfileField
-                label="Specialities"
-                value={selectedDoctor.specialities}
-              />
-              <ProfileField label="Status" value={selectedDoctor.status} />
-            </div>
-            {/** Time slot */}
-            <div className="m-4">
-              <strong>Time Slot:</strong>
-              {selectedDoctor.timeSlots &&
-              selectedDoctor.timeSlots.length > 0 ? (
-                selectedDoctor.timeSlots.map((slot, index) => (
-                  <div key={index} style={{ marginBottom: "10px" }}>
-                    <div>
-                      Start Time: {slot.startTime}, End Time: {slot.endTime},
-                      Weekdays:{" "}
-                      {slot.weekdays && slot.weekdays.length > 0 ? (
-                        slot.weekdays.map((day, idx) => (
-                          <span key={idx} style={{ marginRight: "5px" }}>
-                            {day}
-                          </span>
-                        ))
-                      ) : (
-                        <span>None</span>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div>No time slots available.</div>
-              )}
-            </div>
-            <div className="scale-95 w-auto h-auto outline-double outline-tealBlue ">
-              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-            </div>
-            <div className="m-4 my-8">
-              {/* CAPTCHA and Registration Number Input Fields */}
-              <div className="mt-4">
-                <label className="block text-gray-700 font-semibold mb-2">
-                  CAPTCHA Code
-                </label>
-                <input
-                  type="text"
-                  value={captchaCode}
-                  onChange={(e) => setCaptchaCode(e.target.value)}
-                  className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-2/3"
-                />
-              </div>
-              <div className="mt-4">
-                <label className="block text-gray-700 font-semibold mb-2">
-                  Registration Number
-                </label>
-                <input
-                  type="text"
-                  value={registrationNo}
-                  onChange={(e) => setRegistrationNo(e.target.value)}
-                  className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-2/3"
-                />
-              </div>
-              <div className="mt-4">
+          </div>
+        </div>
+
+        {/* Doctors List */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+                  <th className="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Designation
+                  </th>
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Department
+                  </th>
+                  <th className="hidden lg:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {doctors.length > 0 ? (
+                  doctors.map((doctor, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {doctor.userId}
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">
+                          {doctor.firstname} {doctor.lastname}
+                        </div>
+                      </td>
+                      <td className="hidden sm:table-cell px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {doctor.designation}
+                      </td>
+                      <td className="hidden md:table-cell px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {doctor.department}
+                      </td>
+                      <td className="hidden lg:table-cell px-4 py-4 whitespace-nowrap">
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                          {doctor.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleView(doctor)}
+                          className="text-teal-600 hover:text-teal-900 focus:outline-none"
+                          title="View Details"
+                        >
+                          <Eye className="h-5 w-5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-4 py-8 text-center text-sm text-gray-500"
+                    >
+                      No pending doctors found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 flex justify-between sm:hidden">
                 <button
-                  onClick={validateRegistration}
-                  className="px-4 py-2 bg-tealBlue text-white font-semibold rounded-lg shadow-md hover:bg-tealBlueHover transition-all duration-200"
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 0}
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Validate
+                  Previous
+                </button>
+                <button
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages - 1}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
                 </button>
               </div>
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-gray-700">
+                    Page <span className="font-medium">{currentPage + 1}</span>{" "}
+                    of <span className="font-medium">{totalPages}</span>
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <button
+                      onClick={goToPreviousPage}
+                      disabled={currentPage === 0}
+                      className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={goToNextPage}
+                      disabled={currentPage === totalPages - 1}
+                      className="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </nav>
+                </div>
+              </div>
             </div>
-            {/* Captcha Image */}
-            <div className="flex flex-col items-center m-4  rounded-lg  w-fit">
-              {captchaImage && (
-                <img
-                  src={captchaImage}
-                  alt="CAPTCHA"
-                  className="w-48 h-auto my-4 border rounded-lg shadow-sm"
-                />
-              )}
+          </div>
+        </div>
+      </div>
+
+      {/* Doctor Details Modal */}
+      {isPopupOpen && selectedDoctor && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900">
+                Doctor Details
+              </h2>
               <button
-                onClick={handleRefreshCaptcha}
-                className="px-4 py-2 bg-tealBlue text-white font-semibold rounded-lg shadow-md hover:bg-tealBlueHover transition-all duration-200"
+                onClick={closePopup}
+                className="text-gray-400 hover:text-gray-500 focus:outline-none"
               >
-                Refresh CAPTCHA
+                <X className="h-6 w-6" />
               </button>
             </div>
 
-            <div className="popup-actions p-4">
+            <div className="px-6 py-4 space-y-6">
+              {/* Doctor Information */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ProfileField
+                  label="Request ID"
+                  value={selectedDoctor.userId}
+                />
+                <ProfileField
+                  label="Registration No"
+                  value={selectedDoctor.registrationNo}
+                />
+                <ProfileField
+                  label="Name"
+                  value={`${selectedDoctor.firstname} ${selectedDoctor.lastname}`}
+                />
+                <ProfileField label="Email" value={selectedDoctor.email} />
+                <ProfileField label="Mobile" value={selectedDoctor.mobile} />
+                <ProfileField
+                  label="Designation"
+                  value={selectedDoctor.designation}
+                />
+                <ProfileField
+                  label="Department"
+                  value={selectedDoctor.department}
+                />
+                <ProfileField label="Fee" value={selectedDoctor.fee} />
+                <ProfileField
+                  label="Specialities"
+                  value={selectedDoctor.specialities}
+                />
+                <ProfileField label="Status" value={selectedDoctor.status} />
+              </div>
+
+              {/* Time Slots */}
+              <div className="space-y-2">
+                <h3 className="font-semibold text-gray-900">Time Slots</h3>
+                {selectedDoctor.timeSlots &&
+                selectedDoctor.timeSlots.length > 0 ? (
+                  selectedDoctor.timeSlots.map((slot, index) => (
+                    <div key={index} className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-sm text-gray-600">
+                        {slot.startTime} - {slot.endTime}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {slot.weekdays.join(", ")}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    No time slots available
+                  </p>
+                )}
+              </div>
+              <div className="scale-95 w-auto h-auto  ">
+                <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+              </div>
+              {/* Validation Section */}
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      CAPTCHA Code
+                    </label>
+                    <input
+                      type="text"
+                      value={captchaCode}
+                      onChange={(e) => setCaptchaCode(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Registration Number
+                    </label>
+                    <input
+                      type="text"
+                      value={registrationNo}
+                      onChange={(e) => setRegistrationNo(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                {/* Captcha Image */}
+                <div className="flex items-center gap-4">
+                  <img
+                    src={captchaImage}
+                    alt="CAPTCHA"
+                    className="h-12 rounded border"
+                  />
+                  <button
+                    onClick={handleRefreshCaptcha}
+                    className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    <RefreshCw className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <button
+                  onClick={validateRegistration}
+                  className="w-full sm:w-auto px-6 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors"
+                >
+                  Validate Registration
+                </button>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="sticky bottom-0 bg-gray-50 px-6 py-4 flex justify-end gap-4 border-t border-gray-200">
               <button
-                className="text-red-600 hover:text-red-800 transition duration-300"
                 onClick={() => handleCheck(selectedDoctor, "Rejected")}
+                className="px-4 py-2 border border-red-600 text-red-600 font-medium rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
               >
                 Reject
               </button>
               <button
-                className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
                 onClick={() => handleCheck(selectedDoctor, "Accepted")}
+                className="px-4 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors"
               >
                 Approve
               </button>
@@ -728,13 +673,11 @@ const DoctorsApproveList = () => {
     </div>
   );
 };
+
 const ProfileField = ({ label, value }) => (
-  <div className="text-xl px-4">
-    <div className="flex justify-start">
-      <span className="text-gray-600 w-2/6">{label}:</span>
-      <span className="text-gray-800">{value || "N/A"}</span>
-    </div>
-    <hr className="my-4" />
+  <div>
+    <dt className="text-sm font-medium text-gray-500">{label}</dt>
+    <dd className="mt-1 text-sm text-gray-900">{value || "N/A"}</dd>
   </div>
 );
 export default DoctorsApproveList;

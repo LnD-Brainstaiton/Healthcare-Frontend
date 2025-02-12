@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/AdminsList.module.css";
 import { useNavigate } from "react-router-dom";
-
+import { Search, ChevronLeft, ChevronRight, Edit2, Trash2 } from "lucide-react";
 const AdminsList = () => {
   const navigate = useNavigate();
   const [admins, setAdmins] = useState([]);
@@ -118,114 +118,127 @@ const AdminsList = () => {
   };
 
   return (
-    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Admins</h1>
+    <div className="p-4 lg:p-8 bg-gray-50 min-h-screen mt-24 md:mt-0">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+            Admins
+          </h1>
+        </div>
+        {/* Search Filter Section */}
+        <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by ID"
+                value={searchQueryId}
+                onChange={(e) => setSearchQueryId(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 text-gray-400 h-5 w-5" />
+            </div>
 
-      {/* Search Filter Section */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search by ID..."
-              value={searchQueryId}
-              onChange={(e) => setSearchQueryId(e.target.value)}
-              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 text-gray-400 h-5 w-5" />
+            </div>
+            {/* </div>
+
+          <div className="mt-4"> */}
+            <button
+              onClick={handleSearch}
+              className="w-full sm:w-auto bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            >
+              Search
+            </button>
           </div>
-          <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              placeholder="Search by Name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="border rounded-lg px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 w-60"
-            />
+        </div>
+        {/* Admins Table */}
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Name
+                  </th>
+
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Mobile
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {admins.length > 0 ? (
+                  admins.map((admin) => (
+                    <tr key={admins.adminId} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {admin.adminId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {admin.firstname} {admin.lastname}
+                        </div>
+                      </td>
+                      <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {admin.email}
+                      </td>
+                      <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {admin.mobile}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
+                      No admins found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-6">
           <button
-            onClick={handleSearch}
-            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition duration-300"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 0}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Search
+            <ChevronLeft className="h-5 w-5 mr-1" />
+            Previous
+          </button>
+          <span className="text-sm text-gray-700">
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <button
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages - 1}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+            <ChevronRight className="h-5 w-5 ml-1" />
           </button>
         </div>
-      </div>
-
-      {/* Admins Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full text-left border-collapse">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-3 px-4 text-gray-700 font-semibold">ID</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                First Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">
-                Last Name
-              </th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Email</th>
-              <th className="py-3 px-4 text-gray-700 font-semibold">Mobile</th>
-              {/* <th className="py-3 px-4 text-gray-700 font-semibold">Actions</th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {admins.length > 0 ? (
-              admins.map((admin) => (
-                <tr
-                  key={admin.adminId}
-                  className="hover:bg-gray-100 transition duration-200"
-                >
-                  <td className="py-3 px-4">{admin.adminId}</td>
-                  <td className="py-3 px-4">{admin.firstname}</td>
-                  <td className="py-3 px-4">{admin.lastname}</td>
-                  <td className="py-3 px-4">{admin.email}</td>
-                  <td className="py-3 px-4">{admin.mobile}</td>
-                  {/* <td className="py-3 px-4">
-                    <button
-                      onClick={() => handleUpdate(admin.adminId)}
-                      className="text-teal-600 hover:text-teal-800 transition duration-300 mr-2"
-                    >
-                      Update
-                    </button>
-                    <button
-                      onClick={() => handleDelete(admin.adminId)}
-                      className="text-red-600 hover:text-red-800 transition duration-300"
-                    >
-                      Delete
-                    </button>
-                  </td> */}
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="py-3 px-4 text-center text-gray-500">
-                  No admins found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-6">
-        <button
-          onClick={goToPreviousPage}
-          disabled={currentPage === 0}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <span className="text-gray-700">
-          Page {currentPage + 1} of {totalPages}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={currentPage === totalPages - 1}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
       </div>
     </div>
   );

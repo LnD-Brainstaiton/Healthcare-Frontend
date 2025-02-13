@@ -128,7 +128,9 @@ function App() {
                         <DashboardDoctor />
                       </ProtectedRoute>
                     )}
-                    {userType === "PATIENT" && <HomePage />}
+                    {userType !== "DOCTOR" && userType !== "ADMIN" && (
+                      <HomePage />
+                    )}
                   </>
                 }
               />
@@ -306,6 +308,5 @@ function App() {
     </Router>
   );
 }
-
 
 export default App;

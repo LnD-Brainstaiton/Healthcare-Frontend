@@ -27,6 +27,7 @@ const AppointmentsApproveList = () => {
         size: pageSize,
         requestId: searchQueryId,
         featureCode: "APPOINTMENT",
+        checkerResponse: "3",
       }).toString();
 
       const response = await fetch(
